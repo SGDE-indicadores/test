@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENEMDU Mensual · Caracterización de Empleados</title>
+<link rel="stylesheet" href="../MDTDH/shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{
+  --azul:#4F449A; --azul-2:#4F449A; --azul-claro:#1d6fa8;
+  --dorado:#F1B620; --dorado-claro:#FEF7DC;
+  --gris-fondo:#f4f6f8; --gris-borde:#dbe1e8; --gris-texto:#4a5568; --texto:#1c2a3a;
+  --verde:#2f7d5a; --rojo:#b8433f;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:Arial, sans-serif; background:var(--gris-fondo); color:var(--texto);}
+h1,h2,h3{font-family:'Arial Black', Arial, sans-serif; font-weight:600;}
+a{text-decoration:none; color:inherit;}
+
+.topbar{background:linear-gradient(135deg, var(--azul) 0%, var(--azul-2) 100%); color:#fff; padding:26px 32px; border-bottom:4px solid var(--dorado);}
+.topbar-inner{max-width:1280px; margin:0 auto;}
+.back-link{display:inline-block; margin-bottom:10px; font-size:13px; color:rgba(255,255,255,0.65);}
+.back-link:hover{color:#fff;}
+.eyebrow{font-family:'Arial Black', Arial, sans-serif; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--dorado-claro); font-weight:600;}
+.topbar h1{margin:6px 0 6px 0; font-size:30px; color:#fff;}
+.topbar p{font-size:14.5px; color:rgba(255,255,255,0.65); max-width:760px; margin:0;}
+
+main{max-width:1280px; margin:0 auto; padding:24px 32px 60px 32px;}
+
+.indicator-bar{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:18px 22px; margin-bottom:20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+.indicator-bar label{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--azul-claro);}
+#famSelect{
+  flex:1; min-width:280px; font-family:Arial, sans-serif; font-size:15.5px; font-weight:600; color:var(--azul);
+  padding:11px 14px; border:1px solid var(--gris-borde); border-radius:8px; background:#fff; cursor:pointer;
+}
+.ind-def{font-size:13.5px; color:var(--gris-texto); line-height:1.5; width:100%; margin-top:2px;}
+
+.kpi-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:24px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi-card{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:16px 18px; border-top:4px solid var(--azul-claro);}
+.kpi-card.hi{border-top-color:var(--verde);}
+.kpi-card.lo{border-top-color:var(--rojo);}
+.kpi-lbl{font-family:'Arial Black', Arial, sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--gris-texto); margin-bottom:6px;}
+.kpi-val{font-family:'Arial Black', Arial, sans-serif; font-size:22px; font-weight:700; color:var(--azul); line-height:1.2;}
+.kpi-sub{font-size:12px; color:var(--gris-texto); margin-top:4px;}
+
+.panel{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:20px 22px; margin-bottom:20px;}
+.panel-title{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--azul-claro); margin-bottom:14px;}
+.chart-wrap{position:relative; height:340px;}
+.chart-wrap.short{height:300px;}
+
+.insight-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:800px){.insight-grid{grid-template-columns:1fr;}}
+.insight-box{border-radius:10px; padding:16px 18px;}
+.insight-box.bueno{background:#eef7f1; border-left:5px solid var(--verde);}
+.insight-box.malo{background:#fbedec; border-left:5px solid var(--rojo);}
+.insight-box .ib-title{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;}
+.insight-box.bueno .ib-title{color:var(--verde);}
+.insight-box.malo .ib-title{color:var(--rojo);}
+.insight-box ul{margin:0; padding-left:18px;}
+.insight-box li{font-size:13.5px; line-height:1.55; margin-bottom:8px; color:var(--texto);}
+.insight-box li:last-child{margin-bottom:0;}
+.insight-empty{font-size:13px; color:var(--gris-texto); font-style:italic;}
+
+.trim-select{font-family:Arial, sans-serif; font-size:14px; font-weight:600; color:var(--azul); padding:9px 14px; border:1px solid var(--gris-borde); border-radius:8px; background:#fff; cursor:pointer; margin-bottom:16px;}
+.snap-note{font-size:12.5px; color:var(--gris-texto); margin-bottom:14px;}
+.snap-note b{color:var(--azul);}
+
+details.tech-notes{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; margin-bottom:20px; overflow:hidden;}
+details.tech-notes summary{padding:16px 22px; cursor:pointer; font-weight:700; font-size:14.5px; color:var(--azul); list-style:none; display:flex; align-items:center; justify-content:space-between; font-family:'Arial Black', Arial, sans-serif; letter-spacing:.4px;}
+details.tech-notes summary::-webkit-details-marker{display:none;}
+details.tech-notes summary:after{content:'▸'; transition:transform .15s; color:var(--azul-claro);}
+details.tech-notes[open] summary:after{transform:rotate(90deg);}
+.tn-body{padding:0 22px 20px 22px; font-size:13.5px; color:var(--gris-texto); line-height:1.65;}
+.tn-body h4{font-family:'Arial Black', Arial, sans-serif; font-size:12.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--azul-claro); margin:16px 0 6px 0;}
+.tn-body h4:first-child{margin-top:0;}
+.tn-body ul{margin:4px 0; padding-left:20px;}
+.tn-body li{margin-bottom:5px;}
+.tn-body a{color:var(--azul-claro); text-decoration:underline;}
+.tn-body .cita{background:var(--gris-fondo); border-radius:8px; padding:10px 14px; font-size:12.5px; margin-top:6px;}
+
+footer{text-align:center; padding:26px; font-size:12.5px; color:var(--gris-texto);}
+.hidden{display:none;}
+
+/* ---- nuevo header institucional con trazabilidad y menú de indicadores ---- */
+.ind-header{background:var(--azul); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--dorado); flex-wrap:wrap; gap:8px;}
+.ind-header-left{display:flex; align-items:center; gap:14px; padding:10px 0;}
+.header-logo{min-width:38px; height:38px; padding:0 6px; box-sizing:border-box; background:var(--dorado); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Arial Black', Arial, sans-serif; font-weight:700; font-size:12.5px; color:var(--azul); flex-shrink:0;}
+.ind-header-title{font-family:'Arial Black', Arial, sans-serif; font-weight:700; font-size:17px; color:#fff; line-height:1.25;}
+.ind-header-sub{font-size:11.5px; color:rgba(255,255,255,0.65); margin-top:1px;}
+.ind-header-right{display:flex; align-items:center; gap:10px; position:relative;}
+.nav-btn{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.28); color:var(--azul-light); padding:7px 14px; border-radius:6px; font-size:12.5px; font-weight:600; cursor:pointer; text-decoration:none; font-family:Arial, sans-serif; white-space:nowrap; display:inline-block;}
+.nav-btn:hover{background:rgba(255,255,255,.18);}
+.menu-drop{position:absolute; top:calc(100% + 8px); right:0; background:#fff; border:1px solid var(--gris-borde); border-radius:10px; box-shadow:0 10px 30px rgba(11,45,82,.22); min-width:290px; padding:8px; display:none; z-index:80;}
+.menu-drop.open{display:block;}
+.menu-drop a{display:block; padding:9px 12px; border-radius:7px; font-size:13.5px; color:var(--azul); text-decoration:none; font-weight:600;}
+.menu-drop a:hover{background:var(--gris-fondo);}
+.menu-drop a.current{background:var(--dorado-claro); color:var(--amarillo-d);}
+.ind-breadcrumb{background:var(--azul-2); padding:9px 32px; font-size:12.5px; color:rgba(255,255,255,0.65);}
+.ind-breadcrumb a{color:rgba(255,255,255,0.65); text-decoration:none;}
+.ind-breadcrumb a:hover{color:#fff;}
+.ind-breadcrumb b{color:var(--dorado-claro); font-weight:700;}
+.page-intro{max-width:1280px; margin:0 auto; padding:20px 32px 0 32px; font-size:13.5px; color:var(--gris-texto); line-height:1.6;}
+
+</style>
+</head>
+<body>
+
+<div id="app-sidebar-mount"></div>
+
+<div class="ind-header">
+  <div class="ind-header-left">
+    <div class="header-logo">MDTDH</div>
+    <div>
+      <div class="ind-header-title">Caracterización de Empleados</div>
+      <div class="ind-header-sub">Ministerio de Trabajo y Desarrollo Humano · ENEMDU Mensual</div>
+    </div>
+  </div>
+  <div class="ind-header-right">
+    <button class="nav-btn" type="button" onclick="toggleMenu('menuMensual')">☰ Menú Mensual</button>
+    <div id="menuMensual" class="menu-drop">
+      <a href="poblaciones_mensual.html">Poblaciones</a>
+      <a href="tasas_mensual.html">Tasas</a>
+      <a href="caracterizacion_empleados_mensual.html" class="current">Caracterización de Empleados</a>
+      <a href="caracterizacion_adecuado_pleno_mensual.html">Caracterización de Empleo Adecuado/Pleno</a>
+      <a href="caracterizacion_subempleo_mensual.html">Caracterización de Subempleo</a>
+      <a href="caracterizacion_otro_no_pleno_mensual.html">Caracterización de Otro Empleo no Pleno</a>
+      <a href="caracterizacion_desempleo_mensual.html">Caracterización de Desempleo</a>
+      <a href="sectorizacion_empleo_mensual.html">Sectorización del Empleo</a>
+    </div>
+    <a class="nav-btn" href="../index_ENEMDU.html">Inicio</a>
+  </div>
+</div>
+<nav class="ind-breadcrumb">
+  <a href="../index_ENEMDU.html">Inicio</a> › <a href="mensual.html">Mensual</a> › <b>Caracterización de Empleados</b>
+</nav>
+<p class="page-intro">Perfil sociodemográfico y laboral de las personas empleadas (sep-2020 a may-2026): sexo, tipo de empleo, edad, instrucción, etnia, sector y horas de trabajo. Estos datos ya vienen como composición directa del empleo, sin necesitar más desagregación.</p>
+
+<main>
+
+  <div class="indicator-bar">
+    <label for="famSelect">Característica</label>
+    <select id="famSelect"></select>
+    <div class="ind-def" id="famDef"></div>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="panel">
+    <div class="panel-title">Lectura de los datos</div>
+    <div class="insight-grid" id="insightGrid"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Evolución histórica — sep-2020 a may-2026 (todas las categorías)</div>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Corte por mes</div>
+    <div class="snap-note">Composición correspondiente a <b id="snapTrimLabel"></b> — elige otro mes específico:</div>
+    <select class="trim-select" id="trimSelect"></select>
+    <div class="chart-wrap short"><canvas id="snapChart"></canvas></div>
+  </div>
+
+  <details class="tech-notes">
+    <summary>⚠ Notas técnicas, fuente y metodología</summary>
+    <div class="tn-body">
+      <h4>Fuente</h4>
+      <p style="margin:0 0 4px 0;">Encuesta de Empleo, Desempleo y Subempleo (ENEMDU) — Mensual, Instituto Nacional de Estadística y Censos (INEC).</p>
+
+      <h4>Qué mide esta hoja</h4>
+      <p style="margin:0;">A diferencia de Poblaciones y Tasas, esta hoja no cruza indicadores contra Área/Sexo/Edad/Etnia: cada característica (Sexo, Tipo de Empleado, Grupos de edad, etc.) ya es en sí misma una desagregación directa de la población empleada, expresada como porcentaje de esa población (excepto "Horas habituales promedio", que se expresa en horas).</p>
+
+      <h4>Diferencia con la versión trimestral</h4>
+      <p style="margin:0;">La hoja mensual de origen no incluye la característica "Rama de Actividad" (CIIU 4.0) que sí trae la versión trimestral — esa fila simplemente no existe en el archivo mensual, así que no aparece como opción aquí.</p>
+
+      <h4>Sobre las notas (1), (2) y (3) del Excel original</h4>
+      <p style="margin:0;">El archivo fuente marca algunas características con estos superíndices, pero no incluye el texto de la nota correspondiente en la hoja. Con base en la terminología estándar de la ENEMDU: (1) Tipo de Empleado distingue si la persona trabaja en el sector público o privado; (2) Tipo de Trabajo distingue empleo asalariado (con relación de dependencia patronal) de empleo independiente (cuenta propia, empleador, etc.); (3) las horas habituales se refieren a las horas de trabajo declaradas como normales en la ocupación principal y secundaria.</p>
+
+      <h4>Cobertura</h4>
+      <p style="margin:0;">Se muestra únicamente el período con levantamiento mensual continuo de la ENEMDU: septiembre de 2020 a mayo de 2026.</p>
+
+      <h4>Comparabilidad histórica (2020–2021)</h4>
+      <p style="margin:0;">Desde 2020 hasta mayo de 2021 la ENEMDU implementó cambios metodológicos asociados al tamaño y distribución de la muestra, el nivel de representatividad de los estimadores y la construcción de factores de ponderación, lo que afectó la comparabilidad histórica de las cifras oficiales. Más información en la <a href="https://bit.ly/3hQMHRE" target="_blank" rel="noopener">nota técnica del INEC</a>.</p>
+
+      <h4>Cómo citar</h4>
+      <div class="cita">INEC. (2026). <i>Principales resultados mercado laboral mensual-ENEMDU</i>. <a href="https://www.ecuadorencifras.gob.ec/enemdu-mensual/" target="_blank" rel="noopener">https://www.ecuadorencifras.gob.ec/enemdu-mensual/</a></div>
+    </div>
+  </details>
+
+  <div class="gov-close"><img src="../imagenes/EL_NUEVO_ECUADOR_LOGO.png" alt="Gobierno del Ecuador"></div>
+
+</main>
+
+<footer>ENEMDU · Instituto Nacional de Estadística y Censos (INEC) — Panel elaborado por la Dirección de Estudios y Análisis, Subsecretaría de Gestión de Datos y Estudio, Ministerio de Trabajo y Desarrollo Humano</footer>
+
+<script>
+const RAW = {"trimestres":["sep-20","oct-20","nov-20","dic-20","ene-21","feb-21","mar-21","abr-21","may-21","jun-21","jul-21","ago-21","sep-21","oct-21","nov-21","dic-21","ene-22","feb-22","mar-22","abr-22","may-22","jun-22","jul-22","ago-22","sep-22","oct-22","nov-22","dic-22","ene-23","feb-23","mar-23","abr-23","may-23","jun-23","jul-23","ago-23","sep-23","oct-23","nov-23","dic-23","ene-24","feb-24","mar-24","abr-24","may-24","jun-24","jul-24","ago-24","sep-24","oct-24","nov-24","dic-24","ene-25","feb-25","mar-25","abr-25","may-25","jun-25","jul-25","ago-25","sep-25","oct-25","nov-25","dic-25","ene-26","feb-26","mar-26","abr-26","may-26"],"families":[{"family":"Sexo","items":[{"label":"Hombre","values":[59.58,59.52,59.31,59.4,58.64,58.85,60.0,58.68,57.89,59.04,59.33,58.71,58.3,58.89,58.29,57.74,58.5,57.37,58.6,58.08,58.04,58.25,57.67,57.63,57.33,57.87,58.68,58.8,58.38,58.07,59.15,58.86,59.56,58.69,58.62,58.82,58.16,59.26,58.9,58.28,59.16,58.97,58.69,58.74,59.29,58.35,58.95,59.47,58.52,60.17,58.24,59.55,59.25,58.21,59.34,59.0,59.41,58.7,60.35,58.05,57.88,59.07,58.33,59.87,60.52,59.06,59.25,57.95,57.54]},{"label":"Mujer","values":[40.42,40.48,40.69,40.6,41.36,41.15,40.0,41.32,42.11,40.96,40.67,41.29,41.7,41.11,41.71,42.26,41.5,42.63,41.4,41.92,41.96,41.75,42.33,42.37,42.67,42.13,41.32,41.2,41.62,41.93,40.85,41.14,40.44,41.31,41.38,41.18,41.84,40.74,41.1,41.72,40.84,41.03,41.31,41.26,40.71,41.65,41.05,40.53,41.48,39.83,41.76,40.45,40.75,41.79,40.66,41.0,40.59,41.3,39.65,41.95,42.12,40.93,41.67,40.13,39.48,40.94,40.75,42.05,42.46]}]},{"family":"Tipo de Empleado(1)","items":[{"label":"Empleado Público","values":[7.51,6.85,6.44,7.06,7.16,7.44,7.42,6.68,7.35,6.79,6.68,7.59,6.66,6.91,7.18,6.9,6.63,6.88,6.91,6.73,6.73,6.62,6.9,7.09,6.55,7.45,6.99,7.09,6.81,6.02,6.65,7.44,6.87,6.84,6.76,6.4,6.64,6.81,6.22,7.22,7.48,6.7,6.69,7.05,6.39,7.08,6.27,6.24,7.2,6.21,6.18,6.53,6.56,6.39,7.15,6.88,6.68,7.09,6.91,6.49,6.69,7.08,6.17,6.38,6.47,6.33,6.22,6.97,7.15]},{"label":"Empleado Privado","values":[92.49,93.15,93.56,92.94,92.84,92.56,92.58,93.32,92.65,93.21,93.32,92.41,93.34,93.09,92.82,93.1,93.37,93.12,93.09,93.27,93.27,93.38,93.1,92.91,93.45,92.55,93.01,92.91,93.19,93.98,93.35,92.56,93.13,93.16,93.24,93.6,93.36,93.19,93.78,92.78,92.52,93.3,93.31,92.95,93.61,92.92,93.73,93.76,92.8,93.79,93.82,93.47,93.44,93.61,92.85,93.12,93.32,92.91,93.09,93.51,93.31,92.92,93.83,93.62,93.53,93.67,93.78,93.03,92.85]}]},{"family":"Tipo de Trabajo(2)","items":[{"label":"Empleo Asalariado","values":[53.68,51.17,53.8,52.87,52.65,54.13,53.69,52.93,53.51,53.05,52.7,55.72,54.08,53.7,56.03,53.95,52.06,54.61,55.68,53.0,54.05,54.68,53.98,55.25,53.23,52.5,57.95,54.89,53.3,55.42,56.35,55.54,56.24,57.32,54.82,54.04,55.84,54.79,55.84,55.15,54.6,55.57,55.44,54.77,54.17,56.23,54.58,54.87,55.31,55.74,55.61,53.91,55.75,57.39,55.67,55.93,56.36,57.0,59.53,56.48,57.91,58.56,56.42,56.09,56.64,58.22,58.07,56.23,57.45]},{"label":"Empleo Independiente","values":[46.32,48.83,46.2,47.13,47.35,45.87,46.31,47.07,46.49,46.95,47.3,44.28,45.92,46.3,43.97,46.05,47.94,45.39,44.32,47.0,45.95,45.32,46.02,44.75,46.77,47.5,42.05,45.11,46.7,44.58,43.65,44.46,43.76,42.68,45.18,45.96,44.16,45.21,44.16,44.85,45.4,44.43,44.56,45.23,45.83,43.77,45.42,45.13,44.69,44.26,44.39,46.09,44.25,42.61,44.33,44.07,43.64,43.0,40.47,43.52,42.09,41.44,43.58,43.91,43.36,41.78,41.93,43.77,42.55]}]},{"family":"Grupos de edad","items":[{"label":"Entre 15 y 24 años","values":[16.96,17.78,16.85,16.98,15.6,16.52,16.96,16.92,17.61,16.78,17.43,17.43,16.89,17.42,16.59,16.59,17.98,16.96,16.9,16.47,16.48,16.69,16.75,15.88,15.36,15.87,16.11,14.88,15.6,16.45,16.47,16.1,15.86,16.31,15.81,17.27,16.71,16.7,17.56,15.88,16.8,16.64,16.51,14.98,15.53,14.92,15.15,16.05,14.62,14.42,15.93,16.04,15.55,16.11,16.27,13.17,15.35,15.88,13.7,16.45,15.15,14.78,15.6,14.21,13.42,13.88,15.35,13.97,15.15]},{"label":"Entre 25 y 34 años","values":[22.18,21.24,22.53,21.6,22.64,22.82,21.21,22.44,21.32,20.68,22.08,21.51,21.91,21.95,22.08,21.77,21.55,21.67,21.52,21.35,22.04,21.82,20.45,20.98,22.05,21.84,20.63,22.43,22.19,21.46,22.17,21.8,21.52,22.42,21.19,20.54,22.5,21.71,19.87,22.12,20.82,20.89,21.02,21.86,21.5,22.51,21.1,19.48,22.3,22.34,20.19,20.75,21.22,20.96,21.53,21.65,21.13,20.91,22.02,21.04,21.56,21.79,21.26,21.2,22.18,20.74,20.76,21.53,20.44]},{"label":"Entre 35 y 44 años","values":[23.04,21.96,22.64,22.32,23.44,23.34,24.38,22.69,24.66,24.37,22.93,23.76,23.86,22.23,22.82,22.88,20.83,23.16,22.35,23.2,23.14,22.67,23.65,22.76,22.67,22.56,22.91,22.47,22.29,22.71,21.16,22.06,22.99,22.05,22.77,23.46,21.56,21.32,24.02,22.15,22.3,23.29,21.34,22.56,21.91,21.65,21.95,22.8,22.71,21.61,22.3,21.69,22.23,22.72,21.1,23.79,22.7,23.21,24.02,22.94,24.02,23.43,23.33,22.26,25.16,24.16,24.04,25.53,22.69]},{"label":"Entre 45 y 64 años","values":[31.52,31.3,30.36,31.62,30.91,29.88,30.76,30.06,29.45,30.84,29.76,30.11,29.6,30.48,30.8,31.29,32.08,30.37,32.0,31.12,30.86,31.37,30.88,32.29,31.87,31.34,32.66,32.32,31.79,31.35,32.44,32.32,31.11,31.48,32.41,31.13,31.23,31.95,30.38,32.18,31.94,31.35,33.23,32.39,33.55,32.29,33.14,33.13,31.79,32.95,33.17,33.02,32.59,31.43,33.13,33.28,32.06,31.82,32.34,30.89,30.61,31.66,30.85,32.1,31.65,33.11,31.33,30.49,33.91]},{"label":"65 años y más","values":[6.29,7.73,7.62,7.48,7.41,7.44,6.69,7.89,6.96,7.33,7.79,7.19,7.75,7.92,7.71,7.46,7.56,7.85,7.22,7.86,7.48,7.45,8.27,8.09,8.04,8.38,7.7,7.9,8.13,8.03,7.75,7.72,8.51,7.73,7.82,7.6,8.0,8.32,8.17,7.67,8.14,7.83,7.91,8.22,7.51,8.63,8.66,8.53,8.58,8.68,8.41,8.5,8.42,8.78,7.98,8.11,8.75,8.18,7.92,8.69,8.65,8.34,8.96,10.23,7.59,8.12,8.52,8.47,7.81]}]},{"family":"Nivel de Instrucción","items":[{"label":"Ninguno","values":[3.54,3.81,3.14,3.52,3.42,2.37,2.54,3.32,2.28,2.87,3.03,2.64,2.47,2.51,2.55,2.34,2.98,2.99,2.95,2.98,2.46,3.0,2.41,2.64,2.5,3.34,2.56,2.79,2.84,2.95,3.22,3.22,2.84,2.81,2.96,2.44,2.61,4.01,2.72,2.74,3.86,2.95,3.32,3.12,2.17,2.71,3.32,2.43,3.16,3.22,3.1,3.46,3.51,3.65,2.25,3.5,3.07,2.41,3.47,2.68,2.43,2.57,2.43,4.02,2.68,2.5,3.09,1.92,2.41]},{"label":"Educación Básica","values":[41.36,44.09,43.82,42.25,42.49,42.25,40.93,41.31,41.94,40.6,40.01,40.05,40.06,40.15,41.08,40.65,40.49,40.4,39.92,40.45,41.21,39.93,40.43,39.06,41.22,38.73,40.51,39.24,41.47,41.97,39.96,40.61,41.56,40.12,41.67,40.2,40.38,40.02,40.07,41.08,41.02,40.86,40.65,40.88,41.18,40.2,39.35,39.38,39.02,41.91,37.82,41.56,40.07,38.35,39.03,38.3,39.29,37.49,38.73,39.42,36.85,39.01,37.72,39.22,38.56,39.09,38.76,39.13,38.3]},{"label":"Educación Media/Bachillerato","values":[35.73,32.7,34.24,34.78,32.23,33.43,36.46,34.55,35.17,35.45,36.22,36.54,36.23,36.15,34.96,35.47,37.2,36.31,35.46,35.43,35.46,36.98,36.21,36.61,36.11,37.85,36.75,36.4,35.83,36.5,36.2,36.38,35.82,36.01,36.13,36.75,36.0,35.51,37.13,35.07,33.95,36.42,36.19,35.62,36.47,35.93,37.8,36.97,36.56,34.87,38.27,36.23,35.38,37.26,37.45,38.15,36.91,38.95,37.94,36.31,39.11,37.82,38.35,36.96,38.08,38.07,38.02,38.82,37.79]},{"label":"Superior","values":[19.17,19.22,18.46,19.16,21.6,21.72,19.81,20.49,20.36,20.94,20.39,20.27,20.96,20.59,21.05,21.32,19.18,20.14,21.52,20.79,20.73,19.98,20.74,21.43,19.93,19.94,19.84,21.24,19.67,18.43,20.42,19.72,19.5,20.9,18.98,20.39,20.54,20.18,19.94,20.75,21.01,19.68,19.64,20.14,20.03,21.0,19.31,21.05,20.94,19.7,20.53,18.44,20.79,19.94,21.02,19.93,20.44,20.77,19.68,21.52,21.46,20.54,21.26,19.61,20.57,20.23,19.9,20.03,21.34]}]},{"family":"Etnia","items":[{"label":"Indígena","values":[13.43,13.79,12.77,14.24,13.31,9.73,12.3,12.92,12.77,13.54,13.49,11.0,12.8,14.04,11.34,12.75,14.57,14.41,12.97,13.58,13.59,12.32,14.54,9.69,12.6,14.84,11.18,12.94,13.84,15.34,12.34,13.81,13.86,15.1,14.92,15.03,16.37,15.13,17.03,14.82,16.09,15.43,17.86,15.02,15.6,17.25,15.76,15.97,16.84,16.0,16.14,19.53,18.53,19.73,19.98,15.01,14.32,15.71,13.2,16.98,17.31,15.56,17.09,16.56,16.98,15.47,16.69,16.9,15.65]},{"label":"Afroecuatoriano/a Afrodescendiente","values":[3.45,4.14,4.26,3.65,3.73,2.94,2.65,3.13,2.75,3.28,3.4,3.3,3.62,4.63,3.9,3.32,4.05,3.11,2.85,3.78,3.08,2.88,3.31,3.27,3.2,3.63,2.85,2.11,3.75,3.31,2.49,3.08,2.84,2.78,3.11,3.06,2.36,4.78,2.96,2.71,4.36,3.48,2.32,2.89,3.33,2.09,3.01,3.86,2.35,3.72,3.37,2.54,3.72,2.61,2.54,2.98,3.25,2.5,3.4,2.8,2.96,4.0,3.02,2.72,3.15,3.2,2.88,3.72,2.84]},{"label":"Mestizo/a","values":[77.04,76.23,76.6,76.46,75.95,80.3,79.51,79.09,80.08,76.08,77.39,81.16,77.55,74.77,79.03,77.45,76.3,77.3,77.65,77.33,78.76,80.32,77.88,82.38,80.69,76.89,82.44,80.05,79.0,75.39,80.5,79.25,79.01,77.08,78.05,77.41,77.96,76.42,76.2,77.79,74.96,77.08,75.66,79.12,78.46,77.42,78.65,75.96,78.43,77.5,78.33,74.34,73.58,73.51,75.06,78.61,78.03,77.39,78.98,76.19,76.3,75.85,74.92,77.04,75.29,76.62,76.77,75.59,78.04]},{"label":"Blanco/a","values":[0.99,0.86,1.13,1.03,1.3,1.09,0.95,1.14,1.6,1.41,1.09,1.12,1.42,1.56,1.45,1.43,1.25,1.08,0.99,1.35,1.16,0.86,0.87,0.63,0.94,0.79,0.65,0.72,0.8,0.72,0.79,0.67,0.59,0.88,0.76,0.89,0.73,0.67,0.82,0.65,0.65,0.54,0.76,0.45,0.63,0.56,0.56,0.51,0.61,0.72,0.34,0.67,0.6,0.54,0.58,0.73,0.67,1.71,0.61,0.71,0.59,0.39,0.32,0.58,0.75,0.6,0.57,0.58,0.52]},{"label":"Montubio/a","values":[5.08,4.96,5.21,4.61,5.69,5.95,4.59,3.69,2.8,5.65,4.57,3.42,4.54,4.98,4.23,5.05,3.8,4.07,5.54,3.94,3.4,3.59,3.4,4.02,2.57,3.82,2.88,4.15,2.61,5.23,3.88,3.19,3.7,4.16,3.16,3.57,2.56,2.81,2.94,3.99,3.93,3.47,3.38,2.52,1.9,2.67,1.96,3.7,1.76,2.03,1.81,2.9,3.56,3.54,1.79,2.66,3.71,2.68,3.72,3.29,2.82,4.15,4.64,3.08,3.82,4.11,3.07,3.2,2.95]},{"label":"Otro","values":[0.01,0.02,0.02,0.0,0.02,0,0.0,0.03,0.0,0.03,0.05,0.01,0.07,0.01,0.04,0.01,0.02,0.04,0,0.03,0.02,0.04,0.01,0.01,0.0,0.01,0.01,0.02,0.0,0.01,0.01,0.0,0.01,0.0,0.0,0.04,0.01,0.19,0.04,0.05,0.01,0.0,0.02,0.0,0.09,0.01,0.07,0.01,0.01,0.03,0.01,0.02,0.02,0.07,0.05,0.01,0.02,0.01,0.09,0.03,0.02,0.05,0.01,0.01,0.0,0.0,0.01,0.01,0.01]}]},{"family":"Sectorización de la Población","items":[{"label":"Sector Formal","values":[41.61,42.56,40.98,40.95,41.85,41.4,42.09,39.9,39.68,42.33,40.56,41.24,43.91,41.41,43.79,43.22,41.76,42.55,43.94,42.66,41.93,42.98,43.29,43.23,43.66,42.27,43.69,42.58,41.26,41.43,42.24,42.41,43.16,43.15,42.05,41.67,41.97,41.31,42.72,41.32,42.76,41.54,40.7,42.69,42.09,42.62,42.17,41.9,41.11,41.37,42.76,38.44,40.5,43.34,40.59,41.55,44.22,41.52,44.52,41.42,42.25,43.77,42.77,41.86,42.11,43.89,39.0,40.35,41.34]},{"label":"Sector Informal","values":[52.48,52.09,52.85,51.61,51.01,49.85,50.91,52.66,52.67,49.94,51.22,50.6,49.18,52.17,49.51,50.65,53.13,51.38,50.98,51.72,51.75,51.58,51.94,52.19,52.09,53.74,51.18,53.37,54.98,54.26,53.67,53.84,53.27,52.75,54.76,54.59,54.4,55.05,54.2,55.69,54.61,55.1,55.38,53.41,54.44,53.46,54.41,54.37,55.38,54.89,53.53,57.99,55.99,52.41,55.47,54.11,51.77,54.46,51.27,54.27,53.1,51.47,53.42,54.17,54.48,51.79,56.3,55.75,52.84]},{"label":"Empleo Doméstico","values":[1.9,1.52,1.99,2.59,1.78,1.95,1.88,1.9,2.03,1.97,2.05,2.36,2.41,2.18,2.18,2.29,1.89,2.26,2.12,2.05,2.18,2.26,2.06,2.08,2.28,2.34,2.52,2.52,2.26,2.4,2.52,2.23,2.11,2.55,2.14,2.75,2.18,2.25,1.99,2.22,1.92,2.12,2.76,1.91,2.08,2.64,2.35,2.39,2.18,2.32,2.2,2.38,1.97,2.35,2.2,2.41,2.63,2.34,2.92,2.74,2.32,2.9,2.29,2.41,2.17,3.06,2.18,2.36,3.51]},{"label":"No Clasificados por Sector","values":[4.01,3.83,4.19,4.85,5.35,6.8,5.12,5.54,5.62,5.76,6.17,5.8,4.5,4.24,4.51,3.84,3.21,3.82,2.95,3.57,4.14,3.19,2.7,2.5,1.96,1.65,2.61,1.54,1.5,1.91,1.58,1.51,1.46,1.56,1.05,1.0,1.45,1.38,1.09,0.78,0.71,1.24,1.16,1.99,1.39,1.28,1.07,1.33,1.33,1.42,1.52,1.2,1.54,1.89,1.74,1.93,1.38,1.68,1.29,1.58,2.33,1.85,1.52,1.56,1.24,1.26,2.52,1.54,2.31]}]},{"family":"Horas habituales promedio de trabajo a la semana (ocupación principal y secundaria) (3)","items":[{"label":"Total","values":[35.96,35.14,35.0,35.36,35.52,35.77,35.27,35.27,35.16,35.7,35.43,35.7,35.74,35.68,36.22,36.17,35.46,35.54,35.41,35.08,35.02,35.28,34.91,35.5,35.62,34.69,35.27,35.17,35.06,35.11,35.17,35.2,35.51,35.22,35.08,34.69,35.36,35.52,35.1,35.54,34.97,34.88,35.35,35.26,34.86,35.09,35.5,34.74,34.69,34.84,34.84,34.7,34.69,35.25,35.04,35.43,35.59,35.7,36.38,34.8,34.7,35.58,35.1,35.47,35.14,35.43,34.5,34.58,35.17]},{"label":"Hombre","values":[38.34,37.58,37.49,37.8,38.18,38.06,38.02,38.2,37.99,38.57,38.4,38.49,38.6,38.93,38.85,39.38,38.46,38.99,38.06,38.03,38.19,38.39,37.84,39.0,39.14,37.78,38.01,38.08,37.92,37.98,37.84,37.75,37.77,37.74,38.0,37.53,37.96,38.15,38.0,38.24,37.84,37.55,37.63,37.64,37.5,37.54,37.84,37.28,37.5,37.16,37.46,37.15,36.8,37.53,37.02,37.96,37.77,38.29,38.53,37.15,37.17,37.98,37.68,37.92,37.45,37.68,36.99,37.47,37.62]},{"label":"Mujer","values":[32.46,31.55,31.37,31.78,31.74,32.5,31.14,31.12,31.28,31.58,31.1,31.75,31.74,31.02,32.56,31.78,31.23,30.9,31.66,30.99,30.63,30.95,30.92,30.75,30.9,30.45,31.36,31.03,31.04,31.13,31.3,31.55,32.19,31.64,30.94,30.64,31.74,31.7,30.94,31.76,30.82,31.05,32.12,31.86,31.02,31.65,32.13,31.0,30.73,31.34,31.19,31.11,31.62,32.08,32.14,31.78,32.41,32.02,33.1,31.55,31.31,32.12,31.48,31.82,31.6,32.18,30.89,30.59,31.86]}]}]};
+const TRIMS = RAW.trimestres;
+const FAMILIES = RAW.families;
+
+const IS_HOURS = (fam) => fam.startsWith('Horas habituales');
+
+const FAM_DEF = {"Sexo": "Composición del empleo según sexo.", "Tipo de Empleado(1)": "Composición del empleo según si la persona trabaja para el sector público o privado.", "Tipo de Trabajo(2)": "Composición del empleo según si es asalariado (con relación de dependencia) o independiente (cuenta propia, empleador, etc.).", "Grupos de edad": "Composición del empleo según grupo etario.", "Nivel de Instrucción": "Composición del empleo según el nivel de instrucción alcanzado.", "Etnia": "Composición del empleo según autoidentificación étnica.", "Sectorización de la Población": "Composición del empleo según sector formal, informal, doméstico o no clasificado.", "Horas habituales promedio de trabajo a la semana (ocupación principal y secundaria) (3)": "Horas habituales de trabajo por semana (ocupación principal y secundaria), en promedio, por sexo."};
+
+const INSIGHTS = {"Sexo": {"bueno": ["La participación de las mujeres en el empleo subió de 40.4% a 42.5% desde sep-2020 (+2.04 pp), la variación más grande de este grupo."], "malo": ["Los hombres siguen concentrando 57.5% del empleo en may-2026; la brecha de género se redujo levemente pero está lejos de cerrarse."]}, "Tipo de Empleado(1)": {"bueno": [], "malo": ["El empleo público sigue perdiendo peso relativo, aunque de forma marginal: bajó de 7.5% a 7.2% desde sep-2020 (-0.36 pp)."]}, "Tipo de Trabajo(2)": {"bueno": ["El empleo asalariado (con relación de dependencia) ganó terreno: subió de 53.7% a 57.5% desde sep-2020 (+3.78 pp)."], "malo": ["El empleo independiente (cuenta propia) sigue representando más del 42% del empleo total — una porción amplia de trabajo típicamente sin las protecciones de una relación de dependencia formal."]}, "Grupos de edad": {"bueno": [], "malo": ["La participación de los jóvenes (15-24 años) en el empleo bajó de 17.0% a 15.2% desde sep-2020 (-1.81 pp), la caída más marcada de todos los grupos etarios."]}, "Nivel de Instrucción": {"bueno": ["La proporción de empleados con educación superior subió de 19.2% a 21.3% desde sep-2020 (+2.17 pp), el mayor avance del grupo."], "malo": ["La proporción con solo educación básica bajó (-3.06 pp), pero sigue siendo el nivel más común entre las personas empleadas (38.3%)."]}, "Etnia": {"bueno": [], "malo": ["La composición étnica del empleo se mantiene muy concentrada en Mestizo (78.0%); Montubio (-2.13 pp) y Blanco (-0.47 pp) son los grupos que más retroceden desde sep-2020."]}, "Sectorización de la Población": {"bueno": [], "malo": ["El sector informal se mantiene como la categoría más grande (52.8% del empleo) y sigue creciendo levemente (+0.36 pp desde sep-2020); el sector formal está prácticamente estancado (41.6% → 41.3%)."]}, "Horas habituales promedio de trabajo a la semana (ocupación principal y secundaria) (3)": {"bueno": [], "malo": ["La brecha de horas trabajadas por sexo se mantiene: los hombres trabajan en promedio 37.6 horas semanales vs 31.9 de las mujeres, una diferencia de casi 6 horas que apenas se ha movido desde sep-2020."]}};
+
+let currentFamily = FAMILIES[0].family;
+let currentSnapTrim = TRIMS[TRIMS.length-1];
+let trendChart, snapChart;
+
+const PALETTE = ['#0b2d52','#1d6fa8','#c8992a','#2f7d5a','#b8433f','#7a5c9e'];
+
+Chart.register(ChartDataLabels);
+Chart.defaults.set('plugins.datalabels', {display:false});
+
+function famByName(name){
+  return FAMILIES.find(f => f.family === name);
+}
+
+function buildSelect(){
+  const sel = document.getElementById('famSelect');
+  sel.innerHTML = FAMILIES.map(f => {
+    const label = f.family.replace(/\(\d\)$/,'').replace(/\s*\*\*\n.*/,'').trim();
+    return `<option value="${f.family}" ${f.family===currentFamily?'selected':''}>${label}</option>`;
+  }).join('');
+  sel.addEventListener('change', () => {
+    currentFamily = sel.value;
+    renderAll();
+  });
+}
+
+function buildTrimSelect(){
+  const sel = document.getElementById('trimSelect');
+  sel.innerHTML = TRIMS.map(t => `<option value="${t}" ${t===currentSnapTrim?'selected':''}>${t.trim()}</option>`).reverse().join('');
+  sel.addEventListener('change', () => {
+    currentSnapTrim = sel.value;
+    renderSnap();
+  });
+}
+
+function fmtVal(v, fam){
+  if (v==null) return '—';
+  return IS_HOURS(fam) ? v.toFixed(1)+' h' : v.toFixed(1)+'%';
+}
+
+function renderDef(){
+  document.getElementById('famDef').textContent = FAM_DEF[currentFamily] || '';
+}
+
+function renderInsights(){
+  const ins = INSIGHTS[currentFamily] || {bueno:[], malo:[]};
+  const grid = document.getElementById('insightGrid');
+  const listHtml = (arr) => arr.length
+    ? `<ul>${arr.map(t=>`<li>${t}</li>`).join('')}</ul>`
+    : `<div class="insight-empty">Sin hallazgos destacados para este corte.</div>`;
+  grid.innerHTML = `
+    <div class="insight-box bueno">
+      <div class="ib-title">✓ Lo positivo</div>
+      ${listHtml(ins.bueno)}
+    </div>
+    <div class="insight-box malo">
+      <div class="ib-title">⚠ Lo que preocupa</div>
+      ${listHtml(ins.malo)}
+    </div>`;
+}
+
+function renderKpis(){
+  const fam = famByName(currentFamily);
+  const grid = document.getElementById('kpiGrid');
+  const lastIdx = TRIMS.length-1;
+
+  // categoría con mayor valor actual
+  let top = fam.items[0];
+  fam.items.forEach(it => { if ((it.values[lastIdx]||-Infinity) > (top.values[lastIdx]||-Infinity)) top = it; });
+
+  // mayor y menor cambio IV-2020 -> I-2026
+  let maxUp = null, maxDown = null;
+  fam.items.forEach(it => {
+    const first = it.values[0], last = it.values[lastIdx];
+    if (first==null || last==null) return;
+    const diff = last-first;
+    if (maxUp===null || diff > maxUp.diff) maxUp = {label:it.label, diff};
+    if (maxDown===null || diff < maxDown.diff) maxDown = {label:it.label, diff};
+  });
+
+  const unit = IS_HOURS(currentFamily) ? 'h' : 'pp';
+
+  grid.innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-lbl">Categoría con mayor peso (${TRIMS[lastIdx].trim()})</div>
+      <div class="kpi-val">${top.label}</div>
+      <div class="kpi-sub">${fmtVal(top.values[lastIdx], currentFamily)}</div>
+    </div>
+    <div class="kpi-card hi">
+      <div class="kpi-lbl">Mayor incremento desde IV-2020</div>
+      <div class="kpi-val">${maxUp?maxUp.label:'—'}</div>
+      <div class="kpi-sub">${maxUp?('▲ '+Math.abs(maxUp.diff).toFixed(2)+' '+unit):'—'}</div>
+    </div>
+    <div class="kpi-card lo">
+      <div class="kpi-lbl">Mayor caída desde IV-2020</div>
+      <div class="kpi-val">${maxDown?maxDown.label:'—'}</div>
+      <div class="kpi-sub">${maxDown?('▼ '+Math.abs(maxDown.diff).toFixed(2)+' '+unit):'—'}</div>
+    </div>`;
+}
+
+function renderTrend(){
+  const fam = famByName(currentFamily);
+  const labels = TRIMS.map(t=>t.trim());
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (trendChart) trendChart.destroy();
+  const datasets = fam.items.map((it,i) => ({
+    label: it.label, data: it.values, borderColor: PALETTE[i%PALETTE.length],
+    backgroundColor: PALETTE[i%PALETTE.length], borderWidth: 2.5, tension:.3, pointRadius:2.5,
+  }));
+  trendChart = new Chart(ctx, {
+    type:'line',
+    data:{labels, datasets},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11.5}}},
+        tooltip:{callbacks:{label: c => `${c.dataset.label}: ${fmtVal(c.parsed.y, currentFamily)}`}}},
+      scales:{y:{ticks:{callback:v=> IS_HOURS(currentFamily) ? v+'h' : v+'%'}, grid:{color:'#eef1f4'}},
+              x:{grid:{display:false}, ticks:{autoSkip:true, maxRotation:0}}}}
+  });
+}
+
+function renderSnap(){
+  document.getElementById('snapTrimLabel').textContent = currentSnapTrim.trim();
+  const fam = famByName(currentFamily);
+  const idx = TRIMS.indexOf(currentSnapTrim);
+  const labels = fam.items.map(it=>it.label);
+  const vals = fam.items.map(it=>it.values[idx]);
+  const ctx = document.getElementById('snapChart').getContext('2d');
+  if (snapChart) snapChart.destroy();
+  snapChart = new Chart(ctx, {
+    type:'bar',
+    data:{labels, datasets:[{data:vals, backgroundColor:labels.map((_,i)=>PALETTE[i%PALETTE.length]), borderRadius:5}]},
+    options:{responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label: c => fmtVal(c.parsed.y, currentFamily)}},
+        datalabels:{
+          display:true, anchor:'end', align:'top', offset:2,
+          color:'#1c2a3a', font:{family:"Arial, sans-serif", weight:700, size:12},
+          formatter: v => fmtVal(v, currentFamily)
+        }},
+      scales:{
+        y:{ticks:{callback:v=> IS_HOURS(currentFamily) ? v+'h' : v+'%'}, grid:{color:'#eef1f4'}},
+        x:{grid:{display:false}, ticks:{font:{size:11}, maxRotation:20, minRotation:0}}
+      }}
+  });
+}
+
+function renderAll(){
+  renderDef();
+  renderInsights();
+  renderKpis();
+  renderTrend();
+  renderSnap();
+}
+
+buildSelect();
+buildTrimSelect();
+renderAll();
+
+function toggleMenu(id){
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.menu-drop.open').forEach(function(el){
+    if(!el.parentElement.contains(e.target)) el.classList.remove('open');
+  });
+});
+</script>
+<script src="../MDTDH/shared.js"></script>
+<script>
+initSidebar({ activeId: 'pnd-trabajo', basePath: '../' });
+</script>
+
+</body>
+</html>

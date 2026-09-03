@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENEMDU Mensual · Sectorización del Empleo</title>
+<link rel="stylesheet" href="../MDTDH/shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{
+  --azul:#4F449A; --azul-2:#4F449A; --azul-claro:#1d6fa8;
+  --dorado:#F1B620; --dorado-claro:#FEF7DC;
+  --gris-fondo:#f4f6f8; --gris-borde:#dbe1e8; --gris-texto:#4a5568; --texto:#1c2a3a;
+  --verde:#2f7d5a; --rojo:#b8433f;
+}
+*{box-sizing:border-box;}
+body{margin:0; font-family:Arial, sans-serif; background:var(--gris-fondo); color:var(--texto);}
+h1,h2,h3{font-family:'Arial Black', Arial, sans-serif; font-weight:600;}
+a{text-decoration:none; color:inherit;}
+
+.topbar{background:linear-gradient(135deg, var(--azul) 0%, var(--azul-2) 100%); color:#fff; padding:26px 32px; border-bottom:4px solid var(--dorado);}
+.topbar-inner{max-width:1280px; margin:0 auto;}
+.back-link{display:inline-block; margin-bottom:10px; font-size:13px; color:rgba(255,255,255,0.65);}
+.back-link:hover{color:#fff;}
+.eyebrow{font-family:'Arial Black', Arial, sans-serif; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--dorado-claro); font-weight:600;}
+.topbar h1{margin:6px 0 6px 0; font-size:30px; color:#fff;}
+.topbar p{font-size:14.5px; color:rgba(255,255,255,0.65); max-width:760px; margin:0;}
+
+main{max-width:1280px; margin:0 auto; padding:24px 32px 60px 32px;}
+
+.indicator-bar{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:18px 22px; margin-bottom:20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+.indicator-bar label{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--azul-claro);}
+#famSelect{
+  flex:1; min-width:280px; font-family:Arial, sans-serif; font-size:15.5px; font-weight:600; color:var(--azul);
+  padding:11px 14px; border:1px solid var(--gris-borde); border-radius:8px; background:#fff; cursor:pointer;
+}
+.ind-def{font-size:13.5px; color:var(--gris-texto); line-height:1.5; width:100%; margin-top:2px;}
+
+.kpi-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:24px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi-card{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:16px 18px; border-top:4px solid var(--azul-claro);}
+.kpi-card.hi{border-top-color:var(--verde);}
+.kpi-card.lo{border-top-color:var(--rojo);}
+.kpi-lbl{font-family:'Arial Black', Arial, sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--gris-texto); margin-bottom:6px;}
+.kpi-val{font-family:'Arial Black', Arial, sans-serif; font-size:22px; font-weight:700; color:var(--azul); line-height:1.2;}
+.kpi-sub{font-size:12px; color:var(--gris-texto); margin-top:4px;}
+
+.panel{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; padding:20px 22px; margin-bottom:20px;}
+.panel-title{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--azul-claro); margin-bottom:14px;}
+.chart-wrap{position:relative; height:340px;}
+.chart-wrap.short{height:300px;}
+
+.insight-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:800px){.insight-grid{grid-template-columns:1fr;}}
+.insight-box{border-radius:10px; padding:16px 18px;}
+.insight-box.bueno{background:#eef7f1; border-left:5px solid var(--verde);}
+.insight-box.malo{background:#fbedec; border-left:5px solid var(--rojo);}
+.insight-box .ib-title{font-family:'Arial Black', Arial, sans-serif; font-size:13px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;}
+.insight-box.bueno .ib-title{color:var(--verde);}
+.insight-box.malo .ib-title{color:var(--rojo);}
+.insight-box ul{margin:0; padding-left:18px;}
+.insight-box li{font-size:13.5px; line-height:1.55; margin-bottom:8px; color:var(--texto);}
+.insight-box li:last-child{margin-bottom:0;}
+.insight-empty{font-size:13px; color:var(--gris-texto); font-style:italic;}
+
+.trim-select{font-family:Arial, sans-serif; font-size:14px; font-weight:600; color:var(--azul); padding:9px 14px; border:1px solid var(--gris-borde); border-radius:8px; background:#fff; cursor:pointer; margin-bottom:16px;}
+.snap-note{font-size:12.5px; color:var(--gris-texto); margin-bottom:14px;}
+.snap-note b{color:var(--azul);}
+
+details.tech-notes{background:#fff; border:1px solid var(--gris-borde); border-radius:12px; margin-bottom:20px; overflow:hidden;}
+details.tech-notes summary{padding:16px 22px; cursor:pointer; font-weight:700; font-size:14.5px; color:var(--azul); list-style:none; display:flex; align-items:center; justify-content:space-between; font-family:'Arial Black', Arial, sans-serif; letter-spacing:.4px;}
+details.tech-notes summary::-webkit-details-marker{display:none;}
+details.tech-notes summary:after{content:'▸'; transition:transform .15s; color:var(--azul-claro);}
+details.tech-notes[open] summary:after{transform:rotate(90deg);}
+.tn-body{padding:0 22px 20px 22px; font-size:13.5px; color:var(--gris-texto); line-height:1.65;}
+.tn-body h4{font-family:'Arial Black', Arial, sans-serif; font-size:12.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--azul-claro); margin:16px 0 6px 0;}
+.tn-body h4:first-child{margin-top:0;}
+.tn-body ul{margin:4px 0; padding-left:20px;}
+.tn-body li{margin-bottom:5px;}
+.tn-body a{color:var(--azul-claro); text-decoration:underline;}
+.tn-body .cita{background:var(--gris-fondo); border-radius:8px; padding:10px 14px; font-size:12.5px; margin-top:6px;}
+
+footer{text-align:center; padding:26px; font-size:12.5px; color:var(--gris-texto);}
+.hidden{display:none;}
+
+/* ---- nuevo header institucional con trazabilidad y menú de indicadores ---- */
+.ind-header{background:var(--azul); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; border-bottom:3px solid var(--dorado); flex-wrap:wrap; gap:8px;}
+.ind-header-left{display:flex; align-items:center; gap:14px; padding:10px 0;}
+.header-logo{min-width:38px; height:38px; padding:0 6px; box-sizing:border-box; background:var(--dorado); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Arial Black', Arial, sans-serif; font-weight:700; font-size:12.5px; color:var(--azul); flex-shrink:0;}
+.ind-header-title{font-family:'Arial Black', Arial, sans-serif; font-weight:700; font-size:17px; color:#fff; line-height:1.25;}
+.ind-header-sub{font-size:11.5px; color:rgba(255,255,255,0.65); margin-top:1px;}
+.ind-header-right{display:flex; align-items:center; gap:10px; position:relative;}
+.nav-btn{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.28); color:var(--azul-light); padding:7px 14px; border-radius:6px; font-size:12.5px; font-weight:600; cursor:pointer; text-decoration:none; font-family:Arial, sans-serif; white-space:nowrap; display:inline-block;}
+.nav-btn:hover{background:rgba(255,255,255,.18);}
+.menu-drop{position:absolute; top:calc(100% + 8px); right:0; background:#fff; border:1px solid var(--gris-borde); border-radius:10px; box-shadow:0 10px 30px rgba(11,45,82,.22); min-width:290px; padding:8px; display:none; z-index:80;}
+.menu-drop.open{display:block;}
+.menu-drop a{display:block; padding:9px 12px; border-radius:7px; font-size:13.5px; color:var(--azul); text-decoration:none; font-weight:600;}
+.menu-drop a:hover{background:var(--gris-fondo);}
+.menu-drop a.current{background:var(--dorado-claro); color:var(--amarillo-d);}
+.ind-breadcrumb{background:var(--azul-2); padding:9px 32px; font-size:12.5px; color:rgba(255,255,255,0.65);}
+.ind-breadcrumb a{color:rgba(255,255,255,0.65); text-decoration:none;}
+.ind-breadcrumb a:hover{color:#fff;}
+.ind-breadcrumb b{color:var(--dorado-claro); font-weight:700;}
+.page-intro{max-width:1280px; margin:0 auto; padding:20px 32px 0 32px; font-size:13.5px; color:var(--gris-texto); line-height:1.6;}
+
+</style>
+</head>
+<body>
+
+<div id="app-sidebar-mount"></div>
+
+<div class="ind-header">
+  <div class="ind-header-left">
+    <div class="header-logo">MDTDH</div>
+    <div>
+      <div class="ind-header-title">Sectorización del Empleo</div>
+      <div class="ind-header-sub">Ministerio de Trabajo y Desarrollo Humano · ENEMDU Mensual</div>
+    </div>
+  </div>
+  <div class="ind-header-right">
+    <button class="nav-btn" type="button" onclick="toggleMenu('menuMensual')">☰ Menú Mensual</button>
+    <div id="menuMensual" class="menu-drop">
+      <a href="poblaciones_mensual.html">Poblaciones</a>
+      <a href="tasas_mensual.html">Tasas</a>
+      <a href="caracterizacion_empleados_mensual.html">Caracterización de Empleados</a>
+      <a href="caracterizacion_adecuado_pleno_mensual.html">Caracterización de Empleo Adecuado/Pleno</a>
+      <a href="caracterizacion_subempleo_mensual.html">Caracterización de Subempleo</a>
+      <a href="caracterizacion_otro_no_pleno_mensual.html">Caracterización de Otro Empleo no Pleno</a>
+      <a href="caracterizacion_desempleo_mensual.html">Caracterización de Desempleo</a>
+      <a href="sectorizacion_empleo_mensual.html" class="current">Sectorización del Empleo</a>
+    </div>
+    <a class="nav-btn" href="../index_ENEMDU.html">Inicio</a>
+  </div>
+</div>
+<nav class="ind-breadcrumb">
+  <a href="../index_ENEMDU.html">Inicio</a> › <a href="mensual.html">Mensual</a> › <b>Sectorización del Empleo</b>
+</nav>
+<p class="page-intro">Composición del empleo por sector (Formal, Informal, Doméstico, No Clasificado), a nivel Nacional y por Área (Urbano/Rural), sep-2020 a may-2026. Elige un área para ver cómo se reparte el empleo entre sectores y cómo evoluciona en el tiempo.</p>
+
+<main>
+
+  <div class="indicator-bar">
+    <label for="famSelect">Área</label>
+    <select id="famSelect"></select>
+    <div class="ind-def" id="famDef"></div>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="panel">
+    <div class="panel-title">Lectura de los datos</div>
+    <div class="insight-grid" id="insightGrid"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Evolución histórica — sep-2020 a may-2026 (todas las categorías)</div>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Corte por mes</div>
+    <div class="snap-note">Composición correspondiente a <b id="snapTrimLabel"></b> — elige otro mes específico:</div>
+    <select class="trim-select" id="trimSelect"></select>
+    <div class="chart-wrap short"><canvas id="snapChart"></canvas></div>
+  </div>
+
+  <details class="tech-notes">
+    <summary>⚠ Notas técnicas, fuente y metodología</summary>
+    <div class="tn-body">
+      <h4>Fuente</h4>
+      <p style="margin:0 0 4px 0;">Encuesta de Empleo, Desempleo y Subempleo (ENEMDU) — Mensual, Instituto Nacional de Estadística y Censos (INEC).</p>
+
+      <h4>Qué mide esta hoja</h4>
+      <p style="margin:0;">Esta hoja reparte el total de personas empleadas entre cuatro sectores (Formal, Informal, Doméstico, No Clasificado), calculado a nivel Nacional y por Área (Urbano/Rural). Cada área es una desagregación distinta del mismo universo (empleo), no subpoblaciones separadas.</p>
+
+      <h4>Universo de referencia</h4>
+      <p style="margin:0;">Todos los porcentajes de este panel se calculan sobre el total de personas <b>empleadas</b> dentro del área seleccionada (Nacional, Urbano o Rural) — no sobre la PEA total.</p>
+
+      <h4>Sobre los datos previos a 2020</h4>
+      <p style="margin:0;">La hoja fuente incluye datos desde jun-2007, pero en los años previos a la pandemia el desglose Nacional y Rural solo se reporta en diciembre de cada año (el resto de trimestres aparece vacío en el archivo original), mientras que Urbano sí tiene dato en cada corte trimestral. Este panel se limita a partir de sep-2020, donde los tres desgloses (Nacional, Urbano, Rural) ya tienen cobertura mensual completa y comparable.</p>
+
+      <h4>Comparabilidad histórica (2020–2021)</h4>
+      <p style="margin:0;">Desde 2020 hasta mayo de 2021 la ENEMDU implementó cambios metodológicos asociados al tamaño y distribución de la muestra, el nivel de representatividad de los estimadores y la construcción de factores de ponderación, lo que afectó la comparabilidad histórica de las cifras oficiales. Más información en la <a href="https://bit.ly/3hQMHRE" target="_blank" rel="noopener">nota técnica del INEC</a>.</p>
+
+      <h4>Cómo citar</h4>
+      <div class="cita">INEC. (2026). <i>Principales resultados mercado laboral mensual-ENEMDU</i>. <a href="https://www.ecuadorencifras.gob.ec/enemdu-mensual/" target="_blank" rel="noopener">https://www.ecuadorencifras.gob.ec/enemdu-mensual/</a></div>
+    </div>
+  </details>
+
+  <div class="gov-close"><img src="../imagenes/EL_NUEVO_ECUADOR_LOGO.png" alt="Gobierno del Ecuador"></div>
+
+</main>
+
+<footer>ENEMDU · Instituto Nacional de Estadística y Censos (INEC) — Panel elaborado por la Dirección de Estudios y Análisis, Subsecretaría de Gestión de Datos y Estudio, Ministerio de Trabajo y Desarrollo Humano</footer>
+
+<script>
+const RAW = {"trimestres":["sep-20","oct-20","nov-20","dic-20","ene-21","feb-21","mar-21","abr-21","may-21","jun-21","jul-21","ago-21","sep-21","oct-21","nov-21","dic-21","ene-22","feb-22","mar-22","abr-22","may-22","jun-22","jul-22","ago-22","sep-22","oct-22","nov-22","dic-22","ene-23","feb-23","mar-23","abr-23","may-23","jun-23","jul-23","ago-23","sep-23","oct-23","nov-23","dic-23","ene-24","feb-24","mar-24","abr-24","may-24","jun-24","jul-24","ago-24","sep-24","oct-24","nov-24","dic-24","ene-25","feb-25","mar-25","abr-25","may-25","jun-25","jul-25","ago-25","sep-25","oct-25","nov-25","dic-25","ene-26","feb-26","mar-26","abr-26","may-26"],"families":[{"family":"Nacional","items":[{"label":"Sector Formal","values":[41.61,42.56,40.98,40.95,41.85,41.4,42.09,39.9,39.68,42.33,40.56,41.24,43.91,41.41,43.79,43.22,41.76,42.55,43.94,42.66,41.93,42.98,43.29,43.23,43.66,42.27,43.69,42.58,41.26,41.43,42.24,42.41,43.16,43.15,42.05,41.67,41.97,41.31,42.72,41.32,42.76,41.54,40.7,42.69,42.09,42.62,42.17,41.9,41.11,41.37,42.76,38.44,40.5,43.34,40.59,41.55,44.22,41.52,44.52,41.42,42.25,43.77,42.77,41.86,42.11,43.89,39.0,40.35,41.34]},{"label":"Sector Informal","values":[52.48,52.09,52.85,51.61,51.01,49.85,50.91,52.66,52.67,49.94,51.22,50.6,49.18,52.17,49.51,50.65,53.13,51.38,50.98,51.72,51.75,51.58,51.94,52.19,52.09,53.74,51.18,53.37,54.98,54.26,53.67,53.84,53.27,52.75,54.76,54.59,54.4,55.05,54.2,55.69,54.61,55.1,55.38,53.41,54.44,53.46,54.41,54.37,55.38,54.89,53.53,57.99,55.99,52.41,55.47,54.11,51.77,54.46,51.27,54.27,53.1,51.47,53.42,54.17,54.48,51.79,56.3,55.75,52.84]},{"label":"Empleo Doméstico","values":[1.9,1.52,1.99,2.59,1.78,1.95,1.88,1.9,2.03,1.97,2.05,2.36,2.41,2.18,2.18,2.29,1.89,2.26,2.12,2.05,2.18,2.26,2.06,2.08,2.28,2.34,2.52,2.52,2.26,2.4,2.52,2.23,2.11,2.55,2.14,2.75,2.18,2.25,1.99,2.22,1.92,2.12,2.76,1.91,2.08,2.64,2.35,2.39,2.18,2.32,2.2,2.38,1.97,2.35,2.2,2.41,2.63,2.34,2.92,2.74,2.32,2.9,2.29,2.41,2.17,3.06,2.18,2.36,3.51]},{"label":"No Clasificados por Sector","values":[4.01,3.83,4.19,4.85,5.35,6.8,5.12,5.54,5.62,5.76,6.17,5.8,4.5,4.24,4.51,3.84,3.21,3.82,2.95,3.57,4.14,3.19,2.7,2.5,1.96,1.65,2.61,1.54,1.5,1.91,1.58,1.51,1.46,1.56,1.05,1.0,1.45,1.38,1.09,0.78,0.71,1.24,1.16,1.99,1.39,1.28,1.07,1.33,1.33,1.42,1.52,1.2,1.54,1.89,1.74,1.93,1.38,1.68,1.29,1.58,2.33,1.85,1.52,1.56,1.24,1.26,2.52,1.54,2.31]}]},{"family":"Urbano","items":[{"label":"Sector Formal","values":[51.79,53.46,52.75,51.25,53.73,51.91,51.34,50.93,50.72,52.55,50.74,52.07,54.25,52.53,55.25,52.6,52.84,53.57,55.06,53.4,52.78,53.72,55.5,55.73,55.1,54.15,55.94,54.37,53.09,53.34,54.13,55.32,54.79,55.49,54.01,51.79,55.31,52.91,54.91,53.63,55.15,54.41,53.22,55.37,53.89,55.4,54.35,53.72,52.84,52.88,54.02,49.74,52.85,54.74,53.32,51.17,55.64,53.42,55.0,52.96,54.76,55.58,56.16,53.06,52.49,56.08,50.71,50.75,53.88]},{"label":"Sector Informal","values":[42.12,40.86,41.27,41.06,38.74,39.43,41.13,41.84,41.01,38.83,40.49,39.56,37.88,40.2,37.91,40.61,41.45,40.18,38.86,40.42,40.83,40.0,39.56,39.72,40.04,41.33,38.72,41.25,42.59,41.86,41.86,40.4,41.31,39.46,42.34,43.91,40.76,42.93,41.56,42.98,41.9,41.68,42.23,40.95,42.57,40.54,41.6,42.08,43.65,43.49,41.82,46.67,43.29,41.13,42.88,44.39,40.1,42.57,40.39,41.98,41.49,39.33,39.22,42.72,44.04,38.8,45.16,45.29,39.99]},{"label":"Empleo Doméstico","values":[2.47,2.01,2.44,3.33,2.36,2.55,2.41,2.54,2.66,2.33,2.58,3.06,3.02,2.84,2.64,2.88,2.5,2.75,2.87,2.73,2.41,2.94,2.65,2.45,3.05,2.9,3.15,3.06,2.83,3.26,2.86,2.87,2.73,3.29,2.87,3.4,2.72,3.06,2.54,2.8,2.4,2.71,3.58,2.33,2.55,3.15,3.1,2.94,2.7,3.05,2.56,2.9,2.73,2.98,2.72,3.14,3.23,2.73,3.82,3.68,2.69,3.62,3.08,2.98,2.65,4.03,2.69,3.09,4.32]},{"label":"No Clasificados por Sector","values":[3.62,3.68,3.54,4.36,5.18,6.11,5.12,4.69,5.6,6.29,6.19,5.3,4.85,4.43,4.2,3.91,3.21,3.5,3.2,3.45,3.98,3.34,2.3,2.11,1.81,1.62,2.18,1.32,1.49,1.54,1.14,1.41,1.17,1.76,0.79,0.9,1.22,1.09,0.98,0.59,0.56,1.21,0.98,1.35,0.99,0.91,0.96,1.25,0.82,0.57,1.6,0.69,1.13,1.14,1.07,1.3,1.04,1.29,0.79,1.37,1.06,1.47,1.53,1.24,0.82,1.1,1.44,0.88,1.81]}]},{"family":"Rural","items":[{"label":"Sector Formal","values":[22.95,22.48,19.69,21.38,20.79,22.06,25.18,20.22,19.87,23.11,21.19,21.02,24.94,20.41,22.77,25.38,21.93,22.12,23.33,21.99,21.6,22.45,20.23,19.22,22.75,19.89,19.75,20.94,19.48,19.42,20.39,18.57,21.28,20.14,19.77,22.9,18.03,20.0,20.5,18.65,21.22,18.41,17.91,19.92,19.94,19.69,19.31,20.45,19.79,19.65,22.87,18.62,19.54,22.49,17.79,23.66,22.14,19.73,24.09,20.22,19.16,21.38,17.43,21.07,21.63,21.15,17.69,20.09,18.7]},{"label":"Sector Informal","values":[71.44,72.81,73.78,71.63,72.78,69.04,68.79,71.96,73.58,70.84,71.63,71.19,69.91,74.78,70.81,69.74,74.03,72.11,73.45,73.46,72.21,73.69,75.36,76.15,74.12,77.14,75.52,75.6,77.77,77.18,75.36,78.68,75.76,77.52,77.94,74.39,78.88,77.31,77.22,79.08,76.71,79.23,79.32,75.78,76.73,76.65,78.46,76.67,76.7,76.39,74.21,77.83,77.56,73.05,78.02,72.18,74.35,76.24,72.47,76.84,74.53,74.51,80.3,75.41,75.07,76.04,76.57,76.15,76.04]},{"label":"Empleo Doméstico","values":[0.87,0.61,1.18,1.19,0.77,0.85,0.91,0.76,0.91,1.29,1.06,1.04,1.3,0.94,1.34,1.16,0.82,1.35,0.74,0.75,1.76,0.95,0.96,1.37,0.88,1.27,1.28,1.51,1.21,0.8,1.88,1.05,0.96,1.17,0.77,1.53,1.22,0.77,1.0,1.15,1.09,1.07,1.27,1.15,1.19,1.71,0.96,1.4,1.23,0.95,1.55,1.46,0.69,1.2,1.25,1.04,1.48,1.62,1.17,1.0,1.63,1.55,0.78,1.36,1.25,1.26,1.25,0.94,2.05]},{"label":"No Clasificados por Sector","values":[4.73,4.1,5.35,5.79,5.66,8.06,5.13,7.06,5.64,4.77,6.12,6.74,3.85,3.88,5.08,3.72,3.22,4.41,2.49,3.8,4.44,2.91,3.46,3.26,2.24,1.7,3.45,1.95,1.53,2.6,2.37,1.7,2.0,1.18,1.52,1.18,1.87,1.92,1.27,1.12,0.98,1.29,1.5,3.15,2.14,1.95,1.28,1.47,2.28,3.02,1.37,2.09,2.22,3.26,2.94,3.11,2.03,2.41,2.26,1.95,4.68,2.56,1.49,2.16,2.05,1.56,4.49,2.82,3.21]}]}]};
+const TRIMS = RAW.trimestres;
+const FAMILIES = RAW.families;
+
+const IS_HOURS = (fam) => fam.startsWith('Horas habituales');
+
+const FAM_DEF = {"Nacional": "Composición del empleo por sector (Formal, Informal, Doméstico, No Clasificado) a nivel nacional.", "Urbano": "Composición del empleo por sector en el área urbana.", "Rural": "Composición del empleo por sector en el área rural."};
+
+const INSIGHTS = {"Nacional": {"bueno": [], "malo": ["El sector informal sigue siendo la categoría más grande a nivel nacional (52.8%) y crece levemente (+0.37 pp desde sep-2020); el empleo doméstico es el que más aumenta en términos relativos (+1.61 pp)."]}, "Urbano": {"bueno": ["El sector formal gana peso en el área urbana: de 51.8% a 53.9% desde sep-2020 (+2.09 pp), consolidándose como la categoría más grande por encima del informal."], "malo": []}, "Rural": {"bueno": [], "malo": ["La brecha urbano-rural se profundiza: el sector informal rural sube de 71.4% a 76.0% desde sep-2020 (+4.60 pp) mientras el sector formal cae con fuerza (-4.25 pp, hasta 18.7%) — justo la dirección opuesta a lo que ocurre en el área urbana."]}};
+
+let currentFamily = FAMILIES[0].family;
+let currentSnapTrim = TRIMS[TRIMS.length-1];
+let trendChart, snapChart;
+
+const PALETTE = ['#0b2d52','#1d6fa8','#c8992a','#2f7d5a','#b8433f','#7a5c9e'];
+
+Chart.register(ChartDataLabels);
+Chart.defaults.set('plugins.datalabels', {display:false});
+
+function famByName(name){
+  return FAMILIES.find(f => f.family === name);
+}
+
+function buildSelect(){
+  const sel = document.getElementById('famSelect');
+  sel.innerHTML = FAMILIES.map(f => {
+    const label = f.family.replace(/\(\d\)$/,'').replace(/\s*\*\*\n.*/,'').trim();
+    return `<option value="${f.family}" ${f.family===currentFamily?'selected':''}>${label}</option>`;
+  }).join('');
+  sel.addEventListener('change', () => {
+    currentFamily = sel.value;
+    renderAll();
+  });
+}
+
+function buildTrimSelect(){
+  const sel = document.getElementById('trimSelect');
+  sel.innerHTML = TRIMS.map(t => `<option value="${t}" ${t===currentSnapTrim?'selected':''}>${t.trim()}</option>`).reverse().join('');
+  sel.addEventListener('change', () => {
+    currentSnapTrim = sel.value;
+    renderSnap();
+  });
+}
+
+function fmtVal(v, fam){
+  if (v==null) return '—';
+  return IS_HOURS(fam) ? v.toFixed(1)+' h' : v.toFixed(1)+'%';
+}
+
+function renderDef(){
+  document.getElementById('famDef').textContent = FAM_DEF[currentFamily] || '';
+}
+
+function renderInsights(){
+  const ins = INSIGHTS[currentFamily] || {bueno:[], malo:[]};
+  const grid = document.getElementById('insightGrid');
+  const listHtml = (arr) => arr.length
+    ? `<ul>${arr.map(t=>`<li>${t}</li>`).join('')}</ul>`
+    : `<div class="insight-empty">Sin hallazgos destacados para este corte.</div>`;
+  grid.innerHTML = `
+    <div class="insight-box bueno">
+      <div class="ib-title">✓ Lo positivo</div>
+      ${listHtml(ins.bueno)}
+    </div>
+    <div class="insight-box malo">
+      <div class="ib-title">⚠ Lo que preocupa</div>
+      ${listHtml(ins.malo)}
+    </div>`;
+}
+
+function renderKpis(){
+  const fam = famByName(currentFamily);
+  const grid = document.getElementById('kpiGrid');
+  const lastIdx = TRIMS.length-1;
+
+  // categoría con mayor valor actual
+  let top = fam.items[0];
+  fam.items.forEach(it => { if ((it.values[lastIdx]||-Infinity) > (top.values[lastIdx]||-Infinity)) top = it; });
+
+  // mayor y menor cambio IV-2020 -> I-2026
+  let maxUp = null, maxDown = null;
+  fam.items.forEach(it => {
+    const first = it.values[0], last = it.values[lastIdx];
+    if (first==null || last==null) return;
+    const diff = last-first;
+    if (maxUp===null || diff > maxUp.diff) maxUp = {label:it.label, diff};
+    if (maxDown===null || diff < maxDown.diff) maxDown = {label:it.label, diff};
+  });
+
+  const unit = IS_HOURS(currentFamily) ? 'h' : 'pp';
+
+  grid.innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-lbl">Categoría con mayor peso (${TRIMS[lastIdx].trim()})</div>
+      <div class="kpi-val">${top.label}</div>
+      <div class="kpi-sub">${fmtVal(top.values[lastIdx], currentFamily)}</div>
+    </div>
+    <div class="kpi-card hi">
+      <div class="kpi-lbl">Mayor incremento desde IV-2020</div>
+      <div class="kpi-val">${maxUp?maxUp.label:'—'}</div>
+      <div class="kpi-sub">${maxUp?('▲ '+Math.abs(maxUp.diff).toFixed(2)+' '+unit):'—'}</div>
+    </div>
+    <div class="kpi-card lo">
+      <div class="kpi-lbl">Mayor caída desde IV-2020</div>
+      <div class="kpi-val">${maxDown?maxDown.label:'—'}</div>
+      <div class="kpi-sub">${maxDown?('▼ '+Math.abs(maxDown.diff).toFixed(2)+' '+unit):'—'}</div>
+    </div>`;
+}
+
+function renderTrend(){
+  const fam = famByName(currentFamily);
+  const labels = TRIMS.map(t=>t.trim());
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (trendChart) trendChart.destroy();
+  const datasets = fam.items.map((it,i) => ({
+    label: it.label, data: it.values, borderColor: PALETTE[i%PALETTE.length],
+    backgroundColor: PALETTE[i%PALETTE.length], borderWidth: 2.5, tension:.3, pointRadius:2.5,
+  }));
+  trendChart = new Chart(ctx, {
+    type:'line',
+    data:{labels, datasets},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:12, font:{size:11.5}}},
+        tooltip:{callbacks:{label: c => `${c.dataset.label}: ${fmtVal(c.parsed.y, currentFamily)}`}}},
+      scales:{y:{ticks:{callback:v=> IS_HOURS(currentFamily) ? v+'h' : v+'%'}, grid:{color:'#eef1f4'}},
+              x:{grid:{display:false}, ticks:{autoSkip:true, maxRotation:0}}}}
+  });
+}
+
+function renderSnap(){
+  document.getElementById('snapTrimLabel').textContent = currentSnapTrim.trim();
+  const fam = famByName(currentFamily);
+  const idx = TRIMS.indexOf(currentSnapTrim);
+  const labels = fam.items.map(it=>it.label);
+  const vals = fam.items.map(it=>it.values[idx]);
+  const ctx = document.getElementById('snapChart').getContext('2d');
+  if (snapChart) snapChart.destroy();
+  snapChart = new Chart(ctx, {
+    type:'bar',
+    data:{labels, datasets:[{data:vals, backgroundColor:labels.map((_,i)=>PALETTE[i%PALETTE.length]), borderRadius:5}]},
+    options:{responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:22}},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label: c => fmtVal(c.parsed.y, currentFamily)}},
+        datalabels:{
+          display:true, anchor:'end', align:'top', offset:2,
+          color:'#1c2a3a', font:{family:"Arial, sans-serif", weight:700, size:12},
+          formatter: v => fmtVal(v, currentFamily)
+        }},
+      scales:{
+        y:{ticks:{callback:v=> IS_HOURS(currentFamily) ? v+'h' : v+'%'}, grid:{color:'#eef1f4'}},
+        x:{grid:{display:false}, ticks:{font:{size:11}, maxRotation:20, minRotation:0}}
+      }}
+  });
+}
+
+function renderAll(){
+  renderDef();
+  renderInsights();
+  renderKpis();
+  renderTrend();
+  renderSnap();
+}
+
+buildSelect();
+buildTrimSelect();
+renderAll();
+
+function toggleMenu(id){
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.menu-drop.open').forEach(function(el){
+    if(!el.parentElement.contains(e.target)) el.classList.remove('open');
+  });
+});
+</script>
+<script src="../MDTDH/shared.js"></script>
+<script>
+initSidebar({ activeId: 'pnd-trabajo', basePath: '../' });
+</script>
+
+</body>
+</html>

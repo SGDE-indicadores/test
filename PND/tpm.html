@@ -1,0 +1,2830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard TPM 2025 — MDTDH</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// Plugin genérico de valores en gráfico: dibuja el valor de cada punto/barra
+// usando el mismo formateador que ya tiene el eje Y de ese gráfico (%, $, o
+// número plano), así cada gráfico muestra sus valores con el formato correcto
+// sin tener que configurarlo gráfico por gráfico. Aplica a barras y líneas;
+// las líneas de "meta" (pointRadius:0) no se etiquetan para no saturar.
+const valueLabelPlugin={id:'valueLabelPlugin',afterDatasetsDraw(chart){
+  if(chart.config.type!=='bar'&&chart.config.type!=='line')return;
+  const{ctx}=chart;ctx.save();ctx.font='700 10px Segoe UI, Arial';ctx.textBaseline='middle';
+  const yScale=chart.options.scales&&chart.options.scales.y;
+  const tickCb=yScale&&yScale.ticks&&typeof yScale.ticks.callback==='function'?yScale.ticks.callback:null;
+  const fmt=v=>{if(v===null||v===undefined||!Number.isFinite(Number(v)))return '';const n=Math.round(Number(v)*100)/100;if(tickCb){try{return String(tickCb(n));}catch(e){}}return n.toLocaleString('es-EC');};
+  chart.data.datasets.forEach((ds,i)=>{
+    const meta=chart.getDatasetMeta(i);
+    if(meta.hidden)return;
+    if(chart.config.type==='line'&&ds.pointRadius===0)return;
+    meta.data.forEach((el,j)=>{
+      const raw=ds.data[j];
+      const num=(raw&&typeof raw==='object')?raw.y:raw;
+      const txt=fmt(num);
+      if(!txt)return;
+      const p=el.tooltipPosition();
+      ctx.fillStyle=ds.borderColor||ds.backgroundColor||'#4F449A';
+      if(chart.config.type==='bar'&&chart.options.indexAxis==='y'){ctx.textAlign='left';ctx.fillText(txt,p.x+8,p.y);}
+      else{ctx.textAlign='center';ctx.fillText(txt,p.x,p.y-10);}
+    });
+  });
+  ctx.restore();
+}};
+if(typeof Chart!=='undefined') Chart.register(valueLabelPlugin);
+</script>
+
+<link rel="stylesheet" href="../MDTDH/shared.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="geojson_js.js"></script>
+<script src="ecuador-map.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="export-utils.js"></script>
+<script src="tpm_cronograma_datos.js"></script>
+<style>
+  :root {
+    --azul:       #4F449A;
+    --azul-med:   #37306C;
+    --azul-light: #E8EEF8;
+    --azul-pale:  #F2F5FB;
+    --amarillo:   #F1B620;
+    --amarillo-d: #C99200;
+    --amarillo-l: #FEF7DC;
+    --rojo:       #DE232D;
+    --rojo-l:     #FDECEA;
+    --verde:      #81A382;
+    --verde-l:    #E6F4EC;
+    --gris:       #F5F6F8;
+    --gris-bd:    #DDE2EE;
+    --texto:      #1A1E2E;
+    --subtexto:   #5A6180;
+    --blanco:     #FFFFFF;
+    --shadow:     0 2px 12px rgba(79,68,154,0.10);
+    --shadow-lg:  0 4px 24px rgba(79,68,154,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #EDF0F7;
+    color: var(--texto);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--azul);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-logo {
+    min-width: 36px; height: 36px; padding: 0 6px; box-sizing: border-box; background: var(--amarillo);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-weight: 700; font-size: 13px; color: var(--azul); letter-spacing: 0.3px;
+  }
+  .header-title {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-weight: 600; font-size: 17px; color: var(--blanco); letter-spacing: 0.3px;
+  }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; }
+  .header-badge {
+    background: rgba(244,180,0,0.18); border: 1px solid rgba(244,180,0,0.40);
+    color: var(--amarillo); padding: 4px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--blanco);
+    border-bottom: 2px solid var(--gris-bd);
+    padding: 0 32px;
+    display: flex; gap: 4px;
+    position: sticky; top: 60px; z-index: 99;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .tab-btn {
+    padding: 12px 20px; border: none; background: none; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--subtexto); border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all .2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--azul-med); background: var(--azul-pale); border-radius: 6px 6px 0 0; }
+  .tab-btn.active { color: var(--azul); font-weight: 700; border-bottom-color: var(--amarillo); }
+
+  /* ── LAYOUT ── */
+  .main { padding: 32px 24px; max-width: 1600px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--blanco); border-radius: 12px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid var(--gris-bd);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-title {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-weight: 600; font-size: 14px; color: var(--azul);
+    text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  .card-sub { font-size: 11px; color: var(--subtexto); margin-top: 2px; }
+  .card-body { padding: 16px 20px; }
+
+  /* ── KPI CARDS ── */
+  .kpi-card {
+    background: var(--blanco); border-radius: 12px;
+    box-shadow: var(--shadow); padding: 20px;
+    border-left: 4px solid var(--azul);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .kpi-card.yellow { border-left-color: var(--amarillo); }
+  .kpi-card.red    { border-left-color: var(--rojo); background: var(--rojo-l); }
+  .kpi-card.green  { border-left-color: var(--verde); background: var(--verde-l); }
+
+  .kpi-label { font-size: 11px; font-weight: 600; color: var(--subtexto); text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-family: 'Arial Black', Arial, sans-serif; font-size: 38px; font-weight: 700; color: var(--azul); line-height: 1; }
+  .kpi-card.red .kpi-value    { color: var(--rojo); }
+  .kpi-card.green .kpi-value  { color: var(--verde); }
+  .kpi-card.yellow .kpi-value { color: var(--amarillo-d); }
+  .kpi-detail { font-size: 12px; color: var(--subtexto); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block; padding: 3px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .badge-red    { background: var(--rojo-l);   color: var(--rojo); }
+  .badge-green  { background: var(--verde-l);  color: var(--verde); }
+  .badge-yellow { background: var(--amarillo-l); color: var(--amarillo-d); }
+  .badge-blue   { background: var(--azul-light); color: var(--azul); }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--subtexto);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 14px; padding-bottom: 6px;
+    border-bottom: 2px solid var(--amarillo);
+    display: inline-block;
+  }
+
+  /* ── HORIZONTAL BAR ── */
+  .h-bar-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; border-bottom: 1px solid var(--gris);
+  }
+  .h-bar-row:last-child { border-bottom: none; }
+  .h-bar-label { width: 210px; font-size: 12px; color: var(--texto); flex-shrink: 0; line-height: 1.3; }
+  .h-bar-track { flex: 1; height: 14px; background: var(--gris); border-radius: 7px; overflow: hidden; }
+  .h-bar-fill  { height: 100%; border-radius: 7px; transition: width .8s ease; }
+  .h-bar-val   { width: 50px; text-align: right; font-size: 12px; font-weight: 600; color: var(--azul); flex-shrink: 0; }
+  .h-bar-fill.rojo    { background: linear-gradient(90deg, #DE232D, #F4736A); }
+  .h-bar-fill.azul    { background: linear-gradient(90deg, #4F449A, #37306C); }
+  .h-bar-fill.amarillo{ background: linear-gradient(90deg, #C99200, #F1B620); }
+  .h-bar-fill.verde   { background: linear-gradient(90deg, #81A382, #27AE60); }
+  .h-bar-fill.azul-m  { background: linear-gradient(90deg, #37306C, #4A72CC); }
+
+  /* ── FLOW ARROW ── */
+  .flow-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+  }
+  .flow-box {
+    flex: 1; background: var(--azul-pale); border: 1px solid var(--gris-bd);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .flow-box.highlight { background: var(--azul); color: white; border-color: var(--azul); }
+  .flow-box.target    { background: var(--verde-l); border-color: var(--verde); }
+  .flow-box.gap       { background: var(--rojo-l); border-color: var(--rojo); }
+  .flow-num {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 36px; font-weight: 700; line-height: 1;
+  }
+  .flow-box.highlight .flow-num { color: var(--amarillo); }
+  .flow-box.target .flow-num    { color: var(--verde); }
+  .flow-box.gap .flow-num       { color: var(--rojo); }
+  .flow-label { font-size: 11px; margin-top: 4px; opacity: 0.8; }
+  .flow-arrow { font-size: 22px; color: var(--subtexto); flex-shrink: 0; }
+
+  /* ── INDICATOR TABLE ── */
+  .ind-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ind-table th {
+    background: var(--azul); color: white; padding: 8px 10px;
+    text-align: left; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .ind-table th:nth-child(2), .ind-table th:nth-child(3),
+  .ind-table th:nth-child(4), .ind-table th:nth-child(5) { text-align: right; }
+  .ind-table td { padding: 7px 10px; border-bottom: 1px solid var(--gris-bd); }
+  .ind-table td:nth-child(2), .ind-table td:nth-child(3),
+  .ind-table td:nth-child(4), .ind-table td:nth-child(5) { text-align: right; font-weight: 500; }
+  .ind-table tr:hover td { background: var(--azul-pale); }
+  .ind-table tr.rojo td { background: var(--rojo-l); }
+  .ind-table tr.tpm-row td {
+    background: var(--azul); color: white; font-weight: 700; font-size: 13px;
+  }
+
+  /* ── STACKED BAR ── */
+  .stack-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+  .stack-label { width: 190px; font-size: 12px; color: var(--texto); flex-shrink: 0; line-height: 1.3; }
+  .stack-track { flex: 1; height: 26px; display: flex; border-radius: 6px; overflow: hidden; }
+  .stack-seg { display: flex; align-items: center; justify-content: center;
+               font-size: 11px; font-weight: 600; color: white; transition: width .8s; }
+  .stack-total { width: 44px; text-align: right; font-size: 12px; font-weight: 700; color: var(--azul); flex-shrink: 0; }
+
+  /* ── PROVINCE TABLE ── */
+  .prov-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .prov-item {
+    background: var(--gris); border-radius: 8px; padding: 10px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .prov-name { font-size: 12px; color: var(--texto); font-weight: 500; }
+  .prov-val  {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 18px; font-weight: 700;
+  }
+
+  /* ── DECISIVENESS ── */
+  .decis-card {
+    background: var(--azul-pale); border: 1px solid var(--gris-bd);
+    border-radius: 10px; padding: 14px 16px; display: flex; gap: 14px; align-items: flex-start;
+  }
+  .decis-rank {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--azul); color: white;
+    font-family: 'Arial Black', Arial, sans-serif; font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .decis-name { font-size: 13px; font-weight: 600; color: var(--azul); margin-bottom: 4px; }
+  .decis-nums { display: flex; gap: 20px; font-size: 12px; color: var(--subtexto); }
+  .decis-big  { font-family: 'Arial Black', Arial, sans-serif; font-size: 22px; font-weight: 700; color: var(--rojo); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--azul); color: rgba(255,255,255,0.5);
+    text-align: center; font-size: 11px; padding: 14px;
+    margin-top: 32px;
+  }
+
+  .ind-btn {
+    padding: 8px 16px; border: none; border-left-width: 4px;
+    border-left-style: solid; background: var(--gris);
+    border-radius: 0 8px 8px 0; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 12px;
+    font-weight: 500; color: var(--subtexto); transition: all .2s;
+  }
+  .ind-btn:hover { background: var(--azul-pale); color: var(--azul); }
+  .ind-btn.active { background: var(--azul-pale); color: var(--azul); font-weight: 700; }
+
+  /* ── MAPA TERRITORIAL ── */
+  #map-wrap-tpm { position: relative; }
+  #ec-map-tpm { height: 520px; border-radius: 8px; background:#EAF2FB; }
+  .leaflet-container { font-family: Arial, sans-serif; }
+  .prov-tooltip { font-family:Arial, sans-serif; font-size:12px; }
+  .prov-tooltip b { color: var(--azul); }
+  #galapagos-inset-tpm {
+    position: absolute; left: 12px; bottom: 12px; width: 140px;
+    background: var(--blanco); border: 2px solid var(--gris-bd); border-radius: 8px;
+    box-shadow: var(--shadow-lg); overflow: hidden; z-index: 500;
+  }
+  .inset-label { font-family:'Arial Black', Arial, sans-serif; font-size:10px; font-weight:700; color:var(--azul); text-transform:uppercase; letter-spacing:.4px; padding:5px 8px 3px; border-bottom:1px solid var(--gris-bd); }
+  #ec-map-gal-tpm { height: 84px; cursor: pointer; }
+  .legend-box { display:flex; align-items:center; gap:8px; padding: 10px 4px 4px; font-size:11px; color: var(--subtexto); }
+  .legend-scale { flex:1; height:10px; border-radius:6px; }
+
+  
+  /* ── CRONOGRAMA ── */
+  .inst-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; padding: 14px 20px; border: 2px solid var(--gris-bd);
+    border-radius: 12px; background: var(--blanco); cursor: pointer;
+    font-family: Arial, sans-serif; transition: all .2s; min-width: 140px;
+    box-shadow: var(--shadow);
+  }
+  .inst-btn-disabled {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    border-style: dashed !important;
+  }
+  .inst-btn-disabled:hover {
+    transform: none !important;
+    background: var(--blanco) !important;
+    border-color: var(--gris-bd) !important;
+  }
+  .inst-btn:hover { border-color: var(--azul-med); background: var(--azul-pale); transform: translateY(-2px); }
+  .inst-btn.active { border-color: var(--azul); background: var(--azul); color: white; }
+  .inst-btn .inst-sigla {
+    font-family: 'Arial Black', Arial, sans-serif; font-size: 22px; font-weight: 700;
+    color: var(--azul);
+  }
+  .inst-btn.active .inst-sigla { color: var(--amarillo); }
+  .inst-btn .inst-name { font-size: 10px; font-weight: 600; color: var(--subtexto); text-align: center; line-height: 1.3; }
+  .inst-btn.active .inst-name { color: rgba(255,255,255,0.8); }
+  .inst-btn .inst-coming { font-size: 9px; color: var(--subtexto); font-style: italic; }
+
+  .cron-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .cron-table th {
+    background: var(--azul); color: white; padding: 9px 12px;
+    text-align: left; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap;
+  }
+  .cron-table th.center { text-align: center; }
+  .cron-table td { padding: 10px 12px; border-bottom: 1px solid var(--gris-bd); vertical-align: top; line-height: 1.45; }
+  .cron-table tr:hover td { background: var(--azul-pale); }
+  .cron-table tr:nth-child(even) td { background: var(--gris); }
+  .cron-table tr:nth-child(even):hover td { background: var(--azul-pale); }
+  .cron-table td.center { text-align: center; }
+
+  .estado-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .estado-cumplido    { background: #D4EDDA; color: #81A382; }
+  .estado-ejecucion   { background: #FFF3CD; color: #7F6000; }
+  .estado-noiniciado  { background: #FDECEA; color: #DE232D; }
+  .estado-suspendida  { background: #FDECEA; color: #DE232D; }
+  .estado-finalizada  { background: #D4EDDA; color: #81A382; }
+
+  .pct-bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .pct-bar-track { flex: 1; height: 8px; background: var(--gris-bd); border-radius: 4px; overflow: hidden; min-width: 60px; }
+  .pct-bar-fill  { height: 100%; border-radius: 4px; transition: width .6s ease; }
+  .pct-val { font-size: 11px; font-weight: 700; color: var(--azul); white-space: nowrap; }
+
+  .accion-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--azul);
+    color: white; font-weight: 700; font-size: 13px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: 'Arial Black', Arial, sans-serif;
+  }
+  .accion-title { font-weight: 600; color: var(--azul); font-size: 12px; line-height: 1.4; }
+  .accion-desc  { font-size: 11px; color: var(--subtexto); margin-top: 3px; line-height: 1.4; }
+  .link-btn { color: var(--azul-med); font-size: 10px; text-decoration: none; }
+  .link-btn:hover { text-decoration: underline; }
+
+  .summary-kpi {
+    background: var(--blanco); border-radius: 10px; padding: 14px 18px;
+    box-shadow: var(--shadow); border-left: 4px solid var(--azul);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .summary-kpi .sk-num {
+    font-family: 'Arial Black', Arial, sans-serif; font-size: 32px;
+    font-weight: 700; color: var(--azul); line-height: 1;
+  }
+  .summary-kpi .sk-label { font-size: 11px; color: var(--subtexto); font-weight: 500; }
+
+  /* ── PROVINCE LIST ── */
+  .prov-list-item {
+    display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+    border-radius: 8px; cursor: pointer; transition: background .15s;
+    border: 1.5px solid transparent;
+  }
+  .prov-list-item:hover { background: var(--azul-pale); border-color: var(--gris-bd); }
+  .prov-list-item.selected { background: var(--azul-pale); border-color: var(--azul); }
+  .prov-list-rank {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--gris-bd);
+    font-size: 10px; font-weight: 700; color: var(--subtexto);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .prov-list-item.selected .prov-list-rank { background: var(--azul); color: white; }
+  .prov-list-name { flex: 1; font-size: 12px; color: var(--texto); font-weight: 500; }
+  .prov-list-item.selected .prov-list-name { color: var(--azul); font-weight: 600; }
+  .prov-list-bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .prov-list-bar { height: 6px; border-radius: 3px; min-width: 4px; }
+  .prov-list-val { font-size: 11px; font-weight: 700; width: 40px; text-align: right; }
+
+  /* ── CRONOGRAMA FILTERS ── */
+  .cron-filter {
+    padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--gris-bd);
+    background: var(--gris); cursor: pointer; font-size: 11px; font-weight: 600;
+    color: var(--subtexto); font-family: Arial, sans-serif; transition: all .15s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .cron-filter:hover { border-color: var(--azul); color: var(--azul); background: var(--azul-pale); }
+  .cron-filter.active          { background: var(--azul);    color: white; border-color: var(--azul); }
+  .cron-filter.ejecucion.active{ background: #7F6000;        color: white; border-color: #7F6000; }
+  .cron-filter.cumplido.active { background: var(--verde);   color: white; border-color: var(--verde); }
+  .cron-filter.vencido.active  { background: var(--rojo);    color: white; border-color: var(--rojo); }
+  .filter-count {
+    background: rgba(255,255,255,0.25); border-radius: 10px;
+    padding: 1px 6px; font-size: 10px; font-weight: 700;
+  }
+  .cron-filter:not(.active) .filter-count { background: var(--gris-bd); color: var(--subtexto); }
+
+  canvas { max-height: 360px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3 { grid-column: span 1; }
+    .main { padding: 16px; }
+    .nav-tabs { overflow-x: auto; }
+  }
+
+  /* ── MENÚ INICIAL ── */
+  .sec { display: none; }
+  .sec.active { display: block; }
+  .inicio-overlay { display: none; }
+  .inicio-overlay.active { display: block; }
+  .inicio-wrap { max-width: 1600px; margin: 0 auto; padding: 32px 24px 40px; }
+  .inicio-header {
+    background: var(--azul); border-radius: 12px; padding: 32px 36px;
+    margin-bottom: 24px; border-bottom: 4px solid var(--amarillo);
+  }
+  .inicio-header h2 {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 24px; font-weight: 700; color: white; margin-bottom: 8px;
+  }
+  .inicio-header p { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; }
+  .inicio-cards {
+    display: grid; grid-template-columns: repeat(3, 300px); justify-content: center; gap: 20px; margin-bottom: 24px;
+  }
+  .inicio-card {
+    display: flex; flex-direction: column;
+    background: var(--blanco); border: 2px solid var(--gris-bd); border-radius: 12px;
+    padding: 32px 24px; cursor: pointer; text-align: center;
+    transition: border-color .2s, box-shadow .2s, transform .15s;
+  }
+  .inicio-card:hover {
+    border-color: var(--azul); box-shadow: 0 6px 24px rgba(79,68,154,0.15); transform: translateY(-3px);
+  }
+  .inicio-icon {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--azul);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 24px;
+  }
+  .inicio-card h3 {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 18px; font-weight: 700; color: var(--azul); margin-bottom: 8px;
+  }
+  .inicio-card p { font-size: 13px; color: var(--subtexto); margin-bottom: 16px; line-height: 1.5; }
+  .inicio-card ul {
+    list-style: none; font-size: 12px; color: var(--subtexto); text-align: left; margin-bottom: 20px;
+  }
+  .inicio-card ul li { padding: 3px 0 3px 16px; position: relative; }
+  .inicio-card ul li::before { content: '▸'; position: absolute; left: 0; color: var(--amarillo); }
+  .btn-inicio-card {
+    display: block; margin-top: auto; width: 100%; padding: 12px; border-radius: 8px; border: none;
+    background: var(--azul); color: white; font-size: 14px; font-weight: 600;
+    font-family: Arial, sans-serif; cursor: pointer;
+  }
+  .btn-inicio-card.dorado { background: var(--amarillo); color: var(--azul); }
+  .btn-inicio-card.verde { background: var(--verde); color: white; }
+  .inicio-nota {
+    background: var(--gris); border-radius: 8px; padding: 14px 16px; font-size: 12px;
+    color: var(--subtexto); line-height: 1.6;
+  }
+  .inicio-nota strong { color: var(--azul); }
+  .volver-inicio {
+    display: inline-flex; align-items: center; gap: 6px; color: var(--azul-med);
+    font-size: 12px; font-weight: 600; text-decoration: none; cursor: pointer;
+    margin-bottom: 14px; background: none; border: none; font-family: Arial, sans-serif;
+  }
+  .volver-inicio:hover { text-decoration: underline; }
+
+  /* ── DEFINICIÓN DEL INDICADOR (menú inicial) ── */
+  .def-box {
+    background: var(--blanco); border: 1px solid var(--gris-bd); border-left: 4px solid var(--azul-med);
+    border-radius: 12px; padding: 22px 26px; margin-bottom: 24px;
+  }
+  .def-box-title {
+    font-family: 'Arial Black', Arial, sans-serif; font-size: 15px; font-weight: 700;
+    color: var(--azul); margin-bottom: 10px;
+  }
+  .def-box-text { font-size: 13px; color: var(--subtexto); line-height: 1.65; }
+
+  /* ── INTERPRETACIÓN ── */
+  .interp-box {
+    background: var(--azul); border-radius: 12px; border-bottom: 4px solid var(--amarillo);
+    padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .interp-box-icon { font-size: 18px; line-height: 1.4; }
+  .interp-box-text { font-size: 13.5px; color: rgba(255,255,255,0.92); line-height: 1.6; }
+  .interp-box-text b { color: var(--amarillo); }
+
+  /* ── METODOLOGÍA (breve nota, ej. contrafactual) ── */
+  .metodo-box {
+    background: var(--azul-pale); border: 1px solid var(--azul-light); border-left: 4px solid var(--azul-med);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; font-size: 12.5px;
+    color: var(--texto); line-height: 1.65;
+  }
+  .metodo-box strong { color: var(--azul); }
+
+  /* ── FICHA DE INDICADORES (tabla por dimensión, clic para desplegar definición) ── */
+  .dim-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .dim-table th {
+    background: var(--azul); color: white; text-align: left; padding: 10px 14px;
+    font-family: 'Arial Black', Arial, sans-serif; font-weight: 600; letter-spacing: 0.4px;
+    text-transform: uppercase; font-size: 11.5px;
+  }
+  .dim-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--gris-bd); vertical-align: top;
+  }
+  .dim-table td.dim-cell {
+    font-weight: 700; color: var(--azul); background: var(--azul-pale);
+    border-right: 1px solid var(--gris-bd);
+  }
+  .dim-table tr:last-child td { border-bottom: none; }
+  .dim-cell-inner { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .dim-cell-icon {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .fila-ind-icon {
+    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+  }
+  .fila-ind-nombre {
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    font-size: 12.5px; color: var(--texto); user-select: none;
+  }
+  .fila-ind-nombre:hover { color: var(--azul-med); }
+  .fila-ind-arrow {
+    font-size: 10px; color: var(--azul-med); transition: transform .2s ease; flex-shrink: 0;
+  }
+  .fila-ind-nombre.abierto .fila-ind-arrow { transform: rotate(90deg); }
+  .fila-ind-val {
+    margin-left: auto; font-family: 'Arial Black', Arial, sans-serif; font-size: 15px;
+    font-weight: 700; flex-shrink: 0;
+  }
+  .fila-ind-def {
+    display: none; font-size: 12px; color: var(--subtexto); line-height: 1.65;
+    margin-top: 8px; margin-left: 32px; padding: 10px 12px; background: var(--azul-pale);
+    border-radius: 8px; border-left: 3px solid var(--azul-med);
+  }
+
+  /* ── TOOLBAR TRIMESTRAL ── */
+  .tri-toolbar {
+    background: var(--blanco); border: 1px solid var(--gris-bd); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 18px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .tri-toolbar label {
+    font-size: 11px; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: .5px;
+  }
+  .tri-btn {
+    padding: 7px 16px; border: 1.8px solid var(--gris-bd); border-radius: 7px;
+    background: white; color: var(--subtexto); font-size: 12px; font-weight: 700;
+    font-family: Arial, sans-serif; cursor: pointer;
+  }
+  .tri-btn.active { background: var(--azul); border-color: var(--azul); color: white; }
+
+  /* ── SUB-TABS TRIMESTRAL (Serie / Sexo / Tabla) ── */
+  .tri-tabs-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 16px; }
+  .tri-tab-btn {
+    padding: 8px 18px; border: 1.5px solid var(--gris-bd); border-radius: 999px;
+    background: white; color: var(--subtexto); font-size: 12px; font-weight: 700;
+    font-family: Arial, sans-serif; cursor: pointer;
+  }
+  .tri-tab-btn.active { background: var(--azul); border-color: var(--azul); color: white; }
+  .tri-tab-panel { display: none; }
+  .tri-tab-panel.active { display: block; }
+
+  .tri-toggle-series { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
+  .tri-ts-btn {
+    display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px;
+    border: 1.5px solid var(--gris-bd); background: white; font-size: 11px; font-weight: 700;
+    color: var(--subtexto); cursor: pointer; font-family: Arial, sans-serif;
+  }
+  .tri-ts-btn.off { opacity: .4; }
+  .tri-ts-swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+  .tri-filtros-bar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .tri-filtros-bar label { font-size: 11px; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: .5px; }
+  .tri-filtros-bar select {
+    padding: 6px 10px; border: 1.5px solid var(--gris-bd); border-radius: 6px;
+    font-size: 12px; color: var(--texto); font-family: Arial, sans-serif; background: white;
+  }
+  .tri-btn-reset {
+    padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--gris-bd); background: var(--gris);
+    font-size: 11px; font-weight: 700; color: var(--subtexto); cursor: pointer;
+  }
+  .tri-filtros-count { font-size: 11px; color: var(--subtexto); margin-left: auto; }
+  .tri-silueta-wrap { display: flex; align-items: center; justify-content: center; gap: 28px; padding: 24px 0; }
+  .tri-silueta-item { text-align: center; }
+  .tri-silueta-val { font-family: 'Arial Black', Arial, sans-serif; font-size: 34px; font-weight: 700; }
+  .tri-silueta-label { font-size: 12px; color: var(--subtexto); font-weight: 600; margin-top: 2px; }
+
+  @media (max-width: 680px) {
+    .inicio-cards { grid-template-columns: 1fr; }
+    .inicio-wrap { padding: 20px 16px 32px; }
+  }
+
+.limit-box-ps{background:white;border:1px solid #DDE2EE;border-radius:12px;margin-bottom:1.5rem;overflow:hidden;}
+.limit-box-ps summary{cursor:pointer;list-style:none;padding:1rem 1.5rem;display:flex;align-items:center;gap:.6rem;
+  font-size:13px;font-weight:700;color:#4F449A;background:#FDF3D7;border-left:4px solid #F1B620;}
+.limit-box-ps summary::-webkit-details-marker{display:none;}
+.limit-box-ps summary:after{content:'▸';margin-left:auto;font-size:11px;color:#4F449A;transition:transform .2s;}
+.limit-box-ps[open] summary:after{transform:rotate(90deg);}
+.limit-box-ps ol{padding:1rem 1.5rem 1.25rem 2.5rem;}
+.limit-box-ps li{font-size:12.5px;color:#5A6180;line-height:1.6;margin-bottom:.6rem;}
+.limit-box-ps li:last-child{margin-bottom:0;}
+.limit-box-ps li b{color:#4F449A;}
+
+
+/* ─────────────────────────────────────────────────────────────
+   HOMOLOGACIÓN MDTDH: colores de tarjetas de acceso + footer único
+   Regla visual:
+   - Anual / Trimestral / Resultados: azul institucional
+   - Acciones planificadas: amarillo institucional
+   - Cronograma de gestión: verde institucional
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --mdh-blue:#4F449A;
+  --mdh-yellow:#F1B620;
+  --mdh-green:#81A382;
+}
+.card-blue .freq-icon,
+.card-blue .freq-icon-ps,
+.card-blue .freq-icon-d,
+.card-blue .freq-icon-g,
+.card-blue .freq-icon-pi,
+.card-blue .inicio-icon{
+  background:var(--mdh-blue) !important;
+  color:#FFFFFF !important;
+}
+.card-blue .btn-freq,
+.card-blue .btn-freq-ps,
+.card-blue .btn-freq-d,
+.card-blue .btn-freq-g,
+.card-blue .btn-freq-pi,
+.card-blue .btn-inicio-card{
+  background:var(--mdh-blue) !important;
+  border-color:var(--mdh-blue) !important;
+  color:#FFFFFF !important;
+}
+.card-blue:hover{
+  border-color:var(--mdh-blue) !important;
+}
+.card-yellow .freq-icon,
+.card-yellow .freq-icon-ps,
+.card-yellow .freq-icon-d,
+.card-yellow .freq-icon-g,
+.card-yellow .freq-icon-pi,
+.card-yellow .inicio-icon{
+  background:var(--mdh-yellow) !important;
+  color:var(--mdh-blue) !important;
+}
+.card-yellow .btn-freq,
+.card-yellow .btn-freq-ps,
+.card-yellow .btn-freq-d,
+.card-yellow .btn-freq-g,
+.card-yellow .btn-freq-pi,
+.card-yellow .btn-inicio-card{
+  background:var(--mdh-yellow) !important;
+  border-color:var(--mdh-yellow) !important;
+  color:var(--mdh-blue) !important;
+}
+.card-yellow:hover{
+  border-color:var(--mdh-yellow) !important;
+}
+.card-green .freq-icon,
+.card-green .freq-icon-ps,
+.card-green .freq-icon-d,
+.card-green .freq-icon-g,
+.card-green .freq-icon-pi,
+.card-green .inicio-icon{
+  background:var(--mdh-green) !important;
+  color:#FFFFFF !important;
+}
+.card-green .btn-freq,
+.card-green .btn-freq-ps,
+.card-green .btn-freq-d,
+.card-green .btn-freq-g,
+.card-green .btn-freq-pi,
+.card-green .btn-inicio-card{
+  background:var(--mdh-green) !important;
+  border-color:var(--mdh-green) !important;
+  color:#FFFFFF !important;
+}
+.card-green:hover{
+  border-color:var(--mdh-green) !important;
+}
+.dashboard-footer{
+  width:100%;
+  background:var(--mdh-blue);
+  color:rgba(255,255,255,.62);
+  text-align:center;
+  font-family:Arial, Arial, sans-serif;
+  font-size:11px;
+  line-height:1.45;
+  padding:14px 24px;
+  margin-top:32px;
+  box-shadow:0 -1px 8px rgba(79,68,154,.10);
+}
+.dashboard-footer strong{
+  color:rgba(255,255,255,.84);
+  font-weight:700;
+}
+@media(max-width:760px){
+  .dashboard-footer{font-size:10.5px;padding:12px 16px;}
+}
+
+
+
+/* =========================================================
+   HOMOLOGACIÓN MDTDH V3 — Migas de navegación y pie de página
+   ========================================================= */
+:root{
+  --mdh-blue:#4F449A;
+  --mdh-blue-2:#37306C;
+  --mdh-yellow:#F1B620;
+  --mdh-footer-h:44px;
+}
+html{min-height:100%;}
+body{
+  min-height:100vh !important;
+  padding-bottom:var(--mdh-footer-h) !important;
+}
+.mdh-breadcrumb,
+.breadcrumb.mdh-breadcrumb{
+  width:100% !important;
+  min-height:34px !important;
+  background:var(--mdh-blue-2) !important;
+  padding:8px 32px !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  flex-wrap:wrap !important;
+  font-family:Arial, Arial, sans-serif !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  color:rgba(255,255,255,.72) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  margin:0 !important;
+  position:relative !important;
+  z-index:930 !important;
+}
+.mdh-breadcrumb a,
+.mdh-breadcrumb .mdh-bc-base{
+  color:rgba(255,255,255,.78) !important;
+  text-decoration:none !important;
+  font-weight:500 !important;
+  cursor:pointer !important;
+}
+.mdh-breadcrumb a:hover,
+.mdh-breadcrumb .mdh-bc-base:hover{
+  color:#FFFFFF !important;
+}
+.mdh-breadcrumb .mdh-bc-sep{
+  color:rgba(255,255,255,.55) !important;
+  font-weight:600 !important;
+}
+.mdh-breadcrumb .mdh-bc-current{
+  color:var(--mdh-yellow) !important;
+  font-weight:700 !important;
+}
+.dashboard-footer{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  z-index:950 !important;
+  width:100% !important;
+  min-height:var(--mdh-footer-h) !important;
+  background:var(--mdh-blue) !important;
+  color:rgba(255,255,255,.66) !important;
+  text-align:center !important;
+  font-family:Arial, Arial, sans-serif !important;
+  font-size:11px !important;
+  line-height:1.45 !important;
+  padding:14px 24px !important;
+  margin:0 !important;
+  border:0 !important;
+  box-shadow:0 -1px 8px rgba(79,68,154,.14) !important;
+}
+.dashboard-footer strong{
+  color:rgba(255,255,255,.88) !important;
+  font-weight:700 !important;
+}
+@media(max-width:760px){
+  :root{--mdh-footer-h:54px;}
+  .mdh-breadcrumb,
+  .breadcrumb.mdh-breadcrumb{padding:8px 16px !important;font-size:11.5px !important;}
+  .dashboard-footer{font-size:10.5px !important;padding:11px 16px !important;}
+}
+
+
+/* Espacio para franja de navegacion lateral */
+body.has-sidebar { margin-left: var(--sidebar-w); }
+@media (max-width: 900px){ body.has-sidebar { margin-left: 0; } }
+</style>
+</head>
+<body>
+
+<div id="app-sidebar-mount"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-logo">MDTDH</div>
+    <div>
+      <div class="header-title">Indicador sobre la Tasa de Pobreza Multidimensional (TPM)</div>
+      <div class="header-sub">Ministerio de Trabajo y Desarrollo Humano · INEC-ENEMDU 2025</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="header-badge">TPM 2025: 37.11%</div>
+  </div>
+</header>
+<nav class="breadcrumb mdh-breadcrumb" id="mdh-breadcrumb" aria-label="Ruta de navegación"><a href="../index_PND.html">Inicio</a><span class="mdh-bc-sep">›</span><span class="mdh-bc-base">Tasa de Pobreza Multidimensional (TPM)</span><span class="mdh-bc-sep">›</span><span class="mdh-bc-current">Menú TPM</span></nav>
+
+
+<!-- ═══════════════════════════════════════════
+     MENÚ INICIAL
+═══════════════════════════════════════════ -->
+<div id="page-inicio" class="inicio-overlay active">
+  <div class="inicio-wrap">
+    <div class="inicio-header">
+      <h2>Indicador sobre la Tasa de Pobreza Multidimensional (TPM)</h2>
+      <p>Selecciona la información que deseas consultar sobre el Plan Nacional de Desarrollo 2025–2029.</p>
+    </div>
+
+    <div class="def-box">
+      <div class="def-box-title">📖 Definición del indicador</div>
+      <p class="def-box-text">Porcentaje de personas que viven en hogares pobres multidimensionales en relación al total de la población. Se evalúan 12 indicadores repartidos en 4 dimensiones. Para que un hogar se considere pobre multidimensional debe presentar privaciones en una tercera parte o más de los indicadores ponderados.</p>
+    </div>
+
+    <details class="limit-box-ps">
+      <summary>⚠️ Limitaciones técnicas del indicador</summary>
+      <ol>
+        <li>Hasta el año 2017, las estadísticas con desglose provincial se generaban a partir de las encuestas realizadas en los meses de diciembre. A partir de 2018, el INEC comenzó a producir estimaciones acumuladas anuales, que permiten desagregación provincial y mayor nivel de desagregación sociodemográfico. No obstante, en 2020, debido a la pandemia por COVID-19, la encuesta de abril no se ejecutó y, además, las encuestas de mayo a agosto se realizaron de manera telefónica, método incompatible con la agregación de muestra requerida por la ENEMDU anual. Por lo tanto, para el año 2020, no se dispone de la ENEMDU acumulada anual. </li>
+        <li>Para los análisis respectivos, es importante tener presente que no son posibles las comparaciones entre los resultados trimestrales de un mismo año, siendo lo adecuado la comparación entre trimestres de los años anteriores o posteriores al cálculo, principalmente por la estacionalidad que pudieran presentar los valores de ciertos indicadores.  </li>
+        <li>En el caso de considerar desagregaciones adicionales se debe analizar parámetros de confiabilidad como por ejemplo el coeficiente de variación, bajo la responsabilidad de cada institución.</li>
+        <li>A partir del año 2026, se generará una nueva encuesta que reemplazará a la Encuesta Nacional de Empleo, Desempleo y Subempleo – ENEMDU, la cual incorporará actualizaciones.</li>
+      </ol>
+    </details>
+
+    <div class="inicio-cards">
+      <div class="inicio-card card-blue" onclick="irSeccion('anual')">
+        <div class="inicio-icon">📊</div>
+        <h3>Análisis Anual</h3>
+        <p>Indicadores, ficha, datos territoriales, serie histórica y análisis contrafactual de la TPM</p>
+        <ul>
+          <li>Serie 2018–2025 (cortes de diciembre)</li>
+          <li>12 indicadores · desagregación provincial y cantonal</li>
+          <li>Último dato: 2025 · 37.11%</li>
+        </ul>
+        <button class="btn-inicio-card">Ver análisis anual →</button>
+      </div>
+      <div class="inicio-card card-blue" onclick="irSeccion('trimestral')">
+        <div class="inicio-icon" style="background:var(--amarillo);">📈</div>
+        <h3>Análisis Trimestral</h3>
+        <p>Evolución trimestral de la TPM por área y sexo — ENEMDU acumulada trimestral</p>
+        <ul>
+          <li>17 trimestres: I Trim 2022 – I Trim 2026</li>
+          <li>Desagregación: nacional, área, sexo</li>
+          <li>Último: I Trim 2026 · 37.31%</li>
+        </ul>
+        <button class="btn-inicio-card dorado">Ver análisis trimestral →</button>
+      </div>
+      <div class="inicio-card card-green" onclick="irSeccion('cronograma')">
+        <div class="inicio-icon" style="background:var(--verde);">📋</div>
+        <h3>Cronograma de Gestión</h3>
+        <p>Acciones planificadas por institución para reducir la TPM · corte 2026</p>
+        <ul>
+          <li>MDTDH, MINEDEC y MDT reportando</li>
+          <li>Seguimiento mensual de resultados</li>
+          <li>Estados: cumplido, en ejecución, vencido</li>
+        </ul>
+        <button class="btn-inicio-card verde">Ver cronograma →</button>
+      </div>
+    </div>
+    <div class="inicio-nota">
+      <strong>Nota metodológica:</strong> La TPM se calcula a partir de la ENEMDU del INEC.
+      La serie anual corresponde al corte de diciembre (acumulada anual); desde 2022 el INEC además publica
+      cortes trimestrales acumulados que permiten un seguimiento más frecuente del indicador.
+    </div>
+  </div>
+</div>
+
+<!-- NAV (solo visible dentro de Análisis Anual) -->
+<nav class="nav-tabs" id="nav-anual">
+    <button class="tab-btn" onclick="showPage('indicadores',event)" class="tab-btn active">Indicadores de la TPM </button>
+  <button class="tab-btn" onclick="showPage('ficha',event)">Ficha de Indicadores</button>
+  <button class="tab-btn" onclick="showPage('territorial',event)">Datos a nivel territorial</button>
+  <button class="tab-btn" onclick="showPage('serie',event)">Serie Histórica</button>
+  <button class="tab-btn" onclick="showPage('contrafactual',event)">Análisis Contrafactual</button>
+</nav>
+
+<main class="main">
+
+<div id="sec-anual" class="sec">
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1: RESUMEN
+═══════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════
+     PAGE 2: INDICADORES
+═══════════════════════════════════════════ -->
+<div id="page-indicadores" class="page active">
+
+  <div class="grid-4" style="margin-bottom:20px;">
+    <div class="kpi-card red">
+      <div class="kpi-label">TPM 2025</div>
+      <div class="kpi-value">37.11%</div>
+      <div class="kpi-detail">+0.26 puntos porcentuales (pp) vs. 2024</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Meta PND 2025</div>
+      <div class="kpi-value">35.58%</div>
+      <div class="kpi-detail">Meta Plan Nacional de Desarrollo</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Brecha frente a meta para el 2025</div>
+      <div class="kpi-value">+1.53 pp</div>
+      <div class="kpi-detail"> </div>
+    </div>
+  </div>
+
+  <div class="interp-box">
+    <div class="interp-box-icon">💡</div>
+    <div class="interp-box-text" id="interp-tpm-texto">Para el año <b>2025</b>, existe <b>37,11%</b> de personas que viven en hogares pobres multidimensionales en relación al total de la población.</div>
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Evolución de los 12 Indicadores de Pobreza Multidimensional 2023–2025</div>
+          <div class="card-sub">Fuente: INEC-ENEMDU Anual · Indicadores en rojo subieron en 2025</div>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <table class="ind-table">
+          <thead>
+            <tr>
+              <th style="width:320px;">Indicador</th>
+              <th>2023</th>
+              <th>2024</th>
+              <th>2025</th>
+              <th>Variación</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-indicadores"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Contribución al resultado TPM 2025</div>
+        <div class="card-sub">Peso estructural de cada indicador en el resultado nacional</div>
+      </div>
+      <div class="card-body" id="contrib-bars"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Descomposición Urbano-Rural</div>
+        <div class="card-sub">Contribución de los 4 indicadores objetivo al resultado TPM 2025</div>
+      </div>
+      <div class="card-body" id="urban-rural-bars"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 2b: FICHA DE INDICADORES
+═══════════════════════════════════════════ -->
+<div id="page-ficha" class="page">
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Indicadores de la Tasa de Pobreza Multidimensional</div>
+        <div class="card-sub">12 indicadores agrupados en 4 dimensiones · clic en un indicador para ver su definición</div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="dim-table">
+        <thead><tr><th style="width:220px;">Dimensión</th><th>Indicador</th></tr></thead>
+        <tbody id="tabla-ficha"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 3: TERRITORIAL
+═══════════════════════════════════════════ -->
+<div id="page-territorial" class="page">
+
+  <!-- Selector de indicador -->
+  <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="font-size:13px;font-weight:600;color:var(--subtexto);
+         display:flex;align-items:center;margin-right:6px;">Indicador:</div>
+    <button class="ind-btn active" onclick="seleccionarIndicador('saneamiento',this)"
+      style="border-left:4px solid #7B4FA6;">Sin saneamiento de excretas</button>
+    <button class="ind-btn" onclick="seleccionarIndicador('educ',this)"
+      style="border-left:4px solid #2D6EA5;">Educ. superior (económica)</button>
+    <button class="ind-btn" onclick="seleccionarIndicador('hacinamiento',this)"
+      style="border-left:4px solid #E8C800;">Hacinamiento</button>
+    <button class="ind-btn" onclick="seleccionarIndicador('basura',this)"
+      style="border-left:4px solid #2A9D8F;">Sin recolección de basura</button>
+  </div>
+
+  <div class="grid-2" style="align-items:start;">
+
+    <!-- Panel provincial -->
+    <div class="card" id="card-provincial">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="titulo-provincial">Sin saneamiento de excretas</div>
+          <div class="card-sub">Contribución provincial al resultado TPM nacional · haz clic en una provincia para ver sus cantones</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span class="badge badge-blue" id="total-nacional-badge">7.3% nacional</span>
+          <span class="export-btn-group">
+            <button type="button" class="export-btn" onclick="exportarProvincialCSV_TPM()">⬇ Datos CSV</button>
+          </span>
+        </div>
+      </div>
+      <div class="card-body" style="padding:12px 16px 4px;">
+        <div id="map-wrap-tpm">
+          <div id="ec-map-tpm"></div>
+          <div id="galapagos-inset-tpm">
+            <div class="inset-label">Galápagos</div>
+            <div id="ec-map-gal-tpm"></div>
+          </div>
+        </div>
+        <div class="legend-box">
+          <span id="leg-min-tpm">0.00%</span>
+          <div class="legend-scale" id="leg-scale-tpm"></div>
+          <span id="leg-max-tpm">0.00%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel derecho: lista provincias + cantones -->
+    <div class="card" id="card-cantonal" style="display:flex;flex-direction:column;gap:0;">
+
+      <!-- Lista de provincias -->
+      <div style="border-bottom:1px solid var(--gris-bd);">
+        <div class="card-header" style="padding-bottom:8px;">
+          <div>
+            <div class="card-title" id="titulo-prov-lista">Ranking de provincias</div>
+            <div class="card-sub">Selecciona para ver cantones</div>
+          </div>
+        </div>
+        <div id="prov-lista" style="padding:8px 12px;display:flex;flex-direction:column;gap:4px;
+             max-height:300px;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Panel cantonal -->
+      <div>
+        <div class="card-header" style="justify-content:space-between;">
+          <div>
+            <div class="card-title" id="titulo-cantonal">← Selecciona una provincia</div>
+            <div class="card-sub" id="sub-cantonal">del listado o del gráfico</div>
+          </div>
+          <button onclick="limpiarCantonal()" id="btn-volver"
+            style="display:none;padding:4px 14px;border-radius:20px;border:1px solid var(--gris-bd);
+                   background:var(--gris);font-size:12px;cursor:pointer;color:var(--subtexto);">
+            ✕ Limpiar
+          </button>
+        </div>
+        <div class="card-body" style="padding:12px 16px;" id="body-cantonal">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                      height:220px;color:var(--subtexto);gap:10px;">
+            <div style="font-size:32px;">👆</div>
+            <div style="font-size:13px;font-weight:500;">Selecciona una provincia</div>
+            <div style="font-size:12px;">del listado de arriba o del gráfico</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 4: SERIE HISTÓRICA
+═══════════════════════════════════════════ -->
+<div id="page-serie" class="page">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Serie Histórica TPM — Nivel Nacional 2021–2025</div>
+        <div class="card-sub">Evolución real con intervalo de confianza 95% · Meta PND 2025: 35.58% · Meta PND 2029: 32.59%</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <canvas id="chart-serie" height="340"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="kpi-card">
+      <div class="kpi-label">Brecha respecto a la meta del año 2025</div>
+      <div class="kpi-value">+1.53 pp</div>
+    </div>
+
+    <div class="kpi-card red">
+      <div class="kpi-label">Caída necesaria anual</div>
+      <div class="kpi-value">−1.06 pp</div>
+      <div class="kpi-detail">Para alcanzar meta 2029 de 32.59%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 5: CONTRAFACTUAL (análisis adicional — va al final para no anteponerse
+     a los resultados principales del indicador, homologado con el orden de
+     presentación de Tasa de pobreza extrema por ingresos)
+═══════════════════════════════════════════ -->
+<div id="page-contrafactual" class="page">
+
+  <div class="metodo-box">
+    <strong>¿Qué es el análisis contrafactual?</strong> Estima cuánto se reduciría la Tasa de Pobreza Multidimensional (TPM) si se eliminara la privación en cada uno de los 4 indicadores objetivo (saneamiento de excretas, educación superior por razones económicas, hacinamiento y recolección de basura), manteniendo todo lo demás constante. En otras palabras, simula el valor que tomaría el índice si ningún hogar estuviera privado en ese indicador en particular, aislando así su contribución individual al resultado nacional de 2025 y su relación con la brecha frente a la meta PND (1.53 pp).
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px;align-items:start;">
+
+    <!-- Gráfico contrafactual -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Impacto contrafactual individual — 4 indicadores objetivo</div>
+          <div class="card-sub">Cuánto bajaría la TPM si cada indicador dejara de existir en el índice</div>
+        </div>
+        <span class="badge badge-red">Brecha meta: 1.53 pp</span>
+      </div>
+      <div class="card-body">
+        <canvas id="chart-contrafactual" height="280"></canvas>
+        <div style="margin-top:10px;font-size:11px;color:var(--subtexto);background:var(--rojo-l);padding:8px 12px;border-radius:6px;border-left:3px solid var(--rojo);">
+          La línea <strong style="color:var(--rojo);">roja</strong> marca la brecha de 1.53 pp. Todos los indicadores la superan individualmente.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjetas decisividad -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Decisividad — ¿Para quién es clave cada indicador?</div>
+          <div class="card-sub">% de personas para quienes ese indicador es decisivo para salir de la pobreza</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:12px;" id="decis-cards"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Prevalencia en población total vs. entre pobres multidimensionales</div>
+      <div class="card-sub">Cuán concentradas están las privaciones dentro del grupo de pobres</div>
+    </div>
+    <div class="card-body">
+      <canvas id="chart-prevalencia" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+</div> <!-- /#sec-anual -->
+
+<!-- ═══════════════════════════════════════════
+     SECCIÓN: ANÁLISIS TRIMESTRAL
+═══════════════════════════════════════════ -->
+<div id="sec-trimestral" class="sec">
+
+  <div class="inicio-nota" style="margin-bottom:16px;">
+    <strong>Comparación correcta:</strong> Comparar entre el mismo trimestre de años distintos (ej. I Trim 2025 vs I Trim 2026).
+    No comparar trimestres del mismo año entre sí por estacionalidad.
+  </div>
+
+  <!-- SELECTOR PERÍODO TRIMESTRAL -->
+  <section class="tri-toolbar">
+    <label>Ver:</label>
+    <button class="tri-btn active" id="tm-todos" onclick="setModoTrim('todos')">Toda la serie</button>
+    <button class="tri-btn" id="tm-trim" onclick="setModoTrim('trim')">Por trimestre</button>
+    <span id="wrap-año-trim" style="display:none;align-items:center;gap:.4rem;">
+      <label style="font-weight:600;text-transform:none;letter-spacing:0;">Año:</label>
+      <select id="sel-año-trim" onchange="filtrarTrim()">
+        <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+        <option value="2023">2023</option><option value="2022">2022</option>
+      </select>
+    </span>
+    <span id="wrap-trim-num" style="display:none;align-items:center;gap:.4rem;">
+      <label style="font-weight:600;text-transform:none;letter-spacing:0;">Trimestre:</label>
+      <select id="sel-trim-num" onchange="filtrarTrim()">
+        <option value="I">I Trimestre</option><option value="II">II Trimestre</option>
+        <option value="III">III Trimestre</option><option value="IV">IV Trimestre</option>
+      </select>
+    </span>
+  </section>
+
+  <!-- MÉTRICAS -->
+  <div class="grid-4" style="margin-bottom:8px;">
+    <div class="kpi-card">
+      <div class="kpi-label">Nacional</div>
+      <div class="kpi-value" id="mv-nac-trim">—</div>
+      <div class="kpi-detail" id="ms-nac-trim">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Urbano</div>
+      <div class="kpi-value" id="mv-urb-trim">—</div>
+      <div class="kpi-detail" id="ms-urb-trim">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Rural</div>
+      <div class="kpi-value" id="mv-rur-trim">—</div>
+      <div class="kpi-detail" id="ms-rur-trim">—</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Meta 2029 (ref. anual)</div>
+      <div class="kpi-value">32.59%</div>
+      <div class="kpi-detail">No comparable con el dato trimestral</div>
+    </div>
+  </div>
+
+  <!-- SUB-TABS -->
+  <div class="tri-tabs-row">
+    <button class="tri-tab-btn active" onclick="activarTabTrim('serie',this)">Serie trimestral</button>
+    <button class="tri-tab-btn" onclick="activarTabTrim('sexo',this)">Por sexo</button>
+    <button class="tri-tab-btn" onclick="activarTabTrim('tabla',this)">Tabla de datos</button>
+  </div>
+
+  <!-- PANEL: Serie trimestral (Nacional/Urbano/Rural) -->
+  <div id="trim-serie" class="tri-tab-panel active">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="title-trim-serie">Evolución trimestral de la TPM — Nacional, Urbano y Rural</div>
+          <div class="card-sub" id="sub-trim-serie">Fuente: INEC-ENEMDU acumulada trimestral · I Trim 2022 – I Trim 2026</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="tri-toggle-series">
+          <button class="tri-ts-btn" id="ts-t-nac" onclick="toggleTrimSerie('nac')"><span class="tri-ts-swatch" style="background:#4F449A;"></span>Nacional</button>
+          <button class="tri-ts-btn" id="ts-t-urb" onclick="toggleTrimSerie('urb')"><span class="tri-ts-swatch" style="background:#F1B620;"></span>Urbano</button>
+          <button class="tri-ts-btn" id="ts-t-rur" onclick="toggleTrimSerie('rur')"><span class="tri-ts-swatch" style="background:#DE232D;"></span>Rural</button>
+        </div>
+        <canvas id="chart-trim-serie" height="330"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: Por sexo -->
+  <div id="trim-sexo" class="tri-tab-panel">
+    <!-- Vista único período (KPI grande) -->
+    <div id="trim-sexo-unico" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="title-trim-sexo-sil">TPM por sexo</div>
+            <div class="card-sub">Nacional · INEC-ENEMDU acumulada trimestral</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tri-silueta-wrap" id="trim-siluetas-wrap"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Vista serie -->
+    <div id="trim-sexo-chart">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title" id="title-trim-sexo">Evolución trimestral de la TPM por sexo</div>
+            <div class="card-sub">Fuente: INEC-ENEMDU acumulada trimestral</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tri-toggle-series">
+            <button class="tri-ts-btn" id="ts-t-h" onclick="toggleTrimSexo('h')"><span class="tri-ts-swatch" style="background:#2D6EA5;"></span>Hombre</button>
+            <button class="tri-ts-btn" id="ts-t-m" onclick="toggleTrimSexo('m')"><span class="tri-ts-swatch" style="background:#B6459F;"></span>Mujer</button>
+          </div>
+          <canvas id="chart-trim-sexo" height="320"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: Tabla de datos -->
+  <div id="trim-tabla" class="tri-tab-panel">
+    <div class="tri-filtros-bar">
+      <label>Filtrar:</label>
+      <select id="ft-año" onchange="renderTablaTrim()"><option value="">Todos los años</option><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select>
+      <select id="ft-trim" onchange="renderTablaTrim()"><option value="">Todos los trimestres</option><option value="I">I Trim</option><option value="II">II Trim</option><option value="III">III Trim</option><option value="IV">IV Trim</option></select>
+      <select id="ft-area" onchange="renderTablaTrim()"><option value="">Todas las áreas</option><option>Nacional</option><option>Urbano</option><option>Rural</option><option>Hombre</option><option>Mujer</option></select>
+      <button class="tri-btn-reset" onclick="resetFiltrosTrim()">✕ Limpiar</button>
+      <span class="tri-filtros-count" id="ft-count"></span>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="ind-table" style="min-width:760px;">
+          <thead>
+            <tr>
+              <th onclick="sortTablaTrim(0)">Período</th>
+              <th onclick="sortTablaTrim(1)" style="text-align:left;">Área / Grupo</th>
+              <th onclick="sortTablaTrim(2)">Estimador</th>
+              <th onclick="sortTablaTrim(3)">L. Inferior</th>
+              <th onclick="sortTablaTrim(4)">L. Superior</th>
+              <th onclick="sortTablaTrim(5)">CV</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-trim"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="inicio-nota" style="margin-top:16px;">
+    <strong>Lectura del indicador:</strong> Los cortes trimestrales del INEC (ENEMDU acumulada trimestral) permiten
+    dar seguimiento a la TPM entre cortes anuales, pero tienen mayor coeficiente de variación (CV) al basarse en
+    muestras más pequeñas; se recomienda interpretarlos como tendencia y no como reemplazo del dato anual oficial (corte de diciembre).
+  </div>
+</div> <!-- /#sec-trimestral -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 6: CRONOGRAMA DE GESTIÓN
+═══════════════════════════════════════════ -->
+<div id="sec-cronograma" class="sec">
+
+
+  <!-- Instituciones -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:12px;font-weight:600;color:var(--subtexto);text-transform:uppercase;
+                letter-spacing:.8px;margin-bottom:12px;">Selecciona la institución:</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button class="inst-btn active" onclick="verInstitucion('MDTDH', this)">
+        <div class="inst-sigla">MDTDH</div>
+        <div class="inst-name">Ministerio de<br>Desarrollo Humano</div>
+      </button>
+      <button class="inst-btn" onclick="verInstitucion('MINEDEC', this)">
+        <div class="inst-sigla">MINEDEC</div>
+        <div class="inst-name">Min. Educación,<br>Deporte y Cultura</div>
+      </button>
+      <button class="inst-btn" onclick="verInstitucion('MDT', this)">
+        <div class="inst-sigla">MDT</div>
+        <div class="inst-name">Ministerio<br>del Trabajo</div>
+      </button>
+      <button class="inst-btn" onclick="verInstitucion('MAE', this)">
+        <div class="inst-sigla">MAE</div>
+        <div class="inst-name">Min. Ambiente<br>y Energía</div>
+      </button>
+      <button class="inst-btn" onclick="verInstitucion('MIT', this)">
+        <div class="inst-sigla">MIT</div>
+        <div class="inst-name">Min. Infraestructura<br>y Transporte</div>
+      </button>
+      <button class="inst-btn inst-btn-disabled" title="Información próximamente disponible" disabled>
+        <div class="inst-sigla" style="color:var(--subtexto);">VMDUH</div>
+        <div class="inst-name">Vic. Desarrollo<br>Urbano y Vivienda</div>
+        <div class="inst-coming">🔒 Próximamente</div>
+      </button>
+      <button class="inst-btn inst-btn-disabled" title="Información próximamente disponible" disabled>
+        <div class="inst-sigla" style="color:var(--subtexto);">AME</div>
+        <div class="inst-name">Acciones AME</div>
+        <div class="inst-coming" style="font-size:9px;color:var(--subtexto);font-style:normal;">Asoc. Municipalidades<br>Ecuatorianas</div>
+        <div class="inst-coming">🔒 Próximamente</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Selector de corte / mes -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:12px;font-weight:600;color:var(--subtexto);text-transform:uppercase;
+                letter-spacing:.8px;margin-bottom:12px;">Corte de seguimiento:</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="corte-selector"></div>
+  </div>
+
+  <!-- Summary KPIs -->
+  <div id="cron-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;"></div>
+
+  <!-- Tabla cronograma -->
+  <div class="card">
+    <div class="card-header" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div class="card-title" id="cron-titulo">Ministerio de Trabajo y Desarrollo Humano — Cronograma de Acciones 2026</div>
+        <div class="card-sub" id="cron-sub">Mes de reporte: Marzo 2026 · Acciones orientadas a reducir la TPM</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="cron-filtros">
+        <button class="cron-filter active" data-filter="todas" onclick="filtrarCronograma('todas',this)">
+          Todas <span class="filter-count" id="fc-todas"></span>
+        </button>
+        <button class="cron-filter ejecucion" data-filter="ejecucion" onclick="filtrarCronograma('ejecucion',this)">
+          🟡 En ejecución <span class="filter-count" id="fc-ejecucion"></span>
+        </button>
+        <button class="cron-filter cumplido" data-filter="cumplido" onclick="filtrarCronograma('cumplido',this)">
+          ✅ Cumplidas <span class="filter-count" id="fc-cumplido"></span>
+        </button>
+        <button class="cron-filter vencido" data-filter="vencido" onclick="filtrarCronograma('vencido',this)">
+          🔴 Vencidas <span class="filter-count" id="fc-vencido"></span>
+        </button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table class="cron-table" id="cron-tabla">
+        <thead>
+          <tr>
+            <th style="width:32px;" class="center">#</th>
+            <th style="min-width:260px;">Acción planificada</th>
+            <th style="min-width:100px;" class="center">Tipo</th>
+            <th style="min-width:90px;" class="center">Período</th>
+            <th style="min-width:90px;" class="center">Frecuencia</th>
+            <th style="min-width:160px;">Resultados obtenidos</th>
+            <th style="display:none;">% Ejecución</th>
+            <th style="min-width:130px;" class="center">Estado</th>
+            <th style="min-width:180px;">Justificación</th>
+          </tr>
+        </thead>
+        <tbody id="cron-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Nota plantilla -->
+  <div style="margin-top:16px;padding:12px 16px;background:var(--azul-pale);border-radius:8px;
+              border-left:4px solid var(--azul);font-size:11px;color:var(--subtexto);">
+    <strong style="color:var(--azul);">📋 Actualización de datos:</strong>
+    Para agregar o actualizar información de una institución, completa la plantilla Excel estandarizada y
+    entrega al equipo técnico para su carga en el dashboard.
+    Los estados se asignan automáticamente: <strong style="color:var(--verde);">verde = Cumplido</strong>,
+    <strong style="color:#7F6000;">amarillo = En ejecución</strong>,
+    <strong style="color:var(--rojo);">rojo = No iniciado / Vencido</strong>.
+  </div>
+</div> <!-- /#sec-cronograma -->
+
+</main>
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const DATA = {
+  indicadores: [
+    { nombre: "Inasistencia educ. básica y bachillerato", v23: 8.98, v24: 9.36, v25: 8.97, var: -4.2, rojo: false },
+    { nombre: "No acceso a educ. superior (económica)", v23: 19.94, v24: 18.89, v25: 19.21, var: 1.7, rojo: true },
+    { nombre: "Logro educativo incompleto", v23: 32.85, v24: 33.13, v25: 32.19, var: -2.8, rojo: false },
+    { nombre: "Empleo infantil y adolescente", v23: 6.90, v24: 7.21, v25: 5.76, var: -20.1, rojo: false },
+    { nombre: "Desempleo o empleo inadecuado", v23: 43.21, v24: 43.17, v25: 42.55, var: -1.4, rojo: false },
+    { nombre: "No contribución al sistema de pensiones", v23: 43.27, v24: 43.32, v25: 43.14, var: -0.4, rojo: false },
+    { nombre: "Pobreza extrema por ingresos", v23: 8.75, v24: 8.81, v25: 6.83, var: -22.5, rojo: false },
+    { nombre: "Sin servicio de agua por red pública", v23: 19.86, v24: 21.00, v25: 20.24, var: -3.6, rojo: false },
+    { nombre: "Hacinamiento", v23: 14.80, v24: 13.98, v25: 14.00, var: 0.1, rojo: true },
+    { nombre: "Déficit habitacional", v23: 57.03, v24: 57.86, v25: 56.35, var: -2.6, rojo: false },
+    { nombre: "Sin saneamiento de excretas", v23: 20.12, v24: 19.64, v25: 20.78, var: 5.8, rojo: true },
+    { nombre: "Sin servicio de recolección de basura", v23: 12.70, v24: 11.80, v25: 14.22, var: 20.5, rojo: true },
+  ],
+  contribuciones: [
+    { nombre: "Déficit habitacional",       val: 19.82 },
+    { nombre: "No contrib. pensiones",      val: 15.18 },
+    { nombre: "Desempleo/subempleo",         val: 14.97 },
+    { nombre: "Logro educ. incompleto",      val: 11.32 },
+    { nombre: "Sin saneamiento excretas",   val: 7.31, rojo: true },
+    { nombre: "Sin agua red pública",        val: 7.12 },
+    { nombre: "Educ. superior económica",   val: 6.76, rojo: true },
+    { nombre: "Sin recolección basura",     val: 5.00, rojo: true },
+    { nombre: "Hacinamiento",               val: 4.93, rojo: true },
+    { nombre: "Inasistencia educ. básica",  val: 3.16 },
+    { nombre: "Pobreza extrema ingresos",   val: 2.40 },
+    { nombre: "Empleo infantil",            val: 2.03 },
+  ],
+  urbanoRural: [
+    { nombre: "Sin saneamiento excretas", urbano: 5.21, rural: 2.11, total: 7.32 },
+    { nombre: "Educ. superior económica", urbano: 3.69, rural: 3.08, total: 6.76 },
+    { nombre: "Sin recolección basura",   urbano: 0.79, rural: 4.21, total: 5.00 },
+    { nombre: "Hacinamiento",             urbano: 3.21, rural: 1.73, total: 4.93 },
+  ],
+  contrafactual: [
+    { nombre: "Saneamiento de excretas", impacto: 3.494 },
+    { nombre: "Educ. superior económica", impacto: 3.132 },
+    { nombre: "Hacinamiento", impacto: 2.093 },
+    { nombre: "Sin recolección basura", impacto: 1.622 },
+  ],
+  decisividad: [
+    { nombre: "Sin saneamiento de excretas", pobl: 3.49, pobres: 9.42 },
+    { nombre: "Educ. superior (económica)",  pobl: 3.13, pobres: 8.44 },
+    { nombre: "Hacinamiento",                pobl: 2.09, pobres: 5.64 },
+    { nombre: "Sin recolección de basura",   pobl: 1.62, pobres: 4.37 },
+  ],
+  prevalencia: [
+    { nombre: "Saneamiento",    total: 20.81, pobres: 39.71 },
+    { nombre: "Basura",         total: 14.22, pobres: 35.07 },
+    { nombre: "Hacinamiento",   total: 14.04, pobres: 28.81 },
+    { nombre: "Educ. superior", total: 11.06, pobres: 21.93 },
+  ],
+  provincial: [
+    { prov: "Morona Santiago", tpm: 90.43 }, { prov: "Orellana", tpm: 83.71 }, { prov: "Napo", tpm: 83.53 },
+    { prov: "Cotopaxi", tpm: 64.42 }, { prov: "Los Ríos", tpm: 45.30 }, { prov: "Chimborazo", tpm: 56.92 },
+    { prov: "Esmeraldas", tpm: 56.04 }, { prov: "Sucumbíos", tpm: 56.78 }, { prov: "Pastaza", tpm: 56.85 },
+    { prov: "Manabí", tpm: 51.01 }, { prov: "Bolívar", tpm: 43.11 }, { prov: "Z. Chinchipe", tpm: 43.55 },
+    { prov: "Loja", tpm: 41.72 }, { prov: "Santa Elena", tpm: 41.22 }, { prov: "Carchi", tpm: 38.62 },
+    { prov: "Imbabura", tpm: 37.83 }, { prov: "Tungurahua", tpm: 37.29 }, { prov: "Nacional", tpm: 37.11 },
+    { prov: "Guayas", tpm: 36.10 }, { prov: "Sto. Domingo", tpm: 31.89 }, { prov: "Cañar", tpm: 30.82 },
+    { prov: "Azuay", tpm: 20.89 }, { prov: "El Oro", tpm: 19.72 }, { prov: "Pichincha", tpm: 15.34 },
+    { prov: "Galápagos", tpm: 9.75 },
+  ].sort((a,b) => b.tpm - a.tpm),
+  provIndicadores: {
+    provincias: ["Azuay","Bolívar","Cañar","Carchi","Cotopaxi","Chimborazo","El Oro","Esmeraldas","Guayas","Imbabura","Loja","Los Ríos","Manabí","M. Santiago","Napo","Pastaza","Pichincha","Tungurahua","Z. Chinchipe","Galápagos","Sucumbíos","Orellana","Sto. Domingo","Santa Elena"],
+    inasistencia:[6.53,10.01,6.19,9.85,10.13,10.41,7.14,11.23,9.34,9.94,7.98,11.64,7.16,21.61,13.51,12.3,6.57,6,10.98,3.79,10.51,16.62,8.93,8.95],
+    educ_sup:[19.18,14.2,24.13,20.94,33.85,27.34,21.87,33.65,10.28,30.96,31.99,14.76,15.08,24.8,51.24,35.72,20.33,26.9,26.16,27.93,33.84,52.91,10.83,11.91],
+    saneamiento:[4.56,13,5.88,23.33,12.31,7.01,6.55,34.98,32.81,15.53,12.64,29.8,29.89,83.73,28.44,18.82,4.62,2.64,12.47,42.24,19.92,53.38,23.13,37.05],
+    basura:[5.6,32.79,6.35,27.93,33.36,18.06,2.54,19.88,12.03,14.98,30.11,13.7,19.62,83.11,32.47,21,5.83,7.79,25.43,0.8,18.2,58.15,9.88,0.82],
+  },
+  serie: [
+    { anio: 2018, tpm: 37.74, li: 36.97, ls: 38.51 },
+    { anio: 2019, tpm: 37.88, li: 37.04, ls: 38.72 },
+    { anio: 2021, tpm: 39.63, li: 38.15, ls: 41.11 },
+    { anio: 2022, tpm: 38.40, li: 36.74, ls: 40.05 },
+    { anio: 2023, tpm: 36.92, li: 35.09, ls: 38.74 },
+    { anio: 2024, tpm: 36.85, li: 34.33, ls: 39.37 },
+    { anio: 2025, tpm: 37.11, li: 36.5,  ls: 37.72 },
+  ]
+};
+
+// ══════════════════════════════════════
+// FICHA DE INDICADORES (dimensión + definición)
+// nombre debe calzar EXACTO con DATA.indicadores[].nombre para poder graficar
+// ══════════════════════════════════════
+const FICHA_DATA = [
+  { dim: 'Educación', nombre: 'Inasistencia educ. básica y bachillerato', titulo: 'Inasistencia a educación básica y bachillerato',
+    def: 'Se consideran privadas en el derecho a la educación los niños y niñas entre 5 a 14 años que no asisten a un centro de educación básica y también los jóvenes entre 15 a 17 años que no asisten al bachillerato.' },
+  { dim: 'Educación', nombre: 'No acceso a educ. superior (económica)', titulo: 'No acceso a educación superior por razones económicas',
+    def: 'Se categorizan como privadas al derecho a la educación a los jóvenes entre 18 y 29 años que, habiendo terminado el bachillerato, no pueden acceder a un centro de educación superior de tercer nivel debido a la falta de recursos económicos.' },
+  { dim: 'Educación', nombre: 'Logro educativo incompleto', titulo: 'Logro educativo incompleto',
+    def: 'Se consideran privados en el derecho a la educación las personas entre 18 a 64 años que no hayan terminado la educación básica, es decir, que tengan menos de 10 años de escolaridad y que no asistan a un centro de educación formal.' },
+  { dim: 'Trabajo y seguridad social', nombre: 'No contribución al sistema de pensiones', titulo: 'No contribución al sistema de pensiones',
+    def: 'Se consideran privadas las personas ocupadas de 15 años o más que no aportan a ningún tipo de seguridad social; se excluye de la privación a personas ocupadas de 65 años y más que no aportan pero reciben pensión por jubilación. Para personas en desempleo o económicamente inactivas de 65 años o más, se las considera en privación si no reciben pensión por jubilación, Bono de Desarrollo Humano o Bono Joaquín Gallegos Lara.' },
+  { dim: 'Trabajo y seguridad social', nombre: 'Empleo infantil y adolescente', titulo: 'Empleo infantil y adolescente',
+    def: 'Los niños y niñas entre 5 a 14 años que estén ocupados en la semana de referencia se identifican como privados, al considerarse prohibido el trabajo infantil. Para los adolescentes entre 15 a 17 años, se los considera privados si, estando ocupados, recibieron una remuneración inferior al Salario Básico Unificado, no asisten a clases o trabajaron más de 30 horas.' },
+  { dim: 'Trabajo y seguridad social', nombre: 'Desempleo o empleo inadecuado', titulo: 'Desempleo o empleo inadecuado',
+    def: 'Se consideran privadas en su derecho al trabajo a las personas de 18 años o más que, en el período de referencia, estuvieron desocupadas (sin trabajo, disponibles para trabajar, en búsqueda o no de empleo). Adicionalmente, se consideran privadas las personas ocupadas que tienen un empleo inadecuado.' },
+  { dim: 'Salud, agua y alimentación', nombre: 'Sin servicio de agua por red pública', titulo: 'Sin servicio de agua por red pública',
+    def: 'Se identifica como privados a los miembros de las viviendas que obtienen el agua por un medio distinto al de la red pública.' },
+  { dim: 'Salud, agua y alimentación', nombre: 'Pobreza extrema por ingresos', titulo: 'Pobreza extrema por ingresos',
+    def: 'Se consideran privadas a las personas cuyo ingreso per cápita familiar es inferior al de la línea de pobreza extrema.' },
+  { dim: 'Hábitat, vivienda y ambiente sano', nombre: 'Hacinamiento', titulo: 'Hacinamiento',
+    def: 'Se encuentran en condición de hacinamiento los miembros de viviendas que tienen más de tres personas por dormitorio exclusivo para dormir.' },
+  { dim: 'Hábitat, vivienda y ambiente sano', nombre: 'Déficit habitacional', titulo: 'Déficit habitacional',
+    def: 'Se consideran en déficit habitacional las personas cuya vivienda, debido a los materiales o estado de sus paredes, piso y techo, son consideradas en déficit cualitativo o cuantitativo.' },
+  { dim: 'Hábitat, vivienda y ambiente sano', nombre: 'Sin saneamiento de excretas', titulo: 'Sin saneamiento de excretas',
+    def: 'Se catalogan como privadas en saneamiento de excretas a las personas del área urbana cuya vivienda no cuenta con servicio higiénico conectado a alcantarillado. En el área rural, las personas privadas son aquellas cuya vivienda no cuenta con alcantarillado o pozo séptico.' },
+  { dim: 'Hábitat, vivienda y ambiente sano', nombre: 'Sin servicio de recolección de basura', titulo: 'Sin servicio de recolección de basura',
+    def: 'Las personas que habitan en viviendas que no tienen acceso al servicio municipal de recolección de basura se clasifican como privadas en este indicador.' },
+];
+
+// ══════════════════════════════════════
+// NAVEGACIÓN — MENÚ INICIAL / SECCIONES
+// ══════════════════════════════════════
+function irInicio() {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.getElementById('nav-anual').style.display = 'none';
+  document.getElementById('page-inicio').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function irSeccion(sec) {
+  document.getElementById('page-inicio').classList.remove('active');
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + sec).classList.add('active');
+  document.getElementById('nav-anual').style.display = (sec === 'anual') ? 'flex' : 'none';
+  if (sec === 'anual' && !window._anualInit) { initAnualCharts(); window._anualInit = true; }
+  if (sec === 'trimestral' && !window._triInit) { buildTrim(); window._triInit = true; }
+  window.scrollTo(0,0);
+}
+
+function initAnualCharts() {
+  buildChartContrafactual();
+  buildChartPrevalencia();
+  renderProvincial('saneamiento');
+  buildChartSerie();
+  buildFichaTabla();
+}
+
+// ══════════════════════════════════════
+// FICHA DE INDICADORES — tabla con íconos por dimensión, desplegable
+// ══════════════════════════════════════
+const FICHA_ICONS = {
+  'Inasistencia educ. básica y bachillerato': '🏫',
+  'No acceso a educ. superior (económica)': '🎓',
+  'Logro educativo incompleto': '📘',
+  'No contribución al sistema de pensiones': '💼',
+  'Empleo infantil y adolescente': '🧒',
+  'Desempleo o empleo inadecuado': '📉',
+  'Sin servicio de agua por red pública': '🚰',
+  'Pobreza extrema por ingresos': '💰',
+  'Hacinamiento': '🏠',
+  'Déficit habitacional': '🏚️',
+  'Sin saneamiento de excretas': '🚻',
+  'Sin servicio de recolección de basura': '🗑️',
+};
+const FICHA_DIM_ICONS = {
+  'Educación': '📚',
+  'Trabajo y seguridad social': '💼',
+  'Salud, agua y alimentación': '🚰',
+  'Hábitat, vivienda y ambiente sano': '🏠',
+};
+const FICHA_DIM_COLORS = {
+  'Educación': '#2563A8',
+  'Trabajo y seguridad social': '#C99200',
+  'Salud, agua y alimentación': '#2A9D8F',
+  'Hábitat, vivienda y ambiente sano': '#7B4FA6',
+};
+
+function buildFichaTabla() {
+  const tbody = document.getElementById('tabla-ficha');
+  if (!tbody) return;
+  const dims = [...new Set(FICHA_DATA.map(f => f.dim))];
+  let html = '';
+  let idx = 0;
+  dims.forEach(dim => {
+    const items = FICHA_DATA.filter(f => f.dim === dim);
+    const color = FICHA_DIM_COLORS[dim] || 'var(--azul)';
+    items.forEach((item, i) => {
+      idx++;
+      const id = 'ficha-ind-' + idx;
+      const dato = DATA.indicadores.find(r => r.nombre === item.nombre);
+      const celdaDim = i === 0 ? `<td class="dim-cell" rowspan="${items.length}">
+        <div class="dim-cell-inner">
+          <div class="dim-cell-icon" style="background:${color};">${FICHA_DIM_ICONS[dim] || '📊'}</div>
+          <span>${dim}</span>
+        </div>
+      </td>` : '';
+      html += `<tr>${celdaDim}<td>
+        <div class="fila-ind-nombre" onclick="toggleFichaDef('${id}', this)">
+          <span class="fila-ind-arrow">▸</span>
+          <span class="fila-ind-icon" style="background:${color};">${FICHA_ICONS[item.nombre] || '📊'}</span>
+          ${idx}. ${item.titulo}
+          ${dato ? `<span class="fila-ind-val" style="color:${color};">${dato.v25.toFixed(2)}%</span>` : ''}
+        </div>
+        <div class="fila-ind-def" id="${id}">${item.def}</div>
+      </td></tr>`;
+    });
+  });
+  tbody.innerHTML = html;
+}
+
+function toggleFichaDef(id, el) {
+  const def = document.getElementById(id);
+  if (!def) return;
+  const abierto = def.style.display === 'block';
+  def.style.display = abierto ? 'none' : 'block';
+  el.classList.toggle('abierto', !abierto);
+}
+
+// ══════════════════════════════════════
+// TABS
+// ══════════════════════════════════════
+function showPage(id, evt) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#nav-anual .tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const btn = evt ? evt.currentTarget : document.querySelector('[onclick*="' + id + '"]');
+  if (btn) btn.classList.add('active');
+  if (id === 'territorial') {
+    if (!mapaTPM) renderProvincial(TERR.indicadorActual);
+    else setTimeout(() => mapaTPM.invalidateSize(), 30);
+  }
+}
+
+// ══════════════════════════════════════
+// ANÁLISIS TRIMESTRAL — DATOS REALES INEC-ENEMDU
+// (Fuente: Reporte_consolidado.xlsx, hoja "Multidimensional", indicador 1.1.2)
+// Modelo alineado con pobreza_extrema.html: SIN filtro "Por año" en trimestral,
+// porque los trimestres de un mismo año no son comparables entre sí (estacionalidad).
+// ══════════════════════════════════════
+function pctT(v) { return (v*100).toFixed(2).replace('.', ',') + '%'; }
+
+const TRIM_GEO=[
+{per:'I Trim 2022',nac:0.4129,urb:0.2642,rur:0.7297},
+{per:'II Trim 2022',nac:0.3979,urb:0.2535,rur:0.7071},
+{per:'III Trim 2022',nac:0.3963,urb:0.2434,rur:0.7231},
+{per:'IV Trim 2022',nac:0.388,urb:0.2305,rur:0.7255},
+{per:'I Trim 2023',nac:0.3941,urb:0.2481,rur:0.7073},
+{per:'II Trim 2023',nac:0.3865,urb:0.2408,rur:0.6982},
+{per:'III Trim 2023',nac:0.3763,urb:0.223,rur:0.7047},
+{per:'IV Trim 2023',nac:0.3887,urb:0.2391,rur:0.7085},
+{per:'I Trim 2024',nac:0.3976,urb:0.239,rur:0.7371},
+{per:'II Trim 2024',nac:0.3887,urb:0.238,rur:0.7117},
+{per:'III Trim 2024',nac:0.3827,urb:0.2332,rur:0.7031},
+{per:'IV Trim 2024',nac:0.3899,urb:0.2402,rur:0.7111},
+{per:'I Trim 2025',nac:0.4001,urb:0.2435,rur:0.7341},
+{per:'II Trim 2025',nac:0.3744,urb:0.2212,rur:0.7024},
+{per:'III Trim 2025',nac:0.3675,urb:0.2075,rur:0.7098},
+{per:'IV Trim 2025',nac:0.4056,urb:0.2642,rur:0.7088},
+{per:'I Trim 2026',nac:0.3731,urb:0.218,rur:0.7057}
+];
+
+const TRIM_SEXO=[
+{per:'I Trim 2022',h:0.4266,m:0.3998},
+{per:'II Trim 2022',h:0.4135,m:0.383},
+{per:'III Trim 2022',h:0.4059,m:0.3872},
+{per:'IV Trim 2022',h:0.3956,m:0.3807},
+{per:'I Trim 2023',h:0.405,m:0.3837},
+{per:'II Trim 2023',h:0.3993,m:0.3741},
+{per:'III Trim 2023',h:0.3883,m:0.3648},
+{per:'IV Trim 2023',h:0.4016,m:0.3763},
+{per:'I Trim 2024',h:0.4092,m:0.3865},
+{per:'II Trim 2024',h:0.3979,m:0.3798},
+{per:'III Trim 2024',h:0.3931,m:0.3726},
+{per:'IV Trim 2024',h:0.3947,m:0.3853},
+{per:'I Trim 2025',h:0.4129,m:0.3879},
+{per:'II Trim 2025',h:0.3846,m:0.3646},
+{per:'III Trim 2025',h:0.3764,m:0.359},
+{per:'IV Trim 2025',h:0.4143,m:0.3972},
+{per:'I Trim 2026',h:0.3744,m:0.3717}
+];
+
+const TRIM_TABLA=[
+['I Trim 2022','Nacional',0.4129,0.3861,0.4397,0.0331],
+['I Trim 2022','Urbano',0.2642,0.2329,0.2955,0.0605],
+['I Trim 2022','Rural',0.7297,0.6966,0.7628,0.0231],
+['I Trim 2022','Hombre',0.4266,0.3967,0.4564,0.0357],
+['I Trim 2022','Mujer',0.3998,0.3749,0.4246,0.0317],
+['II Trim 2022','Nacional',0.3979,0.3642,0.4317,0.0433],
+['II Trim 2022','Urbano',0.2535,0.2085,0.2985,0.0906],
+['II Trim 2022','Rural',0.7071,0.6684,0.7458,0.0279],
+['II Trim 2022','Hombre',0.4135,0.3744,0.4526,0.0483],
+['II Trim 2022','Mujer',0.383,0.3534,0.4125,0.0393],
+['III Trim 2022','Nacional',0.3963,0.3726,0.42,0.0305],
+['III Trim 2022','Urbano',0.2434,0.2203,0.2666,0.0485],
+['III Trim 2022','Rural',0.7231,0.6892,0.7571,0.0239],
+['III Trim 2022','Hombre',0.4059,0.3813,0.4304,0.0309],
+['III Trim 2022','Mujer',0.3872,0.3632,0.4111,0.0316],
+['IV Trim 2022','Nacional',0.388,0.3589,0.4171,0.0382],
+['IV Trim 2022','Urbano',0.2305,0.2024,0.2585,0.0621],
+['IV Trim 2022','Rural',0.7255,0.6875,0.7634,0.0267],
+['IV Trim 2022','Hombre',0.3956,0.3652,0.426,0.0392],
+['IV Trim 2022','Mujer',0.3807,0.3519,0.4095,0.0386],
+['I Trim 2023','Nacional',0.3941,0.3606,0.4276,0.0434],
+['I Trim 2023','Urbano',0.2481,0.2224,0.2739,0.053],
+['I Trim 2023','Rural',0.7073,0.659,0.7556,0.0348],
+['I Trim 2023','Hombre',0.405,0.371,0.439,0.0428],
+['I Trim 2023','Mujer',0.3837,0.3496,0.4178,0.0453],
+['II Trim 2023','Nacional',0.3865,0.3498,0.4231,0.0484],
+['II Trim 2023','Urbano',0.2408,0.2135,0.2682,0.0579],
+['II Trim 2023','Rural',0.6982,0.6448,0.7515,0.039],
+['II Trim 2023','Hombre',0.3993,0.361,0.4377,0.049],
+['II Trim 2023','Mujer',0.3741,0.3382,0.41,0.0489],
+['III Trim 2023','Nacional',0.3763,0.3508,0.4018,0.0346],
+['III Trim 2023','Urbano',0.223,0.2029,0.2432,0.0461],
+['III Trim 2023','Rural',0.7047,0.6681,0.7413,0.0265],
+['III Trim 2023','Hombre',0.3883,0.3624,0.4143,0.0341],
+['III Trim 2023','Mujer',0.3648,0.3385,0.391,0.0367],
+['IV Trim 2023','Nacional',0.3887,0.3583,0.419,0.0398],
+['IV Trim 2023','Urbano',0.2391,0.2079,0.2704,0.0667],
+['IV Trim 2023','Rural',0.7085,0.6699,0.7471,0.0278],
+['IV Trim 2023','Hombre',0.4016,0.3708,0.4324,0.0391],
+['IV Trim 2023','Mujer',0.3763,0.3451,0.4075,0.0423],
+['I Trim 2024','Nacional',0.3976,0.3599,0.4354,0.0484],
+['I Trim 2024','Urbano',0.239,0.2073,0.2707,0.0676],
+['I Trim 2024','Rural',0.7371,0.6894,0.7848,0.033],
+['I Trim 2024','Hombre',0.4092,0.3725,0.4459,0.0457],
+['I Trim 2024','Mujer',0.3865,0.3464,0.4267,0.053],
+['II Trim 2024','Nacional',0.3887,0.352,0.4254,0.0482],
+['II Trim 2024','Urbano',0.238,0.2079,0.268,0.0645],
+['II Trim 2024','Rural',0.7117,0.6618,0.7616,0.0358],
+['II Trim 2024','Hombre',0.3979,0.3592,0.4366,0.0497],
+['II Trim 2024','Mujer',0.3798,0.3437,0.4159,0.0485],
+['III Trim 2024','Nacional',0.3827,0.3459,0.4194,0.0489],
+['III Trim 2024','Urbano',0.2332,0.2027,0.2638,0.0668],
+['III Trim 2024','Rural',0.7031,0.6503,0.7559,0.0383],
+['III Trim 2024','Hombre',0.3931,0.3518,0.4344,0.0536],
+['III Trim 2024','Mujer',0.3726,0.3388,0.4065,0.0463],
+['IV Trim 2024','Nacional',0.3899,0.3388,0.441,0.0669],
+['IV Trim 2024','Urbano',0.2402,0.1978,0.2826,0.09],
+['IV Trim 2024','Rural',0.7111,0.6412,0.7809,0.0501],
+['IV Trim 2024','Hombre',0.3947,0.3427,0.4468,0.0673],
+['IV Trim 2024','Mujer',0.3853,0.3337,0.4368,0.0682],
+['I Trim 2025','Nacional',0.4001,0.3422,0.4581,0.0739],
+['I Trim 2025','Urbano',0.2435,0.2077,0.2793,0.075],
+['I Trim 2025','Rural',0.7341,0.6573,0.8109,0.0533],
+['I Trim 2025','Hombre',0.4129,0.3595,0.4662,0.0659],
+['I Trim 2025','Mujer',0.3879,0.3249,0.4509,0.0829],
+['II Trim 2025','Nacional',0.3744,0.3223,0.4265,0.071],
+['II Trim 2025','Urbano',0.2212,0.1938,0.2486,0.0631],
+['II Trim 2025','Rural',0.7024,0.627,0.7778,0.0548],
+['II Trim 2025','Hombre',0.3846,0.3304,0.4387,0.0718],
+['II Trim 2025','Mujer',0.3646,0.3135,0.4157,0.0715],
+['III Trim 2025','Nacional',0.3675,0.318,0.4169,0.0686],
+['III Trim 2025','Urbano',0.2075,0.1779,0.2371,0.0728],
+['III Trim 2025','Rural',0.7098,0.6411,0.7784,0.0493],
+['III Trim 2025','Hombre',0.3764,0.3172,0.4355,0.0801],
+['III Trim 2025','Mujer',0.359,0.3179,0.4,0.0583],
+['IV Trim 2025','Nacional',0.4056,0.3205,0.4907,0.107],
+['IV Trim 2025','Urbano',0.2642,0.1204,0.4081,0.2776],
+['IV Trim 2025','Rural',0.7088,0.6565,0.7611,0.0376],
+['IV Trim 2025','Hombre',0.4143,0.3344,0.4941,0.0983],
+['IV Trim 2025','Mujer',0.3972,0.3069,0.4876,0.116],
+['I Trim 2026','Nacional',0.3731,0.3007,0.4454,0.0989],
+['I Trim 2026','Urbano',0.218,0.171,0.265,0.11],
+['I Trim 2026','Rural',0.7057,0.6048,0.8065,0.0729],
+['I Trim 2026','Hombre',0.3744,0.3042,0.4447,0.0957],
+['I Trim 2026','Mujer',0.3717,0.2969,0.4465,0.1026]
+];
+
+let modoTrim = 'todos';
+let _añoSelTrim = '2026', _trimSelNum = 'I';
+let trimSerieOn = { nac:true, urb:true, rur:true };
+let trimSexoOn  = { h:true, m:true };
+let chartTrimSerie = null, chartTrimSexo = null;
+let sortColTrim = -1, sortDirTrim = 1;
+const CT = { nacional:'#4F449A', urbano:'#F1B620', rural:'#DE232D', hombre:'#2D6EA5', mujer:'#B6459F' };
+
+function activarTabTrim(name, btn) {
+  document.querySelectorAll('#sec-trimestral .tri-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#sec-trimestral .tri-tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('trim-' + name).classList.add('active');
+}
+
+function setModoTrim(m) {
+  modoTrim = m;
+  ['todos','trim'].forEach(k => document.getElementById('tm-' + k).classList.toggle('active', k === m));
+  document.getElementById('wrap-año-trim').style.display = (m === 'trim') ? 'inline-flex' : 'none';
+  document.getElementById('wrap-trim-num').style.display = (m === 'trim') ? 'inline-flex' : 'none';
+  filtrarTrim();
+}
+
+function filtrarTrim() {
+  _añoSelTrim = document.getElementById('sel-año-trim').value;
+  _trimSelNum = document.getElementById('sel-trim-num').value;
+  let data;
+  if (modoTrim === 'todos') data = TRIM_GEO;
+  else data = TRIM_GEO.filter(d => d.per.startsWith(_trimSelNum + ' Trim'));
+
+  let perDestacado = null;
+  if (modoTrim === 'trim') perDestacado = _trimSelNum + ' Trim ' + _añoSelTrim;
+
+  actualizarChartTrimSerie(data, perDestacado);
+  actualizarChartTrimSexo(data, perDestacado);
+
+  if (data.length > 0) {
+    const ult = data[data.length - 1];
+    document.getElementById('mv-nac-trim').textContent = pctT(ult.nac); document.getElementById('ms-nac-trim').textContent = ult.per;
+    document.getElementById('mv-urb-trim').textContent = pctT(ult.urb); document.getElementById('ms-urb-trim').textContent = ult.per;
+    document.getElementById('mv-rur-trim').textContent = pctT(ult.rur); document.getElementById('ms-rur-trim').textContent = ult.per;
+  }
+}
+
+function toggleTrimSerie(k) {
+  trimSerieOn[k] = !trimSerieOn[k];
+  document.getElementById('ts-t-' + k).classList.toggle('off', !trimSerieOn[k]);
+  filtrarTrim();
+}
+function toggleTrimSexo(k) {
+  trimSexoOn[k] = !trimSexoOn[k];
+  document.getElementById('ts-t-' + k).classList.toggle('off', !trimSexoOn[k]);
+  filtrarTrim();
+}
+
+function actualizarChartTrimSerie(data, perDestacado) {
+  const labels = data.map(d => d.per);
+
+  document.getElementById('title-trim-serie').textContent = modoTrim === 'trim'
+    ? `Comparación del ${_trimSelNum} Trimestre entre años — TPM Nacional, Urbano y Rural`
+    : 'Evolución trimestral de la TPM — Nacional, Urbano y Rural';
+  document.getElementById('sub-trim-serie').textContent = modoTrim === 'trim'
+    ? 'Fuente: INEC-ENEMDU acumulada trimestral · misma referencia de trimestre entre años'
+    : 'Fuente: INEC-ENEMDU acumulada trimestral · I Trim 2022 – I Trim 2026';
+
+  const mkData = k => data.map(d => +(d[k]*100).toFixed(2));
+  const mkR = () => labels.map(l => perDestacado && l === perDestacado ? 8 : 3);
+
+  if (!chartTrimSerie) {
+    chartTrimSerie = new Chart(document.getElementById('chart-trim-serie'), {
+      type: 'line',
+      data: { labels, datasets: [
+        { label:'Nacional', data: mkData('nac'), borderColor: CT.nacional, backgroundColor: CT.nacional, borderWidth:3, tension:.3, pointRadius: mkR(), hidden: !trimSerieOn.nac },
+        { label:'Urbano',   data: mkData('urb'), borderColor: CT.urbano,   backgroundColor: CT.urbano,   borderWidth:2, borderDash:[5,3], tension:.3, pointRadius: mkR(), hidden: !trimSerieOn.urb },
+        { label:'Rural',    data: mkData('rur'), borderColor: CT.rural,    backgroundColor: CT.rural,    borderWidth:2, borderDash:[5,3], tension:.3, pointRadius: mkR(), hidden: !trimSerieOn.rur },
+      ]},
+      options: {
+        plugins: { legend:{display:false}, tooltip:{mode:'index',intersect:false,callbacks:{label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`}} },
+        scales: {
+          x: { grid:{color:'#EEEEEE'}, ticks:{font:{size:10}, maxRotation:60, minRotation:60} },
+          y: { grid:{color:'#EDF0F7'}, title:{display:true,text:'Tasa TPM (%)'}, ticks:{callback:v=>v.toFixed(0)+'%'} }
+        }
+      }
+    });
+  } else {
+    chartTrimSerie.data.labels = labels;
+    const ds = chartTrimSerie.data.datasets;
+    ds[0].data = mkData('nac'); ds[0].hidden = !trimSerieOn.nac; ds[0].pointRadius = mkR();
+    ds[1].data = mkData('urb'); ds[1].hidden = !trimSerieOn.urb; ds[1].pointRadius = mkR();
+    ds[2].data = mkData('rur'); ds[2].hidden = !trimSerieOn.rur; ds[2].pointRadius = mkR();
+    chartTrimSerie.update();
+  }
+}
+
+function actualizarChartTrimSexo(data, perDestacado) {
+  const pers = data.map(d => d.per);
+  const sf = TRIM_SEXO.filter(d => pers.includes(d.per));
+  const esSolo = sf.length === 1;
+  const silDiv = document.getElementById('trim-sexo-unico');
+  const chartDiv = document.getElementById('trim-sexo-chart');
+
+  if (esSolo) {
+    silDiv.style.display = 'block';
+    chartDiv.style.display = 'none';
+    const d = sf[0];
+    document.getElementById('title-trim-sexo-sil').textContent = 'TPM por sexo — ' + d.per;
+    document.getElementById('trim-siluetas-wrap').innerHTML = `
+      <div class="tri-silueta-item"><div class="tri-silueta-val" style="color:${CT.hombre};">${pctT(d.h)}</div><div class="tri-silueta-label">Hombre</div></div>
+      <div style="width:1px;height:70px;background:var(--gris-bd);"></div>
+      <div class="tri-silueta-item"><div class="tri-silueta-val" style="color:${CT.mujer};">${pctT(d.m)}</div><div class="tri-silueta-label">Mujer</div></div>`;
+    return;
+  }
+  silDiv.style.display = 'none';
+  chartDiv.style.display = 'block';
+
+  const labels = sf.map(d => d.per);
+  const mkH = sf.map(d => +(d.h*100).toFixed(2));
+  const mkM = sf.map(d => +(d.m*100).toFixed(2));
+  const mkR = () => labels.map(l => perDestacado && l === perDestacado ? 8 : 3);
+
+  if (!chartTrimSexo) {
+    chartTrimSexo = new Chart(document.getElementById('chart-trim-sexo'), {
+      type: 'line',
+      data: { labels, datasets: [
+        { label:'Hombre', data: mkH, borderColor: CT.hombre, backgroundColor: CT.hombre, borderWidth:2.5, tension:.3, pointRadius: mkR(), hidden: !trimSexoOn.h },
+        { label:'Mujer',  data: mkM, borderColor: CT.mujer,  backgroundColor: CT.mujer,  borderWidth:2.5, tension:.3, pointRadius: mkR(), hidden: !trimSexoOn.m },
+      ]},
+      options: {
+        plugins: { legend:{display:false}, tooltip:{mode:'index',intersect:false,callbacks:{label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`}} },
+        scales: {
+          x: { grid:{color:'#EEEEEE'}, ticks:{font:{size:10}, maxRotation:60, minRotation:60} },
+          y: { grid:{color:'#EDF0F7'}, title:{display:true,text:'Tasa TPM (%)'}, ticks:{callback:v=>v.toFixed(0)+'%'} }
+        }
+      }
+    });
+  } else {
+    chartTrimSexo.data.labels = labels;
+    chartTrimSexo.data.datasets[0].data = mkH; chartTrimSexo.data.datasets[0].hidden = !trimSexoOn.h; chartTrimSexo.data.datasets[0].pointRadius = mkR();
+    chartTrimSexo.data.datasets[1].data = mkM; chartTrimSexo.data.datasets[1].hidden = !trimSexoOn.m; chartTrimSexo.data.datasets[1].pointRadius = mkR();
+    chartTrimSexo.update();
+  }
+}
+
+function renderTablaTrim() {
+  const fAño = document.getElementById('ft-año').value;
+  const fTrim = document.getElementById('ft-trim').value;
+  const fArea = document.getElementById('ft-area').value;
+  let data = TRIM_TABLA;
+  if (fAño) data = data.filter(r => r[0].endsWith(fAño));
+  if (fTrim) data = data.filter(r => r[0].startsWith(fTrim + ' Trim'));
+  if (fArea) data = data.filter(r => r[1] === fArea);
+  if (sortColTrim >= 0) data = [...data].sort((a,b) => {
+    const av=a[sortColTrim], bv=b[sortColTrim];
+    return (av<bv?-1:av>bv?1:0)*sortDirTrim;
+  });
+  document.getElementById('ft-count').textContent = data.length + ' filas';
+  const tbody = document.getElementById('tbody-trim');
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--subtexto);">Sin resultados</td></tr>'; return; }
+  tbody.innerHTML = data.map(r => `<tr>
+    <td>${r[0]}</td><td style="text-align:left;">${r[1]}</td>
+    <td><strong>${pctT(r[2])}</strong></td><td>${pctT(r[3])}</td><td>${pctT(r[4])}</td>
+    <td>${(r[5]*100).toFixed(1)}%</td></tr>`).join('');
+}
+function sortTablaTrim(col) {
+  if (sortColTrim === col) sortDirTrim *= -1; else { sortColTrim = col; sortDirTrim = 1; }
+  renderTablaTrim();
+}
+function resetFiltrosTrim() {
+  document.getElementById('ft-año').value = '';
+  document.getElementById('ft-trim').value = '';
+  document.getElementById('ft-area').value = '';
+  sortColTrim = -1; sortDirTrim = 1;
+  renderTablaTrim();
+}
+
+function buildTrim() {
+  setModoTrim('todos');
+  renderTablaTrim();
+}
+
+
+// ══════════════════════════════════════
+// TABLA INDICADORES
+// ══════════════════════════════════════
+function buildTablaIndicadores() {
+  const tbody = document.getElementById('tabla-indicadores');
+  DATA.indicadores.forEach(r => {
+    const tr = document.createElement('tr');
+    if (r.rojo) tr.classList.add('rojo');
+    const varColor = r.var > 0 ? '#DE232D' : '#81A382';
+    const varSign  = r.var > 0 ? '▲' : '▼';
+    tr.innerHTML = `
+      <td>${r.rojo ? '<span class="badge badge-red" style="margin-right:6px;">●</span>' : ''}${r.nombre}</td>
+      <td>${r.v23.toFixed(2)}%</td>
+      <td>${r.v24.toFixed(2)}%</td>
+      <td><strong>${r.v25.toFixed(2)}%</strong></td>
+      <td><span style="color:${varColor};font-weight:700;">${varSign} ${Math.abs(r.var).toFixed(1)}%</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  // TPM row
+  const tpmTr = document.createElement('tr');
+  tpmTr.classList.add('tpm-row');
+  tpmTr.innerHTML = `<td>Tasa de Pobreza Multidimensional (TPM)</td><td>36.92%</td><td>36.85%</td><td>37.11%</td><td>▲ 0.7%</td>`;
+  tbody.appendChild(tpmTr);
+}
+
+// ══════════════════════════════════════
+// BARRAS CONTRIBUCIÓN
+// ══════════════════════════════════════
+function buildContribBars() {
+  const cont = document.getElementById('contrib-bars');
+  const max = DATA.contribuciones[0].val;
+  DATA.contribuciones.forEach(r => {
+    const pct = (r.val / max * 100).toFixed(1);
+    const color = r.rojo ? 'rojo' : 'azul';
+    cont.innerHTML += `
+      <div class="h-bar-row">
+        <div class="h-bar-label" style="width:195px;">${r.nombre}</div>
+        <div class="h-bar-track"><div class="h-bar-fill ${color}" style="width:${pct}%"></div></div>
+        <div class="h-bar-val" style="${r.rojo ? 'color:var(--rojo)' : ''}">${r.val.toFixed(1)}%</div>
+      </div>`;
+  });
+}
+
+function buildUrbanRuralBars() {
+  const cont = document.getElementById('urban-rural-bars');
+  cont.innerHTML = `<div style="display:flex;gap:16px;margin-bottom:12px;font-size:12px;">
+    <span><span style="display:inline-block;width:12px;height:12px;background:var(--azul);border-radius:2px;margin-right:4px;"></span>Urbano</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:var(--amarillo);border-radius:2px;margin-right:4px;"></span>Rural</span>
+  </div>`;
+  DATA.urbanoRural.forEach(r => {
+    const maxV = 8;
+    const pU = (r.urbano / maxV * 100).toFixed(1);
+    const pR = (r.rural  / maxV * 100).toFixed(1);
+    cont.innerHTML += `
+      <div class="stack-row">
+        <div class="stack-label">${r.nombre}</div>
+        <div class="stack-track" style="height:28px;">
+          <div class="stack-seg" style="width:${pU}%;background:var(--azul);">${r.urbano.toFixed(1)}%</div>
+          <div class="stack-seg" style="width:${pR}%;background:var(--amarillo);color:var(--azul);">${r.rural.toFixed(1)}%</div>
+        </div>
+        <div class="stack-total">${r.total.toFixed(1)}%</div>
+      </div>`;
+  });
+}
+
+// ══════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════
+const AZUL = '#4F449A', AZUL_M = '#37306C', AMARILLO = '#F1B620', ROJO = '#DE232D', VERDE = '#81A382';
+
+function buildChartContrafactual() {
+  const IND_COLORS = {
+    'Saneamiento de excretas':  '#7B4FA6',
+    'Educ. superior económica': '#2D6EA5',
+    'Hacinamiento':             '#E8C800',
+    'Sin recolección basura':   '#2A9D8F',
+  };
+  const BRECHA_VAL = 1.527;
+  const sorted = [...DATA.contrafactual].sort((a,b) => b.impacto - a.impacto);
+
+  new Chart(document.getElementById('chart-contrafactual'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(d => d.nombre),
+      datasets: [{
+        label: 'Impacto contrafactual (pp)',
+        data: sorted.map(d => d.impacto),
+        backgroundColor: sorted.map(d => IND_COLORS[d.nombre] || '#37306C'),
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(3)} pp` } }
+      },
+      scales: {
+        x: {
+          grid: { color: '#EEEEEE' },
+          min: 0, max: 4.2,
+          title: { display: true, text: 'Reducción de TPM si se retira el indicador (pp)' },
+          ticks: { callback: v => v.toFixed(1) + ' pp' }
+        },
+        y: { grid: { display: false }, ticks: { font:{size:12}, color:'#1A2752' } }
+      }
+    },
+    plugins: [{
+      afterDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        const xPos = x.getPixelForValue(BRECHA_VAL);
+        const top  = y.top;
+        const bot  = y.bottom;
+        ctx.save();
+        // Línea roja punteada
+        ctx.beginPath();
+        ctx.setLineDash([7, 5]);
+        ctx.strokeStyle = '#DE232D';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(xPos, top);
+        ctx.lineTo(xPos, bot);
+        ctx.stroke();
+        // Etiqueta fondo blanco con texto rojo
+        ctx.setLineDash([]);
+        const label = 'Brecha meta (1.53 pp)';
+        ctx.font = 'bold 10.5px Arial, sans-serif';
+        const tw = ctx.measureText(label).width;
+        const bx = xPos + 6;
+        const by = bot - 28;
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.strokeStyle = '#DE232D';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(bx - 4, by - 13, tw + 12, 20, 4);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#DE232D';
+        ctx.textAlign = 'left';
+        ctx.fillText(label, bx + 2, by + 2);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+function buildDecisCards() {
+  const cont = document.getElementById('decis-cards');
+  const IND = [
+    { nombre: 'Sin saneamiento de excretas', pobl: 3.49, pobres: 9.42, color: '#7B4FA6', icon: '🚰' },
+    { nombre: 'Educ. superior (económica)',  pobl: 3.13, pobres: 8.44, color: '#2D6EA5', icon: '🎓' },
+    { nombre: 'Hacinamiento',               pobl: 2.09, pobres: 5.64, color: '#E8C800', icon: '🏠' },
+    { nombre: 'Sin recolección de basura',  pobl: 1.62, pobres: 4.37, color: '#2A9D8F', icon: '🗑️' },
+  ];
+  // Encabezado de columnas
+  cont.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;
+                font-size:10px;font-weight:600;color:var(--subtexto);
+                padding:0 12px 4px;text-align:right;">
+      <span style="text-align:left;">Indicador</span>
+      <span>% Pob. total</span>
+      <span>% Entre pobres</span>
+    </div>`;
+  IND.forEach(d => {
+    const iconBg = d.color === '#E8C800' ? '#1A2752' : 'white';
+    cont.innerHTML += `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:8px;
+                  padding:12px;border-radius:10px;background:white;
+                  border:1px solid var(--gris-bd);border-left:4px solid ${d.color};">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:${d.color};flex-shrink:0;
+                      display:flex;align-items:center;justify-content:center;font-size:15px;color:${iconBg};">${d.icon}</div>
+          <span style="font-size:11px;font-weight:600;color:var(--azul);">${d.nombre}</span>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Arial Black', Arial, sans-serif;font-size:28px;font-weight:700;
+                      color:${d.color};line-height:1;">${d.pobl.toFixed(2)}%</div>
+          <div style="font-size:10px;color:var(--subtexto);">de la población total</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Arial Black', Arial, sans-serif;font-size:28px;font-weight:700;
+                      color:var(--azul);line-height:1;">${d.pobres.toFixed(2)}%</div>
+          <div style="font-size:10px;color:var(--subtexto);">de los pobres</div>
+        </div>
+      </div>`;
+  });
+}
+
+function buildChartPrevalencia() {
+  new Chart(document.getElementById('chart-prevalencia'), {
+    type: 'bar',
+    data: {
+      labels: DATA.prevalencia.map(d => d.nombre),
+      datasets: [
+        { label: 'Prevalencia total (%)', data: DATA.prevalencia.map(d => d.total), backgroundColor: AZUL_M+'CC', borderRadius:5 },
+        { label: 'Prevalencia entre pobres (%)', data: DATA.prevalencia.map(d => d.pobres), backgroundColor: ROJO+'BB', borderRadius:5 },
+      ]
+    },
+    options: {
+      plugins: { legend: { position:'bottom' } },
+      scales: {
+        x: { grid:{display:false} },
+        y: { grid:{color:'#EDF0F7'}, title:{display:true,text:'%'} }
+      }
+    }
+  });
+}
+
+function buildChartSerie() {
+  const todosLosAnos = [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029];
+  const icInf  = [38.15, 36.74, 35.09, 34.33, null, null, null, null, null];
+  const icSup  = [41.11, 40.05, 38.74, 39.37, null, null, null, null, null];
+  const tpmReal = [39.63, 38.40, 36.92, 36.85, 37.11, null, null, null, null];
+  const tpmProy = [null, null, null, 36.85, 35.58, 35.03, 34.21, 33.40, 32.59];
+  new Chart(document.getElementById('chart-serie'), {
+    type: 'line',
+    data: {
+      labels: todosLosAnos,
+      datasets: [
+        { label: '_ic_inf_hidden', data: icInf, fill: false, borderColor: 'transparent', pointRadius: 0, tension: 0.4 },
+        { label: 'Intervalo de confianza 95%', data: icSup, fill: '-1', backgroundColor: 'rgba(46,95,163,0.15)', borderColor: 'transparent', pointRadius: 0, tension: 0.4 },
+        { label: 'TPM observada (2021–2025)', data: tpmReal, borderColor: '#1F3864', borderWidth: 3, fill: false, tension: 0.3, spanGaps: false,
+          pointRadius: todosLosAnos.map(a => [2021,2022,2023,2024,2025].includes(a) ? 8 : 0),
+          pointBackgroundColor: todosLosAnos.map(a => a === 2025 ? '#DE232D' : '#1F3864'), pointHoverRadius: 10 },
+        { label: 'Proyección ARIMA (2025–2029)', data: tpmProy, borderColor: '#E67E22', borderWidth: 2.8, borderDash: [8,4], fill: false, tension: 0, spanGaps: false,
+          pointStyle: 'rectRot', pointRadius: todosLosAnos.map(a => [2025,2026,2027,2028,2029].includes(a) ? 7 : 0),
+          pointBackgroundColor: '#E67E22', pointHoverRadius: 9 },
+        { label: 'Meta PND 2025: 35.58%', data: todosLosAnos.map(() => 35.58), borderColor: '#27AE60', borderWidth: 1.8, borderDash: [6,4], fill: false, pointRadius: 0 },
+        { label: 'Meta PND 2029: 32.59%', data: todosLosAnos.map(() => 32.59), borderColor: '#81A382', borderWidth: 1.5, borderDash: [3,3], fill: false, pointRadius: 0 },
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top', labels: { font:{size:11}, filter: item => item.text !== '_ic_inf_hidden' } },
+        tooltip: { mode: 'index', intersect: false },
+      },
+      scales: {
+        x: { grid:{color:'#CCCCCC',lineWidth:0.5}, ticks:{font:{size:11}} },
+        y: { min:30.5, max:42.5, grid:{color:'#CCCCCC',lineWidth:0.6},
+             title:{display:true,text:'Tasa TPM (%)'}, ticks:{callback: val => val.toFixed(1)+'%'} }
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════
+// TERRITORIAL INTERACTIVO
+// ══════════════════════════════════════
+const TERR = {
+  indicadorActual: 'saneamiento',
+  chartProv: null, chartCant: null,
+  colores: {
+    saneamiento:  { main:'#7B4FA6', light:'#E8D5F5', total:'7.3%' },
+    educ:         { main:'#2D6EA5', light:'#D0E4F7', total:'6.8%' },
+    hacinamiento: { main:'#E8C800', light:'#FAF3A0', total:'4.9%' },
+    basura:       { main:'#2A9D8F', light:'#C2EDE7', total:'5.0%' },
+  },
+  titulos: {
+    saneamiento:  'Sin saneamiento de excretas',
+    educ:         'No acceso a educación superior (razones económicas)',
+    hacinamiento: 'Hacinamiento',
+    basura:       'Sin servicio de recolección de basura',
+  },
+  provincial: {
+    saneamiento: [{p:'Guayas',v:3.29},{p:'Manabí',v:1.103},{p:'Los Ríos',v:0.639},{p:'Santa Elena',v:0.509},{p:'Pichincha',v:0.373},{p:'Esmeraldas',v:0.365},{p:'Santo Domingo de los Tsáchilas',v:0.273},{p:'Loja',v:0.15},{p:'Imbabura',v:0.106},{p:'El Oro',v:0.095},{p:'Azuay',v:0.091},{p:'Morona Santiago',v:0.066},{p:'Cotopaxi',v:0.057},{p:'Chimborazo',v:0.034},{p:'Bolívar',v:0.032},{p:'Cañar',v:0.028},{p:'Orellana',v:0.02},{p:'Sucumbíos',v:0.019},{p:'Galápagos',v:0.014},{p:'Tungurahua',v:0.01},{p:'Carchi',v:0.009},{p:'Zamora Chinchipe',v:0.007},{p:'Pastaza',v:0.005},{p:'Napo',v:0.003}],
+    educ: [{p:'Pichincha',v:1.687},{p:'Guayas',v:1.378},{p:'Azuay',v:0.572},{p:'El Oro',v:0.382},{p:'Manabí',v:0.363},{p:'Tungurahua',v:0.321},{p:'Imbabura',v:0.305},{p:'Los Ríos',v:0.287},{p:'Loja',v:0.26},{p:'Cañar',v:0.198},{p:'Esmeraldas',v:0.179},{p:'Santa Elena',v:0.164},{p:'Cotopaxi',v:0.151},{p:'Chimborazo',v:0.102},{p:'Santo Domingo de los Tsáchilas',v:0.087},{p:'Sucumbíos',v:0.084},{p:'Bolívar',v:0.066},{p:'Carchi',v:0.063},{p:'Zamora Chinchipe',v:0.043},{p:'Orellana',v:0.033},{p:'Napo',v:0.026},{p:'Pastaza',v:0.025},{p:'Morona Santiago',v:0.017},{p:'Galápagos',v:0.009}],
+    hacinamiento: [{p:'Guayas',v:2.314},{p:'Manabí',v:0.408},{p:'Los Ríos',v:0.294},{p:'Santa Elena',v:0.293},{p:'El Oro',v:0.256},{p:'Pichincha',v:0.246},{p:'Azuay',v:0.233},{p:'Santo Domingo de los Tsáchilas',v:0.139},{p:'Esmeraldas',v:0.129},{p:'Loja',v:0.126},{p:'Cotopaxi',v:0.086},{p:'Imbabura',v:0.081},{p:'Chimborazo',v:0.061},{p:'Cañar',v:0.058},{p:'Tungurahua',v:0.038},{p:'Bolívar',v:0.027},{p:'Carchi',v:0.025},{p:'Orellana',v:0.021},{p:'Sucumbíos',v:0.014},{p:'Napo',v:0.014},{p:'Zamora Chinchipe',v:0.011},{p:'Morona Santiago',v:0.01},{p:'Galápagos',v:0.008},{p:'Pastaza',v:0.007}],
+    basura: [{p:'Guayas',v:1.486},{p:'Manabí',v:0.621},{p:'Pichincha',v:0.476},{p:'Loja',v:0.394},{p:'Los Ríos',v:0.287},{p:'Cotopaxi',v:0.238},{p:'Azuay',v:0.237},{p:'Bolívar',v:0.203},{p:'Imbabura',v:0.133},{p:'Esmeraldas',v:0.116},{p:'Santo Domingo de los Tsáchilas',v:0.103},{p:'Morona Santiago',v:0.102},{p:'Chimborazo',v:0.098},{p:'Cañar',v:0.095},{p:'Tungurahua',v:0.084},{p:'El Oro',v:0.066},{p:'Sucumbíos',v:0.063},{p:'Carchi',v:0.061},{p:'Zamora Chinchipe',v:0.057},{p:'Orellana',v:0.037},{p:'Napo',v:0.023},{p:'Pastaza',v:0.018},{p:'Galápagos',v:0.001},{p:'Santa Elena',v:0.001}],
+  },
+  cantonal: {
+    saneamiento: {
+      'Guayas': [{c:'Guayaquil',v:1.6037,pob:2880.6},{c:'A. Baquerizo Moreno',v:0.43,pob:136.3},{c:'Durán',v:0.3099,pob:293.9},{c:'El Empalme',v:0.2338,pob:182.6},{c:'Salitre',v:0.1332,pob:91.5}],
+      'Santa Elena': [{c:'Santa Elena',v:0.4196,pob:214.5},{c:'Salinas',v:0.0496,pob:86.9},{c:'La Libertad',v:0.0399,pob:120.5}],
+      'Manabí': [{c:'Portoviejo',v:0.3958,pob:419.7},{c:'Montecristi',v:0.2501,pob:231.3},{c:'Manta',v:0.1536,pob:228.8},{c:'Pichincha',v:0.1252,pob:83.6},{c:'Sucre',v:0.1139,pob:62.9}],
+      'Santo Domingo de los Tsáchilas': [{c:'Santo Domingo',v:0.1681,pob:469.5},{c:'La Concordia',v:0.1046,pob:68.0}],
+      'Los Ríos': [{c:'Valencia',v:0.2144,pob:164.5},{c:'Quevedo',v:0.1461,pob:118.3},{c:'Babahoyo',v:0.0849,pob:224.5},{c:'Vinces',v:0.0848,pob:115.8},{c:'Buena Fe',v:0.0292,pob:75.6}],
+      'Pichincha': [{c:'Cayambe',v:0.2488,pob:240.6},{c:'D.M. De Quito',v:0.0621,pob:2835.6},{c:'Mejía',v:0.0335,pob:88.2},{c:'Puerto Quito',v:0.0221,pob:30.4},{c:'P.V. Maldonado',v:0.004,pob:30.8}],
+      'Esmeraldas': [{c:'Quinindé',v:0.0895,pob:162.5},{c:'San Lorenzo',v:0.0777,pob:92.8},{c:'Atacames',v:0.0761,pob:81.5},{c:'Eloy Alfaro',v:0.0521,pob:66.7},{c:'Esmeraldas',v:0.0362,pob:220.7}],
+      'Loja': [{c:'Saraguro',v:0.0597,pob:45.5},{c:'Loja',v:0.0477,pob:218.3},{c:'Catamayo',v:0.0188,pob:51.9},{c:'Espíndola',v:0.0082,pob:9.5},{c:'Zapotillo',v:0.0037,pob:28.3}],
+      'Imbabura': [{c:'Cotacachi',v:0.0553,pob:100.5},{c:'Ibarra',v:0.023,pob:218.5},{c:'Otavalo',v:0.0204,pob:136.9},{c:'Pimampiro',v:0.0047,pob:9.6},{c:'Antonio Ante',v:0.0025,pob:47.5}],
+      'El Oro': [{c:'Machala',v:0.0413,pob:294.7},{c:'Huaquillas',v:0.0176,pob:63.0},{c:'El Guabo',v:0.0157,pob:115.4},{c:'Pasaje',v:0.0111,pob:68.4},{c:'Santa Rosa',v:0.0048,pob:57.7}],
+      'Azuay': [{c:'Cuenca',v:0.0711,pob:687.8},{c:'C.P. Enríquez',v:0.0117,pob:26.0},{c:'Gualaceo',v:0.0076,pob:61.7}],
+      'Morona Santiago': [{c:'Taisha',v:0.0565,pob:155.3},{c:'Morona',v:0.0028,pob:8.1},{c:'Logroño',v:0.0022,pob:10.4},{c:'Huamboya',v:0.0018,pob:6.2},{c:'Tiwintza',v:0.0018,pob:11.1}],
+      'Cotopaxi': [{c:'La Maná',v:0.0496,pob:78.2},{c:'Saquisilí',v:0.0058,pob:81.2},{c:'Salcedo',v:0.0009,pob:51.7},{c:'Pujilí',v:0.0007,pob:48.5}],
+      'Chimborazo': [{c:'Colta',v:0.019,pob:39.4},{c:'Cumandá',v:0.0059,pob:16.7},{c:'Riobamba',v:0.0026,pob:322.6},{c:'Alausí',v:0.0025,pob:140.9}],
+      'Bolívar': [{c:'Guaranda',v:0.0202,pob:172.2},{c:'Las Naves',v:0.0045,pob:4.2},{c:'Caluma',v:0.004,pob:11.3},{c:'San Miguel',v:0.0024,pob:37.3}],
+      'Cañar': [{c:'La Troncal',v:0.0119,pob:76.0},{c:'Azogues',v:0.0063,pob:105.9},{c:'Cañar',v:0.0056,pob:66.2},{c:'Suscal',v:0.0041,pob:10.7}],
+      'Orellana': [{c:'F. De Orellana',v:0.0185,pob:72.4},{c:'La Joya De Los Sachas',v:0.0009,pob:21.3},{c:'Loreto',v:0.0003,pob:25.4}],
+      'Sucumbíos': [{c:'Lago Agrio',v:0.0115,pob:121.0},{c:'Shushufindi',v:0.0051,pob:66.1},{c:'Cascales',v:0.0023,pob:12.9}],
+      'Galápagos': [{c:'Santa Cruz',v:0.0145,pob:21.8}],
+      'Carchi': [{c:'Tulcán',v:0.0065,pob:135.6},{c:'Montúfar',v:0.0013,pob:31.5},{c:'Bolívar',v:0.0005,pob:7.6}],
+      'Tungurahua': [{c:'Ambato',v:0.0071,pob:451.2},{c:'Stgo. De Píllaro',v:0.0021,pob:38.8}],
+      'Zamora Chinchipe': [{c:'Palanda',v:0.0038,pob:9.6},{c:'Chinchipe',v:0.0018,pob:8.8},{c:'Yantzaza',v:0.0007,pob:19.4},{c:'Zamora',v:0.0007,pob:31.8}],
+      'Napo': [{c:'Tena',v:0.0017,pob:90.9},{c:'C.J. Arosemena Tola',v:0.0013,pob:7.7}],
+      'Pastaza': [{c:'Pastaza',v:0.0044,pob:86.1},{c:'Santa Clara',v:0.0003,pob:8.4}],
+    },
+    educ: {
+      'Pichincha': [{c:'D.M. De Quito',v:1.2395,pob:2835.6},{c:'Cayambe',v:0.2698,pob:240.6},{c:'Mejía',v:0.0534,pob:88.2},{c:'S.M. De Los Bancos',v:0.0393,pob:35.9},{c:'Puerto Quito',v:0.0306,pob:30.4}],
+      'Guayas': [{c:'Guayaquil',v:1.1146,pob:2880.6},{c:'Palestina',v:0.0838,pob:127.2},{c:'A. Baquerizo Moreno',v:0.0821,pob:136.3},{c:'Durán',v:0.038,pob:293.9},{c:'Santa Lucía',v:0.0139,pob:67.5}],
+      'Azuay': [{c:'Cuenca',v:0.3083,pob:687.8},{c:'Gualaceo',v:0.138,pob:61.7},{c:'Sígsig',v:0.0572,pob:57.9},{c:'Nabón',v:0.0171,pob:12.9},{c:'C.P. Enríquez',v:0.0147,pob:26.0}],
+      'El Oro': [{c:'Machala',v:0.1126,pob:294.7},{c:'Huaquillas',v:0.0781,pob:63.0},{c:'Pasaje',v:0.0632,pob:68.4},{c:'El Guabo',v:0.0257,pob:115.4},{c:'Portovelo',v:0.022,pob:9.2}],
+      'Manabí': [{c:'Portoviejo',v:0.1272,pob:419.7},{c:'Montecristi',v:0.0766,pob:231.3},{c:'Manta',v:0.0666,pob:228.8},{c:'Junín',v:0.0656,pob:66.6},{c:'24 De Mayo',v:0.0236,pob:102.3}],
+      'Tungurahua': [{c:'Ambato',v:0.2787,pob:451.2},{c:'Patate',v:0.0123,pob:13.3},{c:'Baños',v:0.0108,pob:30.6},{c:'Stgo. De Píllaro',v:0.0082,pob:38.8},{c:'S.P. De Pelileo',v:0.0053,pob:53.6}],
+      'Imbabura': [{c:'Otavalo',v:0.1035,pob:136.9},{c:'Ibarra',v:0.0763,pob:218.5},{c:'Cotacachi',v:0.0745,pob:100.5},{c:'Antonio Ante',v:0.0335,pob:47.5},{c:'Pimampiro',v:0.009,pob:9.6}],
+      'Los Ríos': [{c:'Buena Fe',v:0.0929,pob:75.6},{c:'Babahoyo',v:0.0438,pob:224.5},{c:'Quevedo',v:0.0379,pob:118.3},{c:'Palenque',v:0.0319,pob:30.8},{c:'Vinces',v:0.0319,pob:115.8}],
+      'Loja': [{c:'Loja',v:0.0831,pob:218.3},{c:'Celica',v:0.0504,pob:63.9},{c:'Paltas',v:0.026,pob:42.7},{c:'Espíndola',v:0.0197,pob:9.5},{c:'Puyango',v:0.0161,pob:6.6}],
+      'Cañar': [{c:'Cañar',v:0.084,pob:66.2},{c:'Azogues',v:0.0654,pob:105.9},{c:'Déleg',v:0.033,pob:23.9},{c:'La Troncal',v:0.0126,pob:76.0}],
+      'Esmeraldas': [{c:'San Lorenzo',v:0.0486,pob:92.8},{c:'Esmeraldas',v:0.0415,pob:220.7},{c:'Quinindé',v:0.0254,pob:162.5},{c:'Eloy Alfaro',v:0.0245,pob:66.7},{c:'Atacames',v:0.0222,pob:81.5}],
+      'Santa Elena': [{c:'La Libertad',v:0.0872,pob:120.5},{c:'Santa Elena',v:0.0597,pob:214.5},{c:'Salinas',v:0.0175,pob:86.9}],
+      'Cotopaxi': [{c:'Pujilí',v:0.0434,pob:48.5},{c:'Latacunga',v:0.0422,pob:164.0},{c:'La Maná',v:0.0413,pob:78.2},{c:'Saquisilí',v:0.0147,pob:81.2}],
+      'Chimborazo': [{c:'Riobamba',v:0.0645,pob:322.6},{c:'Colta',v:0.0154,pob:39.4},{c:'Cumandá',v:0.0085,pob:16.7},{c:'Alausí',v:0.006,pob:140.9}],
+      'Santo Domingo de los Tsáchilas': [{c:'Santo Domingo',v:0.0849,pob:469.5},{c:'La Concordia',v:0.0018,pob:68.0}],
+      'Sucumbíos': [{c:'Lago Agrio',v:0.0514,pob:121.0},{c:'Shushufindi',v:0.011,pob:66.1},{c:'Cascales',v:0.0044,pob:12.9}],
+      'Bolívar': [{c:'Guaranda',v:0.0578,pob:172.2},{c:'San Miguel',v:0.0037,pob:37.3},{c:'Caluma',v:0.0029,pob:11.3}],
+      'Carchi': [{c:'Tulcán',v:0.0291,pob:135.6},{c:'Espejo',v:0.0107,pob:14.3},{c:'Montúfar',v:0.0107,pob:31.5}],
+      'Zamora Chinchipe': [{c:'Yantzaza',v:0.0179,pob:19.4},{c:'Zamora',v:0.0091,pob:31.8},{c:'Palanda',v:0.0048,pob:9.6}],
+      'Orellana': [{c:'F. De Orellana',v:0.0233,pob:72.4},{c:'La Joya De Los Sachas',v:0.0061,pob:21.3},{c:'Loreto',v:0.0022,pob:25.4}],
+      'Napo': [{c:'Tena',v:0.0209,pob:90.9},{c:'Archidona',v:0.0034,pob:40.9}],
+      'Pastaza': [{c:'Pastaza',v:0.013,pob:86.1},{c:'Arajuno',v:0.0062,pob:14.5},{c:'Santa Clara',v:0.0037,pob:8.4}],
+      'Morona Santiago': [{c:'Huamboya',v:0.0074,pob:6.2},{c:'Gualaquiza',v:0.0033,pob:6.2},{c:'Morona',v:0.0017,pob:8.1}],
+      'Galápagos': [{c:'Santa Cruz',v:0.0066,pob:21.8},{c:'San Cristóbal',v:0.0011,pob:11.7}],
+    },
+    hacinamiento: {
+      'Guayas': [{c:'Guayaquil',v:1.6195,pob:2880.6},{c:'Durán',v:0.2247,pob:293.9},{c:'El Empalme',v:0.1238,pob:182.6},{c:'Santa Lucía',v:0.1027,pob:67.5},{c:'Daule',v:0.1023,pob:136.9}],
+      'Manabí': [{c:'Pichincha',v:0.1403,pob:83.6},{c:'Portoviejo',v:0.1135,pob:419.7},{c:'Montecristi',v:0.0749,pob:231.3},{c:'24 De Mayo',v:0.0321,pob:102.3},{c:'Jipijapa',v:0.0162,pob:55.5}],
+      'Los Ríos': [{c:'Palenque',v:0.0717,pob:30.8},{c:'Babahoyo',v:0.0477,pob:224.5},{c:'Buena Fe',v:0.0359,pob:75.6},{c:'Vinces',v:0.0286,pob:115.8},{c:'Urdaneta',v:0.0226,pob:30.7}],
+      'Santa Elena': [{c:'Salinas',v:0.1265,pob:86.9},{c:'Santa Elena',v:0.122,pob:214.5},{c:'La Libertad',v:0.0445,pob:120.5}],
+      'El Oro': [{c:'Arenillas',v:0.0873,pob:57.6},{c:'Machala',v:0.0851,pob:294.7},{c:'Huaquillas',v:0.0267,pob:63.0},{c:'Zaruma',v:0.0212,pob:44.1},{c:'Pasaje',v:0.0158,pob:68.4}],
+      'Pichincha': [{c:'D.M. De Quito',v:0.232,pob:2835.6},{c:'Cayambe',v:0.0099,pob:240.6},{c:'S.M. De Los Bancos',v:0.0018,pob:35.9},{c:'Mejía',v:0.0018,pob:88.2}],
+      'Azuay': [{c:'Cuenca',v:0.1913,pob:687.8},{c:'Sígsig',v:0.0369,pob:57.9},{c:'C.P. Enríquez',v:0.005,pob:26.0}],
+      'Santo Domingo de los Tsáchilas': [{c:'Santo Domingo',v:0.1331,pob:469.5},{c:'La Concordia',v:0.0062,pob:68.0}],
+      'Esmeraldas': [{c:'Esmeraldas',v:0.0506,pob:220.7},{c:'San Lorenzo',v:0.042,pob:92.8},{c:'Atacames',v:0.0162,pob:81.5},{c:'Eloy Alfaro',v:0.0073,pob:66.7},{c:'Quinindé',v:0.0055,pob:162.5}],
+      'Loja': [{c:'Loja',v:0.0439,pob:218.3},{c:'Saraguro',v:0.0261,pob:45.5},{c:'Macará',v:0.0143,pob:22.9},{c:'Catamayo',v:0.0139,pob:51.9},{c:'Paltas',v:0.0085,pob:42.7}],
+      'Cotopaxi': [{c:'La Maná',v:0.0672,pob:78.2},{c:'Saquisilí',v:0.0144,pob:81.2},{c:'Latacunga',v:0.0046,pob:164.0}],
+      'Imbabura': [{c:'Ibarra',v:0.0389,pob:218.5},{c:'Otavalo',v:0.021,pob:136.9},{c:'Cotacachi',v:0.0172,pob:100.5}],
+      'Chimborazo': [{c:'Riobamba',v:0.0489,pob:322.6},{c:'Alausí',v:0.0116,pob:140.9}],
+      'Cañar': [{c:'La Troncal',v:0.033,pob:76.0},{c:'Biblián',v:0.0132,pob:33.9},{c:'Cañar',v:0.0072,pob:66.2},{c:'Azogues',v:0.004,pob:105.9}],
+      'Bolívar': [{c:'Guaranda',v:0.0189,pob:172.2},{c:'San Miguel',v:0.0032,pob:37.3},{c:'Las Naves',v:0.0024,pob:4.2}],
+      'Carchi': [{c:'Montúfar',v:0.0125,pob:31.5},{c:'Tulcán',v:0.0092,pob:135.6}],
+      'Orellana': [{c:'F. De Orellana',v:0.0167,pob:72.4},{c:'Loreto',v:0.0024,pob:25.4}],
+      'Sucumbíos': [{c:'Lago Agrio',v:0.0128,pob:121.0},{c:'Shushufindi',v:0.0009,pob:66.1}],
+      'Tungurahua': [{c:'Ambato',v:0.0333,pob:451.2},{c:'S.P. De Pelileo',v:0.0023,pob:53.6},{c:'Stgo. De Píllaro',v:0.0021,pob:38.8}],
+      'Morona Santiago': [{c:'Sucúa',v:0.0036,pob:8.6},{c:'Huamboya',v:0.0019,pob:6.2},{c:'Morona',v:0.001,pob:8.1}],
+      'Galápagos': [{c:'Santa Cruz',v:0.0081,pob:21.8}],
+      'Zamora Chinchipe': [{c:'Centinela Del Cóndor',v:0.0033,pob:4.4},{c:'Nangaritza',v:0.0024,pob:22.8},{c:'Zamora',v:0.0017,pob:31.8}],
+      'Napo': [{c:'Tena',v:0.0082,pob:90.9},{c:'Archidona',v:0.0056,pob:40.9}],
+      'Pastaza': [{c:'Pastaza',v:0.0053,pob:86.1},{c:'Santa Clara',v:0.0007,pob:8.4}],
+    },
+    basura: {
+      'Guayas': [{c:'Playas',v:0.9095,pob:422.5},{c:'Daule',v:0.1175,pob:136.9},{c:'El Empalme',v:0.1131,pob:182.6},{c:'Guayaquil',v:0.0766,pob:2880.6},{c:'Salitre',v:0.0628,pob:91.5}],
+      'Manabí': [{c:'Pichincha',v:0.1291,pob:83.6},{c:'Santa Ana',v:0.1016,pob:56.1},{c:'Portoviejo',v:0.1007,pob:419.7},{c:'Junín',v:0.0798,pob:66.6},{c:'Jipijapa',v:0.0636,pob:55.5}],
+      'Pichincha': [{c:'Cayambe',v:0.3298,pob:240.6},{c:'D.M. De Quito',v:0.0555,pob:2835.6},{c:'Pedro Moncayo',v:0.037,pob:42.0},{c:'Puerto Quito',v:0.0314,pob:30.4},{c:'Mejía',v:0.0116,pob:88.2}],
+      'Loja': [{c:'Loja',v:0.0762,pob:218.3},{c:'Celica',v:0.0739,pob:63.9},{c:'Paltas',v:0.0414,pob:42.7},{c:'Sozoranga',v:0.038,pob:19.0},{c:'Zapotillo',v:0.0341,pob:28.3}],
+      'Los Ríos': [{c:'Vinces',v:0.0557,pob:115.8},{c:'Puebloviejo',v:0.051,pob:94.4},{c:'Ventanas',v:0.044,pob:76.8},{c:'Babahoyo',v:0.0338,pob:224.5},{c:'Quevedo',v:0.0308,pob:118.3}],
+      'Cotopaxi': [{c:'Saquisilí',v:0.0441,pob:81.2},{c:'Pangua',v:0.0377,pob:72.1},{c:'La Maná',v:0.0366,pob:78.2},{c:'Latacunga',v:0.0349,pob:164.0},{c:'Sigchos',v:0.0325,pob:48.9}],
+      'Azuay': [{c:'Gualaceo',v:0.0878,pob:61.7},{c:'Cuenca',v:0.0697,pob:687.8},{c:'Santa Isabel',v:0.0302,pob:9.0},{c:'El Pan',v:0.0148,pob:6.7},{c:'Sígsig',v:0.0128,pob:57.9}],
+      'Bolívar': [{c:'Guaranda',v:0.1346,pob:172.2},{c:'San Miguel',v:0.0503,pob:37.3},{c:'Chillanes',v:0.0169,pob:9.6}],
+      'Imbabura': [{c:'Cotacachi',v:0.0655,pob:100.5},{c:'Ibarra',v:0.0377,pob:218.5},{c:'Otavalo',v:0.0184,pob:136.9},{c:'Antonio Ante',v:0.0074,pob:47.5}],
+      'Esmeraldas': [{c:'Quinindé',v:0.0531,pob:162.5},{c:'Eloy Alfaro',v:0.03,pob:66.7},{c:'San Lorenzo',v:0.0165,pob:92.8}],
+      'Santo Domingo de los Tsáchilas': [{c:'Santo Domingo',v:0.0954,pob:469.5},{c:'La Concordia',v:0.0072,pob:68.0}],
+      'Morona Santiago': [{c:'Taisha',v:0.0842,pob:155.3},{c:'Huamboya',v:0.0102,pob:6.2},{c:'Morona',v:0.003,pob:8.1}],
+      'Chimborazo': [{c:'Riobamba',v:0.0424,pob:322.6},{c:'Alausí',v:0.029,pob:140.9},{c:'Colta',v:0.0165,pob:39.4}],
+      'Cañar': [{c:'Déleg',v:0.0369,pob:23.9},{c:'Cañar',v:0.0277,pob:66.2},{c:'Azogues',v:0.0251,pob:105.9}],
+      'Tungurahua': [{c:'Ambato',v:0.0422,pob:451.2},{c:'Patate',v:0.0129,pob:13.3},{c:'Stgo. De Píllaro',v:0.0115,pob:38.8}],
+      'El Oro': [{c:'Zaruma',v:0.026,pob:44.1},{c:'Santa Rosa',v:0.0124,pob:57.7},{c:'Machala',v:0.0116,pob:294.7}],
+      'Carchi': [{c:'Montúfar',v:0.0243,pob:31.5},{c:'Tulcán',v:0.0175,pob:135.6},{c:'Mira',v:0.0093,pob:7.9}],
+      'Sucumbíos': [{c:'Lago Agrio',v:0.0453,pob:121.0},{c:'Shushufindi',v:0.016,pob:66.1}],
+      'Orellana': [{c:'F. De Orellana',v:0.0188,pob:72.4},{c:'Aguarico',v:0.011,pob:56.0},{c:'La Joya De Los Sachas',v:0.0052,pob:21.3}],
+      'Napo': [{c:'Tena',v:0.0128,pob:90.9},{c:'C.J. Arosemena Tola',v:0.0056,pob:7.7},{c:'Archidona',v:0.0049,pob:40.9}],
+      'Pastaza': [{c:'Pastaza',v:0.0159,pob:86.1},{c:'Mera',v:0.0012,pob:12.0}],
+      'Zamora Chinchipe': [{c:'Yantzaza',v:0.0368,pob:19.4},{c:'Palanda',v:0.01,pob:9.6},{c:'El Pangui',v:0.0055,pob:18.4}],
+      'Galápagos': [{c:'San Cristóbal',v:0.0008,pob:11.7}],
+      'Santa Elena': [{c:'Santa Elena',v:0.001,pob:214.5}],
+    },
+  },
+};
+
+let mapaTPM = null;
+function initMapaTPM(){
+  if (mapaTPM) return;
+  mapaTPM = crearMapaEcuador({
+    mapId: 'ec-map-tpm', galId: 'ec-map-gal-tpm',
+    overrides: { 'SANTO DOMINGO': 'Santo Domingo de los Tsáchilas' },
+    onSelect: (prov) => seleccionarDesdeMapa(prov)
+  });
+}
+
+function seleccionarIndicador(ind, btn) {
+  TERR.indicadorActual = ind;
+  document.querySelectorAll('.ind-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('titulo-provincial').textContent = TERR.titulos[ind];
+  document.getElementById('total-nacional-badge').textContent = TERR.colores[ind].total + ' nacional';
+  limpiarCantonal();
+  renderProvincial(ind);
+  renderProvList(ind);
+}
+
+function renderProvincial(ind) {
+  // No inicializar/dibujar Leaflet mientras la pestaña está oculta (display:none) —
+  // eso produce un mapa mal encuadrado. Se dibuja recién cuando showPage() la muestra.
+  if (!document.getElementById('page-territorial').classList.contains('active')) return;
+  initMapaTPM();
+  const datos = TERR.provincial[ind];
+  const col = TERR.colores[ind];
+  const filas = datos.map(d => ({
+    p: d.p, value: d.v,
+    tooltip: `${d.v.toFixed(3)}% de contribución · clic para ver cantones`
+  }));
+  const maxV = mapaTPM.render(filas, col.main);
+  document.getElementById('leg-scale-tpm').style.background = `linear-gradient(90deg, #F5F6F8, ${col.main})`;
+  document.getElementById('leg-min-tpm').textContent = '0.00%';
+  document.getElementById('leg-max-tpm').textContent = maxV.toFixed(2) + '%';
+}
+
+function exportarProvincialCSV_TPM(){
+  const ind = TERR.indicadorActual;
+  const filas = [...TERR.provincial[ind]].sort((a,b)=>b.v-a.v).map(d => [d.p, d.v.toFixed(4)]);
+  descargarCSV('tpm_'+ind+'_provincial', ['Provincia', 'Contribución al TPM nacional (%)'], filas);
+}
+
+function renderCantonal(ind, prov) {
+  const cantData = TERR.cantonal[ind]?.[prov];
+  const col = TERR.colores[ind];
+  document.getElementById('titulo-cantonal').textContent = prov;
+  document.getElementById('sub-cantonal').textContent = TERR.titulos[ind] + ' · Top cantones';
+  document.getElementById('btn-volver').style.display = 'block';
+  if (!cantData || cantData.length === 0) {
+    document.getElementById('body-cantonal').innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;color:var(--subtexto);gap:10px;"><div style="font-size:32px;">📭</div><div style="font-size:13px;">Sin datos cantonales para esta provincia</div></div>`;
+    return;
+  }
+  const sorted = [...cantData].sort((a,b) => b.v - a.v);
+  const colors = sorted.map((d,i) => i === 0 ? col.main : col.light);
+  document.getElementById('body-cantonal').innerHTML = '<canvas id="chart-cant-ind" height="280"></canvas>';
+  if (TERR.chartCant) { TERR.chartCant.destroy(); TERR.chartCant = null; }
+  TERR.chartCant = new Chart(document.getElementById('chart-cant-ind'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(d => d.c),
+      datasets: [{ label: 'Contribución (%)', data: sorted.map(d => d.v), backgroundColor: colors, borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x.toFixed(4)}%`, afterLabel: ctx => `  ${sorted[ctx.dataIndex].pob}k hab.` } }
+      },
+      scales: {
+        x: { grid:{color:'#EEEEEE'}, title:{display:true,text:'Contribución al resultado TPM nacional (%)'}, ticks:{callback: v => v.toFixed(3)+'%'} },
+        y: { grid:{display:false}, ticks:{font:{size:11},color:'#1A2752'} }
+      }
+    }
+  });
+}
+
+function limpiarCantonal() {
+  if (TERR.chartCant) { TERR.chartCant.destroy(); TERR.chartCant = null; }
+  document.getElementById('titulo-cantonal').textContent = '← Selecciona una provincia';
+  document.getElementById('sub-cantonal').textContent = 'del mapa o del listado';
+  document.getElementById('btn-volver').style.display = 'none';
+  document.getElementById('body-cantonal').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                height:220px;color:var(--subtexto);gap:10px;">
+      <div style="font-size:32px;">👆</div>
+      <div style="font-size:13px;font-weight:500;">Selecciona una provincia</div>
+      <div style="font-size:12px;">del mapa o del listado de arriba</div>
+    </div>`;
+  document.querySelectorAll('.prov-list-item').forEach(el => el.classList.remove('selected'));
+  if (mapaTPM) mapaTPM.clearHighlight();
+}
+
+function renderProvList(ind) {
+  const datos = [...TERR.provincial[ind]].sort((a,b) => b.v - a.v);
+  const col   = TERR.colores[ind];
+  const maxV  = datos[0].v;
+  const cont  = document.getElementById('prov-lista');
+  if (!cont) return;
+
+  document.getElementById('titulo-prov-lista').textContent =
+    'Ranking · ' + TERR.titulos[ind];
+
+  cont.innerHTML = datos.map((d, i) => {
+    const barW = Math.max((d.v / maxV * 100), 2).toFixed(0);
+    return `
+      <div class="prov-list-item" data-p="${d.p.replace(/"/g,'&quot;')}" onclick="seleccionarDesdeLista('${ind}','${d.p.replace(/'/g,"\\'")}',this)">
+        <div class="prov-list-rank">${i+1}</div>
+        <div class="prov-list-name">${d.p}</div>
+        <div class="prov-list-bar-wrap">
+          <div class="prov-list-bar" style="width:${barW}px;max-width:80px;background:${d.v > 0 ? col.main : col.light};opacity:0.8;"></div>
+          <div class="prov-list-val" style="color:${col.main};">${d.v.toFixed(2)}%</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function seleccionarDesdeLista(ind, prov, el) {
+  document.querySelectorAll('.prov-list-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  if (mapaTPM) mapaTPM.highlight(prov);
+  renderCantonal(ind, prov);
+}
+
+function seleccionarDesdeMapa(prov) {
+  const ind = TERR.indicadorActual;
+  document.querySelectorAll('.prov-list-item').forEach(e => e.classList.toggle('selected', e.dataset.p === prov));
+  renderCantonal(ind, prov);
+}
+
+// ══════════════════════════════════════
+// CRONOGRAMA DE GESTIÓN
+// ══════════════════════════════════════
+// Datos del cronograma cargados desde tpm_cronograma_datos.js (ver <script> en el <head>)
+
+
+function estadoBadge(estado) {
+  const map = {
+    'Cumplido':    'cumplido',
+    'En ejecución':'ejecucion',
+    'No iniciado': 'noiniciado',
+    'No iniciada': 'noiniciado',
+    'Suspendida':  'suspendida',
+    'Finalizada':  'finalizada',
+    'Sin reportar':'noiniciado',
+  };
+  const cls = map[estado] || 'noiniciado';
+  const icons = { cumplido:'✅', ejecucion:'🟡', noiniciado:'🔴', suspendida:'🔴', finalizada:'✅' };
+  return `<span class="estado-badge estado-${cls}">${icons[cls]} ${estado}</span>`;
+}
+
+function pctBar(pct, estado) {
+  const color = estado === 'Cumplido' || estado === 'Finalizada' ? '#81A382'
+              : estado === 'En ejecución' ? '#F1B620'
+              : '#DE232D';
+  return `<div class="pct-bar-wrap">
+    <div class="pct-bar-track">
+      <div class="pct-bar-fill" style="width:${Math.min(pct,100)}%;background:${color};"></div>
+    </div>
+    <span class="pct-val">${pct.toFixed(1)}%</span>
+  </div>`;
+}
+
+function mergeAccionesConCorte(inst, corte) {
+  const d = CRON_DATA[inst];
+  if (!d) return [];
+  const cortesPrevios = Object.keys(d.cortes).sort().filter(k => k <= corte);
+  return d.acciones.map(a => {
+    let c = null;
+    for (const k of cortesPrevios) {
+      const cd = d.cortes[k];
+      if (cd && cd.datos[a.num]) c = cd.datos[a.num];
+    }
+    return Object.assign({}, a, c || {
+      resultados: 'Sin datos para este corte.', pct: 0, estado: 'Sin reportar', justificacion: '', enlace: ''
+    });
+  });
+}
+
+function getCortesDisponibles(inst) {
+  const d = CRON_DATA[inst];
+  if (!d) return [];
+  return Object.keys(d.cortes).sort();
+}
+
+function buildCorteSelector(inst) {
+  const cortes = getCortesDisponibles(inst);
+  const cont = document.getElementById('corte-selector');
+  if (!cortes.length) { cont.innerHTML = ''; return; }
+  if (!cortes.includes(window._corteActual)) {
+    window._corteActual = cortes[cortes.length - 1];
+  }
+  cont.innerHTML = cortes.map(c => `
+    <button class="cron-filter${c === window._corteActual ? ' active' : ''}" onclick="seleccionarCorte('${c}')">
+      🗓️ ${CORTES_META[c] || c}
+    </button>`).join('');
+}
+
+function seleccionarCorte(corte) {
+  window._corteActual = corte;
+  document.querySelectorAll('#corte-selector .cron-filter').forEach(b => b.classList.remove('active'));
+  const btn = [...document.querySelectorAll('#corte-selector .cron-filter')].find(b => b.textContent.includes(CORTES_META[corte] || corte));
+  if (btn) btn.classList.add('active');
+  renderCronTabla(window._instActual);
+}
+
+function renderCronKPIs(inst, acc) {
+  const cumplidas = acc.filter(a => a.estado === 'Cumplido' || a.estado === 'Finalizada').length;
+  const enEj = acc.filter(a => a.estado === 'En ejecución').length;
+  const noIni = acc.filter(a => a.estado === 'No iniciado' || a.estado === 'Suspendida' || a.estado === 'Sin reportar').length;
+
+  const kpis = [
+    { num: acc.length,    label: 'Acciones totales',          color: '#4F449A' },
+    { num: cumplidas,     label: 'Cumplidas',                 color: '#81A382' },
+    { num: enEj,          label: 'En ejecución',              color: '#7F6000' },
+    { num: noIni,         label: 'Vencidas / No iniciadas',   color: '#DE232D' },
+  ];
+
+  const cont = document.getElementById('cron-kpis');
+  cont.innerHTML = kpis.map(k => `
+    <div class="summary-kpi" style="border-left-color:${k.color}">
+      <div class="sk-num" style="color:${k.color}">${k.num}</div>
+      <div class="sk-label">${k.label}</div>
+    </div>`).join('');
+}
+
+function filaAccionHTML(a) {
+  return `
+    <tr>
+      <td class="center"><div class="accion-num">${a.num}</div></td>
+      <td>
+        <div class="accion-title">${a.titulo}</div>
+        <div class="accion-desc">${a.desc}</div>
+      </td>
+      <td class="center"><span class="badge badge-blue" style="font-size:10px;">${a.tipo}</span></td>
+      <td class="center" style="font-size:11px;color:var(--subtexto);">
+        ${a.fecha_ini}<br>→ ${a.fecha_fin}
+      </td>
+      <td class="center"><span class="badge badge-blue" style="font-size:10px;">${a.frecuencia}</span></td>
+      <td style="font-size:11px;white-space:pre-line;">${a.resultados}</td>
+      <td style="display:none;">${pctBar(a.pct, a.estado)}</td>
+      <td class="center">${estadoBadge(a.estado)}</td>
+      <td style="font-size:11px;white-space:pre-line;">${a.justificacion}
+        ${a.enlace ? `<br><a href="${a.enlace}" target="_blank" class="link-btn">🔗 Verificable</a>` : ''}
+      </td>
+    </tr>`;
+}
+
+function renderCronTabla(inst) {
+  const d = CRON_DATA[inst];
+  window._instActual = inst;
+  buildCorteSelector(inst);
+
+  if (!d || !getCortesDisponibles(inst).length) {
+    document.getElementById('cron-tbody').innerHTML = `
+      <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--subtexto);">
+        <div style="font-size:28px;margin-bottom:8px;">🏗️</div>
+        <div style="font-size:14px;font-weight:600;">Información próximamente disponible</div>
+        <div style="font-size:12px;margin-top:4px;">Completa la plantilla Excel y entrégala al equipo técnico.</div>
+      </td></tr>`;
+    document.getElementById('cron-kpis').innerHTML = '';
+    if (d) {
+      document.getElementById('cron-titulo').textContent = `${d.nombre} — Cronograma de Acciones 2026`;
+      document.getElementById('cron-sub').textContent = 'Sin corte de seguimiento disponible todavía.';
+    }
+    return;
+  }
+
+  const corte = window._corteActual;
+  const acc = mergeAccionesConCorte(inst, corte);
+
+  document.getElementById('cron-titulo').textContent =
+    `${d.nombre} — Cronograma de Acciones 2026`;
+  document.getElementById('cron-sub').textContent =
+    `Corte de seguimiento: ${CORTES_META[corte] || corte} · Acciones orientadas a reducir la TPM`;
+
+  renderCronKPIs(inst, acc);
+
+  const counts = {
+    todas:    acc.length,
+    ejecucion: acc.filter(a => a.estado === 'En ejecución').length,
+    cumplido:  acc.filter(a => a.estado === 'Cumplido' || a.estado === 'Finalizada').length,
+    vencido:   acc.filter(a => a.estado === 'No iniciado' || a.estado === 'Suspendida' || a.estado === 'Sin reportar').length,
+  };
+  Object.entries(counts).forEach(([k,v]) => {
+    const el = document.getElementById('fc-' + k);
+    if (el) el.textContent = v;
+  });
+  document.querySelectorAll('#cron-filtros .cron-filter').forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('#cron-filtros .cron-filter[data-filter="todas"]');
+  if (allBtn) allBtn.classList.add('active');
+  window._cronFiltroActual = 'todas';
+
+  document.getElementById('cron-tbody').innerHTML = acc.map(filaAccionHTML).join('');
+}
+
+function verInstitucion(inst, btn) {
+  document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window._instActual = inst;
+  const cortes = getCortesDisponibles(inst);
+  window._corteActual = cortes.length ? cortes[cortes.length - 1] : null;
+  renderCronTabla(inst);
+}
+
+function filtrarCronograma(filtro, btn) {
+  document.querySelectorAll('#cron-filtros .cron-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window._cronFiltroActual = filtro;
+
+  const inst = window._instActual || 'MDTDH';
+  const acc = mergeAccionesConCorte(inst, window._corteActual);
+
+  const filtroMap = {
+    todas:    () => true,
+    ejecucion:a => a.estado === 'En ejecución',
+    cumplido: a => a.estado === 'Cumplido' || a.estado === 'Finalizada',
+    vencido:  a => a.estado === 'No iniciado' || a.estado === 'Suspendida' || a.estado === 'Sin reportar',
+  };
+  const fn = filtroMap[filtro] || (() => true);
+  const accFiltradas = acc.filter(fn);
+
+  const tbody = document.getElementById('cron-tbody');
+  if (accFiltradas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--subtexto);">
+      <div style="font-size:24px;margin-bottom:6px;">✅</div>
+      <div style="font-size:13px;font-weight:600;">No hay acciones en este estado</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = accFiltradas.map(filaAccionHTML).join('');
+}
+
+
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('nav-anual').style.display = 'none';
+  buildTablaIndicadores();
+  buildContribBars();
+  buildUrbanRuralBars();
+  buildDecisCards();
+  renderProvList('saneamiento');
+  window._instActual = 'MDTDH';
+  window._corteActual = getCortesDisponibles('MDTDH').slice(-1)[0];
+  renderCronTabla('MDTDH');
+});
+
+
+
+</script>
+
+<div class="gov-close"><img src="../imagenes/EL_NUEVO_ECUADOR_LOGO.png" alt="Gobierno del Ecuador"></div>
+
+<footer class="dashboard-footer">
+  <strong>Ministerio de Trabajo y Desarrollo Humano</strong> · Subsecretaría de Gestión de Datos y Estudios · Seguimiento PND 2025–2029
+</footer>
+
+<script id="mdh-breadcrumb-script">
+(function(){
+  const cfg = {"base": "Tasa de Pobreza Multidimensional (TPM)", "default": "Menú TPM", "items": [{"id": "page-inicio", "label": "Menú TPM"}, {"id": "sec-anual", "label": "Análisis anual"}, {"id": "sec-trimestral", "label": "Análisis trimestral"}, {"id": "sec-cronograma", "label": "Cronograma de gestión"}]};
+  function visible(el){
+    if(!el) return false;
+    const cs = window.getComputedStyle(el);
+    return cs.display !== 'none' && cs.visibility !== 'hidden';
+  }
+  function activeLabel(){
+    const items = cfg.items || [];
+    for(const item of items){
+      const el = document.getElementById(item.id);
+      if(!el) continue;
+      if(el.classList.contains('active') && visible(el)) return item.label;
+    }
+    for(const item of items){
+      const el = document.getElementById(item.id);
+      if(el && el.classList.contains('active')) return item.label;
+    }
+    return cfg.default || '';
+  }
+  function render(){
+    const bc = document.getElementById('mdh-breadcrumb');
+    if(!bc) return;
+    const label = activeLabel();
+    if(label){
+      bc.innerHTML = '<a href="../index_PND.html">Inicio</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<a href="javascript:void(0)" class="mdh-bc-base" onclick="irInicio()" title="Volver a: '+cfg.base+'">' + cfg.base + '</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<span class="mdh-bc-current">' + label + '</span>';
+    } else {
+      bc.innerHTML = '<a href="../index_PND.html">Inicio</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<span class="mdh-bc-current">' + cfg.base + '</span>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    render();
+    document.body.addEventListener('click', function(){ setTimeout(render, 80); }, true);
+    document.body.addEventListener('change', function(){ setTimeout(render, 80); }, true);
+    setTimeout(render, 120);
+  });
+  window.addEventListener('load', render);
+  window.mdhActualizarBreadcrumb = render;
+})();
+</script>
+
+<script src="../MDTDH/shared.js"></script>
+<script>
+initSidebar({ activeId: 'pnd-tpm', basePath: '../' });
+</script>
+
+</body>
+</html>

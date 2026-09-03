@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protección Social | PND 2025–2029</title>
+<link rel="stylesheet" href="../MDTDH/shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="export-utils.js"></script>
+<script src="proteccion_social_acciones_datos.js"></script>
+<script>
+/* Polyfill defensivo: si el navegador no tiene ResizeObserver nativo (frecuente en
+   equipos institucionales con navegadores desactualizados), Chart.js falla al
+   construir el gráfico (ReferenceError) y el canvas queda en blanco, aunque el
+   título/subtítulo ya se hayan pintado. Este shim evita el crash. */
+if (typeof window.ResizeObserver === 'undefined') {
+  window.ResizeObserver = function(callback) {
+    this._callback = callback;
+    this._els = [];
+    this._onResize = () => this._callback(this._els.map(el => ({ target: el, contentRect: el.getBoundingClientRect() })));
+    window.addEventListener('resize', this._onResize);
+  };
+  window.ResizeObserver.prototype.observe = function(el) { this._els.push(el); };
+  window.ResizeObserver.prototype.unobserve = function(el) { this._els = this._els.filter(e => e !== el); };
+  window.ResizeObserver.prototype.disconnect = function() { window.removeEventListener('resize', this._onResize); this._els = []; };
+}
+</script>
+<style>
+:root{
+  --azul:#4F449A; --azul-med:#37306C; --azul-light:#E8EEF8; --azul-pale:#F2F5FB;
+  --amarillo:#F1B620; --amarillo-d:#C99200; --amarillo-l:#FEF7DC;
+  --rojo:#DE232D; --rojo-l:#FDECEA; --verde:#81A382; --verde-l:#E6F4EC;
+  --gris:#F5F6F8; --gris-bd:#DDE2EE; --texto:#1A1E2E; --subtexto:#5A6180;
+  --blanco:#FFFFFF; --shadow:0 2px 12px rgba(79,68,154,0.10);
+}
+.tpm-header {
+  background:var(--azul); padding:0 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  height:60px; position:sticky; top:0; z-index:999;
+  border-bottom:3px solid var(--amarillo); font-family:Arial, sans-serif;
+}
+.tpm-header-left { display:flex; align-items:center; gap:14px; }
+.tpm-logo {
+  min-width:34px; height:34px; padding:0 5px; box-sizing:border-box; background:var(--amarillo); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Arial Black', Arial, sans-serif; font-weight:700; font-size:12.5px; color:var(--azul); letter-spacing:0.2px;
+}
+.tpm-title {
+  font-family:'Arial Black', Arial, sans-serif; font-weight:600; font-size:16px;
+  color:white; letter-spacing:0.3px; line-height:1.2;
+}
+.tpm-sub { font-size:11px; color:rgba(255,255,255,0.55); margin-top:1px; }
+.tpm-right { display:flex; align-items:center; gap:10px; }
+.tpm-badge {
+  background:rgba(244,180,0,0.18); border:1px solid rgba(244,180,0,0.40);
+  color:var(--amarillo); padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:600; font-family:Arial, sans-serif;
+}
+.tpm-back {
+  color:rgba(255,255,255,.7); font-size:12px; text-decoration:none;
+  border:1px solid rgba(255,255,255,.25); padding:4px 12px;
+  border-radius:20px; font-family:Arial, sans-serif;
+}
+.tpm-back:hover { color:white; }
+body { font-family:Arial, sans-serif; }
+
+:root{--azul:#4F449A;--azul2:#37306C;--azul3:#2563A8;--dorado:#F1B620;--dorado2:#F0C040;--bg:#F4F6FA;--panel:#fff;--borde:#D1D9E6;--txt:#1A2A3A;--muted:#4A5568;--verde:#81A382;--rojo:#C0392B;--sombra:0 10px 28px rgba(13,43,85,.08)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--txt)}
+.topbar{background:var(--azul);border-bottom:3px solid var(--dorado);height:60px;padding:0 2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:10}.escudo{width:36px;height:36px;background:var(--dorado);border-radius:50%;display:grid;place-items:center;font-weight:800;color:var(--azul)}.top-title{color:white;font-size:13px;font-weight:700}.top-sub{color:var(--dorado2);font-size:11px}.top-right{margin-left:auto;color:var(--dorado2);font-size:11px}.btn-inicio{color:var(--dorado2);text-decoration:none;border:1px solid rgba(201,168,76,.5);border-radius:6px;padding:.4rem .9rem;font-size:12px;font-weight:700;background:rgba(255,255,255,.08)}
+.breadcrumb{background:var(--azul2);padding:.5rem 2rem;color:rgba(255,255,255,.72);font-size:12px;display:flex;gap:.4rem;align-items:center}.breadcrumb span:last-child{color:var(--dorado2)}
+.main{max-width:1600px;margin:0 auto;padding:2rem 1.5rem}.dash-header{background:var(--azul);border-radius:12px;padding:1.5rem 2rem;margin-bottom:1.2rem;border-bottom:4px solid var(--dorado);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}.dash-header h1{font-size:19px;color:white;line-height:1.3;margin-bottom:.3rem}.dash-header p{font-size:12px;color:rgba(255,255,255,.68)}.pill{display:inline-flex;align-items:center;background:var(--dorado);color:var(--azul);font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}.pill.ghost{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+.alerta{background:#FDF3D7;border:1px solid #E0C060;border-left:4px solid var(--dorado);border-radius:8px;padding:.85rem 1rem;font-size:12px;color:#5A4200;line-height:1.5;margin-bottom:1rem}.toolbar{background:var(--panel);border:1px solid var(--borde);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;box-shadow:var(--sombra)}.toolbar label{font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:.06em}.modo-btn,.month-btn{padding:.45rem 1rem;border:1.8px solid var(--borde);border-radius:7px;background:#fff;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer}.modo-btn.active,.month-btn.active{background:var(--azul);border-color:var(--azul);color:#fff}select,input{padding:.45rem .75rem;border:1.8px solid var(--borde);border-radius:7px;background:#fff;color:var(--azul);font-size:13px;font-weight:700}.month-wrap{display:none;align-items:center;gap:.4rem;flex-wrap:wrap}.month-buttons{display:flex;gap:.4rem;flex-wrap:wrap}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin-bottom:1.2rem}.kpi{background:var(--panel);border:1px solid var(--borde);border-radius:10px;padding:1rem 1.1rem;box-shadow:var(--sombra);position:relative;overflow:hidden}.kpi:before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--azul)}.kpi.gold:before{background:var(--dorado)}.kpi.green:before{background:var(--verde)}.kpi.red:before{background:var(--rojo)}.kpi-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}.kpi-val{font-size:28px;font-weight:800;color:var(--azul);line-height:1}.kpi-sub{font-size:11px;color:var(--muted);margin-top:.28rem}.delta{font-size:12px;font-weight:800;margin-top:.35rem}.delta.up{color:var(--verde)}.delta.down{color:var(--rojo)}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0 1.25rem}.tab{padding:.48rem 1rem;border:1.5px solid var(--borde);border-radius:999px;background:#fff;color:var(--muted);font-size:12px;font-weight:800;cursor:pointer}.tab.active{background:var(--azul);border-color:var(--azul);color:white}.panel{display:none}.panel.active{display:block}.card{background:var(--panel);border:1px solid var(--borde);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--sombra)}.card-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:.8rem}.card-title{font-size:14px;font-weight:800;color:var(--azul)}.card-sub{font-size:11px;color:var(--muted);margin-top:2px}.source{font-size:10px;color:#9AA5B4;font-style:italic;text-align:right}.chart{position:relative;height:330px}.chart.tall{height:420px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:1rem}.mini-card{border:1px solid var(--borde);border-radius:10px;padding:1rem;background:#FBFDFF}.mini-card b{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.mini-card div{font-size:24px;font-weight:800;color:var(--azul);margin-top:.35rem}.mini-card small{color:var(--muted)}
+.table-tools{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.8rem}.badge{font-size:11px;font-weight:800;color:var(--azul);background:#EDF2F8;padding:.3rem .65rem;border-radius:999px}.table-wrap{overflow:auto;border:1px solid var(--borde);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:12px}thead tr{background:var(--azul)}th{padding:.65rem .85rem;color:white;text-align:left;white-space:nowrap;cursor:pointer}td{padding:.58rem .85rem;border-bottom:1px solid var(--borde);white-space:nowrap}tbody tr:nth-child(even){background:#F8FAFC}.num{text-align:right;font-variant-numeric:tabular-nums}.good{color:var(--verde);font-weight:800}.bad{color:var(--rojo);font-weight:800}.empty{text-align:center;color:var(--muted);padding:2rem}
+.sexo-visual{display:none;padding:1rem 0 .25rem}.sexo-img{display:block;max-width:260px;width:42%;min-width:180px;margin:.25rem auto 1rem}.sexo-values{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:560px;margin:0 auto}.sexo-value{background:#FBFDFF;border:1px solid var(--borde);border-radius:12px;padding:1rem;text-align:center}.sexo-value b{display:block;color:var(--azul);font-size:13px;margin-bottom:.35rem}.sexo-value strong{display:block;font-size:28px;color:var(--azul);line-height:1}.sexo-value small{display:block;margin-top:.3rem;color:var(--muted)}@media(max-width:680px){.freq-cards-ps{grid-template-columns:1fr;}}@media(max-width:640px){.sexo-values{grid-template-columns:1fr}.sexo-img{width:65%}}@media(max-width:760px){.topbar{padding:0 1rem}.top-right{display:none}.main{padding:1rem}.two-col{grid-template-columns:1fr}.dash-header{padding:1.2rem}.chart{height:290px}.card{padding:1rem}}
+
+
+.page-ps{display:none;}.page-ps.active{display:block;}
+.pg-wrap-ps{max-width:1600px;margin:0 auto;padding:2rem 1.5rem;}
+.freq-header-ps{background:#4F449A;border-radius:12px;padding:2rem 2.5rem;margin-bottom:2rem;border-bottom:4px solid #F1B620;}
+.freq-header-ps h2{font-size:22px;font-weight:700;color:white;margin-bottom:.5rem;}
+.freq-header-ps p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;}
+.freq-cards-ps{display:grid;grid-template-columns:300px 300px;justify-content:center;gap:1.25rem;margin-bottom:1.5rem;}
+.freq-card-ps{display:flex;flex-direction:column;background:white;border:2px solid #DDE2EE;border-radius:12px;padding:2rem 1.5rem;
+  cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;text-align:center;}
+.freq-card-ps:hover{border-color:#4F449A;box-shadow:0 6px 24px rgba(79,68,154,.15);transform:translateY(-3px);}
+.freq-icon-ps{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;font-size:24px;background:#4F449A;}
+.def-box-ps{background:white;border:1px solid #DDE2EE;border-left:4px solid #37306C;border-radius:12px;
+  padding:1.4rem 1.6rem;margin-bottom:1.5rem;}
+.def-box-ps-title{font-size:15px;font-weight:700;color:#4F449A;margin-bottom:.6rem;}
+.def-box-ps-text{font-size:13px;color:#5A6180;line-height:1.65;}
+.limit-box-ps{background:white;border:1px solid #DDE2EE;border-radius:12px;margin-bottom:1.5rem;overflow:hidden;}
+.limit-box-ps summary{cursor:pointer;list-style:none;padding:1rem 1.5rem;display:flex;align-items:center;gap:.6rem;
+  font-size:13px;font-weight:700;color:#4F449A;background:#FDF3D7;border-left:4px solid #F1B620;}
+.limit-box-ps summary::-webkit-details-marker{display:none;}
+.limit-box-ps summary:after{content:'▸';margin-left:auto;font-size:11px;color:#4F449A;transition:transform .2s;}
+.limit-box-ps[open] summary:after{transform:rotate(90deg);}
+.limit-box-ps ol{padding:1rem 1.5rem 1.25rem 2.5rem;}
+.limit-box-ps li{font-size:12.5px;color:#5A6180;line-height:1.6;margin-bottom:.6rem;}
+.limit-box-ps li:last-child{margin-bottom:0;}
+.limit-box-ps li b{color:#4F449A;}
+.freq-card-ps h3{font-size:18px;font-weight:700;color:#4F449A;margin-bottom:.5rem;}
+.freq-card-ps p{font-size:13px;color:#5A6180;margin-bottom:1rem;line-height:1.5;}
+.freq-card-ps ul{list-style:none;font-size:12px;color:#5A6180;text-align:left;margin-bottom:1.25rem;}
+.freq-card-ps ul li{padding:3px 0 3px 1rem;position:relative;}
+.freq-card-ps ul li::before{content:'▸';position:absolute;left:0;color:#F1B620;}
+.btn-freq-ps{display:block;margin-top:auto;width:100%;padding:.75rem;border-radius:8px;border:none;
+  background:#4F449A;color:white;font-size:14px;font-weight:600;cursor:pointer;}
+.btn-freq-ps.dorado{background:#F1B620;color:#4F449A;}
+.acc-filtro-ps{padding:4px 12px;border:1.5px solid #DDE2EE;border-radius:20px;background:white;
+  font-size:11px;font-weight:600;color:#5A6180;cursor:pointer;transition:all .2s;}
+.acc-filtro-ps.active{background:#4F449A;border-color:#4F449A;color:white;}
+.acc-tipo-pp-ps{background:#EEF2FF;color:#4338CA;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.acc-estado-ps{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.acc-rol-rect-ps{background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.acc-rol-ejec-ps{background:#EDE9FE;color:#5B21B6;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.acc-rol-corr-ps{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.acc-inc-alta-ps{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+
+
+/* =========================================================
+   AJUSTE DE PROPORCIONES DEL DASHBOARD
+   Objetivo: mantener todas las secciones con el mismo ancho
+   visual que Nacional / Sexo, evitando que la tabla o el footer
+   ocupen todo el ancho de la página.
+   ========================================================= */
+html, body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+#pg-datos-ps{
+  width:100%;
+}
+
+.main{
+  width:min(1600px, calc(100% - 48px));
+  max-width:1600px;
+  margin:0 auto;
+  padding:2rem 0 1.25rem;
+}
+
+.alerta,
+.toolbar,
+.kpi-grid,
+.tabs,
+.panel,
+.card{
+  width:100%;
+  max-width:100%;
+}
+
+#tabla{
+  width:100%;
+  max-width:100%;
+}
+
+#tabla .card{
+  width:100%;
+  max-width:1600px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.table-wrap{
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+}
+
+#tabla table{
+  width:100%;
+  min-width:980px;
+}
+
+@media(max-width:760px){
+  .main{
+    width:calc(100% - 24px);
+    padding-left:0;
+    padding-right:0;
+  }
+
+  #tabla table{
+    min-width:900px;
+  }
+}
+
+
+
+/* =========================================================
+   AJUSTE ESPECÍFICO: GRÁFICOS DE SERVICIO Y ETNIA
+   Objetivo: que estos paneles mantengan el mismo ancho visual
+   que Nacional / Sexo y no se expandan desproporcionadamente.
+   ========================================================= */
+#servicio,
+#etnia{
+  width:100%;
+  max-width:1600px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#servicio .card,
+#etnia .card{
+  width:100%;
+  max-width:1600px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#servicio .chart,
+#etnia .chart{
+  width:100%;
+  max-width:100%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#servicio .chart{
+  height:300px;
+}
+
+#etnia .chart.tall{
+  height:340px;
+}
+
+#servicio canvas,
+#etnia canvas{
+  display:block;
+  width:100% !important;
+  max-width:100% !important;
+}
+
+@media(max-width:760px){
+  #servicio,
+  #etnia,
+  #servicio .card,
+  #etnia .card{
+    max-width:100%;
+  }
+
+  #servicio .chart{
+    height:290px;
+  }
+
+  #etnia .chart.tall{
+    height:330px;
+  }
+}
+
+
+
+/* =========================================================
+   HOMOLOGACIÓN MDTDH V2
+   Colores de acceso y footer único fijo
+   Regla:
+   - Anual / Trimestral / Resultados administrativos: azul
+   - Acciones planificadas: amarillo
+   - Cronograma de gestión: verde
+   ========================================================= */
+:root{
+  --mdh-blue:#4F449A;
+  --mdh-blue-2:#37306C;
+  --mdh-yellow:#F1B620;
+  --mdh-yellow-dark:#C99200;
+  --mdh-green:#81A382;
+  --mdh-footer-h:44px;
+}
+html{min-height:100%;}
+body{
+  min-height:100vh !important;
+  padding-bottom:var(--mdh-footer-h) !important;
+}
+
+/* Tarjetas del selector inicial */
+.card-blue,
+.card-yellow,
+.card-green{
+  border-color:#DDE2EE !important;
+}
+.card-blue:hover{border-color:var(--mdh-blue) !important;}
+.card-yellow:hover{border-color:var(--mdh-yellow) !important;}
+.card-green:hover{border-color:var(--mdh-green) !important;}
+
+.card-blue [class*="icon"],
+.card-blue .inicio-icon{
+  background:var(--mdh-blue) !important;
+  color:#FFFFFF !important;
+}
+.card-yellow [class*="icon"],
+.card-yellow .inicio-icon{
+  background:var(--mdh-yellow) !important;
+  color:var(--mdh-blue) !important;
+}
+.card-green [class*="icon"],
+.card-green .inicio-icon{
+  background:var(--mdh-green) !important;
+  color:#FFFFFF !important;
+}
+
+.card-blue button[class*="btn"],
+.card-blue .btn-freq,
+.card-blue .btn-freq-ps,
+.card-blue .btn-freq-d,
+.card-blue .btn-freq-g,
+.card-blue .btn-freq-pi,
+.card-blue .btn-inicio-card{
+  background:var(--mdh-blue) !important;
+  border-color:var(--mdh-blue) !important;
+  color:#FFFFFF !important;
+}
+.card-yellow button[class*="btn"],
+.card-yellow .btn-freq,
+.card-yellow .btn-freq-ps,
+.card-yellow .btn-freq-d,
+.card-yellow .btn-freq-g,
+.card-yellow .btn-freq-pi,
+.card-yellow .btn-inicio-card{
+  background:var(--mdh-yellow) !important;
+  border-color:var(--mdh-yellow) !important;
+  color:var(--mdh-blue) !important;
+}
+.card-green button[class*="btn"],
+.card-green .btn-freq,
+.card-green .btn-freq-ps,
+.card-green .btn-freq-d,
+.card-green .btn-freq-g,
+.card-green .btn-freq-pi,
+.card-green .btn-inicio-card{
+  background:var(--mdh-green) !important;
+  border-color:var(--mdh-green) !important;
+  color:#FFFFFF !important;
+}
+
+/* Refuerzo específico para Protección Social */
+.freq-card-ps.card-blue .freq-icon-ps,
+.freq-card-ps.card-blue .btn-freq-ps{
+  background:var(--mdh-blue) !important;
+  color:#FFFFFF !important;
+}
+.freq-card-ps.card-yellow .freq-icon-ps,
+.freq-card-ps.card-yellow .btn-freq-ps,
+.freq-card-ps.card-yellow .btn-freq-ps.dorado{
+  background:var(--mdh-yellow) !important;
+  color:var(--mdh-blue) !important;
+}
+
+/* Footer único: barra azul al borde inferior, sin moverse entre pestañas */
+.dashboard-footer{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  z-index:950 !important;
+  width:100% !important;
+  min-height:var(--mdh-footer-h) !important;
+  background:var(--mdh-blue) !important;
+  color:rgba(255,255,255,.66) !important;
+  text-align:center !important;
+  font-family:Arial, Arial, sans-serif !important;
+  font-size:11px !important;
+  line-height:1.45 !important;
+  padding:14px 24px !important;
+  margin:0 !important;
+  border:0 !important;
+  box-shadow:0 -1px 8px rgba(79,68,154,.14) !important;
+}
+.dashboard-footer strong{
+  color:rgba(255,255,255,.88) !important;
+  font-weight:700 !important;
+}
+@media(max-width:760px){
+  :root{--mdh-footer-h:54px;}
+  .dashboard-footer{font-size:10.5px !important;padding:11px 16px !important;}
+}
+
+
+
+/* =========================================================
+   HOMOLOGACIÓN MDTDH V3 — Migas de navegación y pie de página
+   ========================================================= */
+:root{
+  --mdh-blue:#4F449A;
+  --mdh-blue-2:#37306C;
+  --mdh-yellow:#F1B620;
+  --mdh-footer-h:44px;
+}
+html{min-height:100%;}
+body{
+  min-height:100vh !important;
+  padding-bottom:var(--mdh-footer-h) !important;
+}
+.mdh-breadcrumb,
+.breadcrumb.mdh-breadcrumb{
+  width:100% !important;
+  min-height:34px !important;
+  background:var(--mdh-blue-2) !important;
+  padding:8px 32px !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  flex-wrap:wrap !important;
+  font-family:Arial, Arial, sans-serif !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  color:rgba(255,255,255,.72) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  margin:0 !important;
+  position:relative !important;
+  z-index:930 !important;
+}
+.mdh-breadcrumb a,
+.mdh-breadcrumb .mdh-bc-base{
+  color:rgba(255,255,255,.78) !important;
+  text-decoration:none !important;
+  font-weight:500 !important;
+  cursor:pointer !important;
+}
+.mdh-breadcrumb a:hover,
+.mdh-breadcrumb .mdh-bc-base:hover{
+  color:#FFFFFF !important;
+}
+.mdh-breadcrumb .mdh-bc-sep{
+  color:rgba(255,255,255,.55) !important;
+  font-weight:600 !important;
+}
+.mdh-breadcrumb .mdh-bc-current{
+  color:var(--mdh-yellow) !important;
+  font-weight:700 !important;
+}
+.dashboard-footer{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  z-index:950 !important;
+  width:100% !important;
+  min-height:var(--mdh-footer-h) !important;
+  background:var(--mdh-blue) !important;
+  color:rgba(255,255,255,.66) !important;
+  text-align:center !important;
+  font-family:Arial, Arial, sans-serif !important;
+  font-size:11px !important;
+  line-height:1.45 !important;
+  padding:14px 24px !important;
+  margin:0 !important;
+  border:0 !important;
+  box-shadow:0 -1px 8px rgba(79,68,154,.14) !important;
+}
+.dashboard-footer strong{
+  color:rgba(255,255,255,.88) !important;
+  font-weight:700 !important;
+}
+@media(max-width:760px){
+  :root{--mdh-footer-h:54px;}
+  .mdh-breadcrumb,
+  .breadcrumb.mdh-breadcrumb{padding:8px 16px !important;font-size:11.5px !important;}
+  .dashboard-footer{font-size:10.5px !important;padding:11px 16px !important;}
+}
+
+
+/* Espacio para franja de navegacion lateral */
+body.has-sidebar { margin-left: var(--sidebar-w); }
+@media (max-width: 900px){ body.has-sidebar { margin-left: 0; } }
+</style>
+</head>
+<body>
+
+<div id="app-sidebar-mount"></div>
+<div class="tpm-header">
+  <div class="tpm-header-left">
+    <div class="tpm-logo">MDTDH</div>
+    <div>
+      <div class="tpm-title">Porcentaje de usuarios de los servicios de protección social que se encuentran en condición de pobreza y pobreza extrema</div>
+      <div class="tpm-sub">Ministerio de Trabajo y Desarrollo Humano · Registros administrativos</div>
+    </div>
+  </div>
+  <div class="tpm-right">
+    <div class="tpm-badge">Jun 2026: 71,94%</div>
+    
+  </div>
+</div>
+<nav class="breadcrumb mdh-breadcrumb" id="mdh-breadcrumb" aria-label="Ruta de navegación"><a href="../index_PND.html">Inicio</a><span class="mdh-bc-sep">›</span><span class="mdh-bc-base">Usuarios de servicios de protección social</span><span class="mdh-bc-sep">›</span><span class="mdh-bc-current">Menú del indicador</span></nav>
+
+<div id="pg-inicio-ps" class="page-ps active">
+  <div class="pg-wrap-ps">
+    <div class="freq-header-ps">
+      <h2>Porcentaje de usuarios de los servicios de protección social que se encuentran en condición de pobreza y pobreza extrema</h2>
+      <p>Selecciona la información que deseas consultar sobre el Plan Nacional de Desarrollo 2025–2029.</p>
+    </div>
+
+    <div class="def-box-ps">
+      <div class="def-box-ps-title">📖 Definición del indicador</div>
+      <p class="def-box-ps-text">Mide la proporción de usuarios de los servicios de protección social que se encuentran en situación de pobreza y pobreza extrema según el Índice de Registro Social, respecto al total de usuarios atendidos en dichos servicios.</p>
+    </div>
+
+    <details class="limit-box-ps">
+      <summary>⚠️ Limitaciones técnicas del indicador</summary>
+      <ol>
+        <li>La precisión del indicador puede verse limitada por la <b>incompletitud u omisión de datos</b> ocasionada por errores humanos al momento de registrar la información durante la prestación de servicios.</li>
+        <li>Los <b>registros administrativos no están diseñados con fines estadísticos</b>, por lo que suelen llenarse de forma parcial, con errores o campos vacíos, generando inconsistencias y pérdida de calidad en la información.</li>
+        <li>Cuando no se cuenta con información sobre la condición de pobreza del núcleo familiar del beneficiario, se <b>imputa la información del representante del hogar</b>, lo que podría no reflejar la situación real del beneficiario.</li>
+        <li>Los usuarios <b>sin cédula de identidad</b> no pueden identificarse en el Registro Social, pero igual se consideran en el indicador; por esta razón, el indicador podría <b>subestimar la focalización</b> de los servicios.</li>
+        <li>El Registro Social es un <b>instrumento estático en el tiempo</b>: la información refleja la situación socioeconómica de los hogares únicamente a la fecha de levantamiento.</li>
+        <li>El indicador puede variar por factores ajenos a la gestión del servicio: <b>cambios metodológicos</b> en el Índice del Registro Social, actualización del tipo de levantamiento en hogares ya registrados, o levantamiento de información a nuevos hogares.</li>
+      </ol>
+    </details>
+
+    <div class="freq-cards-ps">
+      <div class="freq-card-ps card-blue" onclick="irPaginaPS('pg-datos-ps')">
+        <div class="freq-icon-ps">📊</div>
+        <h3>Resultados administrativos</h3>
+        <p>Registros MDTDH — usuarios en condición de pobreza por área, sexo, servicio y etnia</p>
+        <ul>
+          <li>10 períodos: Dic 2021 – Jun 2026</li>
+          <li>Desagregación: área, sexo, tipo de servicio, etnia</li>
+          <li>Último: Jun 2026 · 71,94%</li>
+        </ul>
+        <button class="btn-freq-ps">Ver resultados →</button>
+      </div>
+      <div class="freq-card-ps card-yellow" onclick="irPaginaPS('pg-acciones-ps')">
+        <div class="freq-icon-ps">📋</div>
+        <h3>Acciones planificadas 2026</h3>
+        <p>Cronograma del MDTDH para incrementar la cobertura de protección social en pobreza</p>
+        <ul>
+          <li>7 acciones planificadas · Corte abril 2026</li>
+          <li>Presupuesto total: +$300M</li>
+          <li>Todo Política Pública · MDTDH</li>
+        </ul>
+        <button class="btn-freq-ps dorado">Ver acciones →</button>
+      </div>
+    </div>
+    <div style="background:#F5F6F8;border-radius:8px;padding:.85rem 1rem;font-size:12px;color:#5A6180;line-height:1.6;">
+      <strong style="color:#4F449A;">Nota metodológica:</strong> Datos administrativos del MDTDH. Sin error estándar, IC ni CV.
+      El indicador mide el porcentaje de usuarios de servicios del MDTDH que están en condición de pobreza o pobreza extrema según el Índice de Registro Social.
+    </div>
+  </div>
+</div>
+
+<div id="pg-datos-ps" class="page-ps">
+<main class="main">
+  <div class="alerta"><strong>Lectura del indicador:</strong> La serie anual corresponde al corte de diciembre de cada año. Al elegir un año en "Por año" se muestra su corte más reciente disponible.</div>
+  <section class="toolbar">
+    <label>Ver:</label><button class="modo-btn active" id="mode-series" onclick="setViewMode('series')">Toda la serie anual</button><button class="modo-btn" id="mode-year" onclick="setViewMode('year')">Por año</button>
+    <span id="yearWrap" style="display:none;align-items:center;gap:.4rem"><label>Año:</label><select id="yearSelect" onchange="setYear(this.value)"></select></span>
+  </section>
+  <section class="kpi-grid" id="kpiGrid"></section>
+  <nav class="tabs">
+    <button class="tab active" onclick="showTab('nacional',this)">Nacional / Área</button>
+    <button class="tab" onclick="showTab('sexo',this)">Sexo</button>
+    <button class="tab" onclick="showTab('servicio',this)">Tipo de servicio</button>
+    <button class="tab" onclick="showTab('etnia',this)">Etnia</button>
+    <button class="tab" onclick="showTab('tabla',this)">Tabla de datos</button>
+  </nav>
+  <section id="nacional" class="panel active">
+    <div class="card"><div class="card-head"><div><div class="card-title" id="geoTitle">Serie anual nacional, urbana y rural</div><div class="card-sub" id="geoSub"></div></div></div><div class="chart"><canvas id="geoChart"></canvas></div></div>
+    <div class="two-col"><div class="card"><div class="card-head"><div><div class="card-title">Brecha urbano-rural</div><div class="card-sub" id="brechaSub"></div></div></div><div class="chart"><canvas id="brechaChart"></canvas></div></div><div class="card"><div class="card-head"><div><div class="card-title">Tendencia nacional vs meta 2029</div><div class="card-sub">Punto destacado = corte seleccionado</div></div></div><div class="chart"><canvas id="metaChart"></canvas></div></div></div>
+  </section>
+  <section id="sexo" class="panel"><div class="card"><div class="card-head"><div><div class="card-title" id="sexoTitle">Desagregación por sexo</div><div class="card-sub" id="sexoSub"></div></div></div><div class="chart" id="sexoChartWrap"><canvas id="sexoChart"></canvas></div><div class="sexo-visual" id="sexoVisual"><img class="sexo-img" id="sexoImgH" src="../imagenes/hombre.png" alt="Hombre" style="display:none;"><img class="sexo-img" id="sexoImgM" src="../imagenes/mujer.png"  alt="Mujer"  style="display:none;"><div id="sexoValues" class="sexo-values"></div></div></div></div></section>
+  <section id="servicio" class="panel"><div class="card"><div class="card-head"><div><div class="card-title" id="srvTitle">Desagregación por tipo de servicio</div><div class="card-sub" id="srvSub"></div></div></div><div class="chart"><canvas id="srvChart"></canvas></div></div></section>
+  <section id="etnia" class="panel"><div class="card"><div class="card-head"><div><div class="card-title" id="etniaTitle">Desagregación por etnia</div><div class="card-sub" id="etniaSub"></div></div></div><div class="chart tall"><canvas id="etniaChart"></canvas></div></div></section>
+  <section id="tabla" class="panel"><div class="card"><div class="card-head"><div><div class="card-title">Tabla consolidada</div><div class="card-sub">Incluye geográfico, sexo, tipo de servicio y etnia.</div></div></div><div class="table-tools"><select id="tableYear" onchange="renderTable()"><option value="">Todos los años</option></select><select id="tableDim" onchange="renderTable()"><option value="">Todas las desagregaciones</option><option>Geográfico</option><option>Sexo</option><option>Servicio</option><option>Etnia</option></select><input id="tableText" placeholder="Buscar..." oninput="renderTable()"><span class="badge" id="rowCount">0 filas</span></div><div class="table-wrap"><table><thead><tr><th onclick="sortTable('per')">Período</th><th onclick="sortTable('tipo')">Desagregación</th><th onclick="sortTable('grupo')">Grupo</th><th onclick="sortTable('est')">Estimador</th><th onclick="sortTable('num')">Numerador</th><th onclick="sortTable('den')">Denominador</th><th onclick="sortTable('gap')">vs Meta 2029</th></tr></thead><tbody id="dataBody"></tbody></table></div></div></section>
+</main>
+<script>
+
+const GEO=[
+  {per:"Dic 2021",area:"Nacional",est:0.561712,num:249322,den:443861},
+  {per:"Dic 2021",area:"Rural",est:0.643821,num:116189,den:180468},
+  {per:"Dic 2021",area:"Urbano",est:0.505454,num:133133,den:263393},
+  {per:"Dic 2022",area:"Nacional",est:0.679556,num:298877,den:439812},
+  {per:"Dic 2022",area:"Rural",est:0.749870,num:129378,den:172534},
+  {per:"Dic 2022",area:"Urbano",est:0.634167,num:169499,den:267278},
+  {per:"Dic 2023",area:"Nacional",est:0.702010,num:293518,den:418111},
+  {per:"Dic 2023",area:"Rural",est:0.778848,num:130950,den:168133},
+  {per:"Dic 2023",area:"Urbano",est:0.650329,num:162568,den:249978},
+  {per:"Dic 2024",area:"Nacional",est:0.746057,num:324546,den:435015},
+  {per:"Dic 2024",area:"Rural",est:0.804927,num:137463,den:170777},
+  {per:"Dic 2024",area:"Urbano",est:0.708009,num:187083,den:264238},
+  {per:"Mar 2025",area:"Nacional",est:0.763783,num:327151,den:428330},
+  {per:"Mar 2025",area:"Rural",est:0.813968,num:137865,den:169374},
+  {per:"Mar 2025",area:"Urbano",est:0.730958,num:189286,den:258956},
+  {per:"Jun 2025",area:"Nacional",est:0.776147,num:336487,den:433535},
+  {per:"Jun 2025",area:"Rural",est:0.822572,num:141234,den:171698},
+  {per:"Jun 2025",area:"Urbano",est:0.745704,num:195253,den:261837},
+  {per:"Sep 2025",area:"Nacional",est:0.779471,num:332916,den:427105},
+  {per:"Sep 2025",area:"Rural",est:0.822720,num:138491,den:168333},
+  {per:"Sep 2025",area:"Urbano",est:0.751337,num:194425,den:258772},
+  {per:"Dic 2025",area:"Nacional",est:0.783083,num:323843,den:413549},
+  {per:"Dic 2025",area:"Rural",est:0.833062,num:140361,den:168488},
+  {per:"Dic 2025",area:"Urbano",est:0.748720,num:183482,den:245061},
+  {per:"Mar 2026",area:"Nacional",est:0.759212,num:328252,den:432359},
+  {per:"Mar 2026",area:"Rural",est:0.804067,num:138519,den:172273},
+  {per:"Mar 2026",area:"Urbano",est:0.729501,num:189733,den:260086},
+  {per:"Jun 2026",area:"Nacional",est:0.719370,num:313065,den:435193},
+  {per:"Jun 2026",area:"Rural",est:0.767893,num:132943,den:173127},
+  {per:"Jun 2026",area:"Urbano",est:0.687315,num:180122,den:262066},
+];
+const SEXO=[
+  {per:"Dic 2021",sexo:"Hombre",est:0.559705,num:116112,den:207452},
+  {per:"Dic 2021",sexo:"Mujer",est:0.563473,num:133210,den:236409},
+  {per:"Dic 2022",sexo:"Hombre",est:0.658631,num:126851,den:192598},
+  {per:"Dic 2022",sexo:"Mujer",est:0.695859,num:172026,den:247214},
+  {per:"Dic 2023",sexo:"Hombre",est:0.697893,num:134186,den:192273},
+  {per:"Dic 2023",sexo:"Mujer",est:0.705515,num:159332,den:225838},
+  {per:"Dic 2024",sexo:"Hombre",est:0.731798,num:140642,den:192187},
+  {per:"Dic 2024",sexo:"Mujer",est:0.757343,num:183904,den:242828},
+  {per:"Mar 2025",sexo:"Hombre",est:0.749924,num:141099,den:188151},
+  {per:"Mar 2025",sexo:"Mujer",est:0.774639,num:186052,den:240179},
+  {per:"Jun 2025",sexo:"Hombre",est:0.763236,num:145069,den:190071},
+  {per:"Jun 2025",sexo:"Mujer",est:0.786227,num:191418,den:243464},
+  {per:"Sep 2025",sexo:"Hombre",est:0.768150,num:142763,den:185853},
+  {per:"Sep 2025",sexo:"Mujer",est:0.788192,num:190153,den:241252},
+  {per:"Dic 2025",sexo:"Hombre",est:0.779927,num:146921,den:188378},
+  {per:"Dic 2025",sexo:"Mujer",est:0.785723,num:176922,den:225171},
+  {per:"Mar 2026",sexo:"Hombre",est:0.745947,num:141841,den:190149},
+  {per:"Mar 2026",sexo:"Mujer",est:0.769626,num:186411,den:242210},
+  {per:"Jun 2026",sexo:"Hombre",est:0.700325,num:133330,den:190383},
+  {per:"Jun 2026",sexo:"Mujer",est:0.734182,num:179735,den:244810},
+];
+const SRV=[
+  {per:"Dic 2021",srv:"Desarrollo Infantil Integral",est:0.498857,num:143623,den:287904},
+  {per:"Dic 2021",srv:"Personas adultas mayores",est:0.672310,num:81611,den:121389},
+  {per:"Dic 2021",srv:"Personas con discapacidad",est:0.696829,num:24088,den:34568},
+  {per:"Dic 2022",srv:"Desarrollo Infantil Integral",est:0.657233,num:192257,den:292525},
+  {per:"Dic 2022",srv:"Personas adultas mayores",est:0.727795,num:82457,den:113297},
+  {per:"Dic 2022",srv:"Personas con discapacidad",est:0.710886,num:24163,den:33990},
+  {per:"Dic 2023",srv:"Desarrollo Infantil Integral",est:0.681846,num:187648,den:275206},
+  {per:"Dic 2023",srv:"Personas adultas mayores",est:0.747146,num:81146,den:108608},
+  {per:"Dic 2023",srv:"Personas con discapacidad",est:0.720879,num:24724,den:34297},
+  {per:"Dic 2024",srv:"Desarrollo Infantil Integral",est:0.743298,num:214868,den:289074},
+  {per:"Dic 2024",srv:"Personas adultas mayores",est:0.757924,num:84263,den:111176},
+  {per:"Dic 2024",srv:"Personas con discapacidad",est:0.731051,num:25415,den:34765},
+  {per:"Mar 2025",srv:"Desarrollo Infantil Integral",est:0.770278,num:220626,den:286424},
+  {per:"Mar 2025",srv:"Personas adultas mayores",est:0.757838,num:81413,den:107428},
+  {per:"Mar 2025",srv:"Personas con discapacidad",est:0.728349,num:25112,den:34478},
+  {per:"Jun 2025",srv:"Desarrollo Infantil Integral",est:0.785613,num:225570,den:287126},
+  {per:"Jun 2025",srv:"Personas adultas mayores",est:0.763804,num:85320,den:111704},
+  {per:"Jun 2025",srv:"Personas con discapacidad",est:0.737559,num:25597,den:34705},
+  {per:"Sep 2025",srv:"Desarrollo Infantil Integral",est:0.797691,num:223276,den:279903},
+  {per:"Sep 2025",srv:"Personas adultas mayores",est:0.749575,num:83678,den:111634},
+  {per:"Sep 2025",srv:"Personas con discapacidad",est:0.729926,num:25962,den:35568},
+  {per:"Dic 2025",srv:"Desarrollo Infantil Integral",est:0.795013,num:211181,den:265632},
+  {per:"Dic 2025",srv:"Personas adultas mayores",est:0.768466,num:85840,den:111703},
+  {per:"Dic 2025",srv:"Personas con discapacidad",est:0.740653,num:26822,den:36214},
+  {per:"Mar 2026",srv:"Desarrollo Infantil Integral",est:0.759185,num:217177,den:286066},
+  {per:"Mar 2026",srv:"Personas adultas mayores",est:0.765989,num:84952,den:110905},
+  {per:"Mar 2026",srv:"Personas con discapacidad",est:0.738188,num:26123,den:35388},
+  {per:"Jun 2026",srv:"Desarrollo Infantil Integral",est:0.701315,num:199827,den:284932},
+  {per:"Jun 2026",srv:"Personas adultas mayores",est:0.758864,num:86172,den:113554},
+  {per:"Jun 2026",srv:"Personas con discapacidad",est:0.737353,num:27066,den:36707},
+];
+const ETNIA=[
+  {per:"Dic 2021",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.616588,num:5598,den:9079},
+  {per:"Dic 2021",etnia:"Blanco/a",est:0.459610,num:495,den:1077},
+  {per:"Dic 2021",etnia:"Indígena",est:0.711214,num:40648,den:57153},
+  {per:"Dic 2021",etnia:"Mestizo/a",est:0.527405,num:178534,den:338514},
+  {per:"Dic 2021",etnia:"Montuvio/a",est:0.636913,num:21078,den:33094},
+  {per:"Dic 2021",etnia:"Mulato/a",est:0.573983,num:1509,den:2629},
+  {per:"Dic 2021",etnia:"Negro/a",est:0.613836,num:976,den:1590},
+  {per:"Dic 2021",etnia:"Otro/a",est:0.667586,num:484,den:725},
+  {per:"Dic 2022",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.694804,num:6659,den:9584},
+  {per:"Dic 2022",etnia:"Blanco/a",est:0.540196,num:551,den:1020},
+  {per:"Dic 2022",etnia:"Indígena",est:0.865385,num:51821,den:59882},
+  {per:"Dic 2022",etnia:"Mestizo/a",est:0.637539,num:209652,den:328846},
+  {per:"Dic 2022",etnia:"Montuvio/a",est:0.751117,num:26564,den:35366},
+  {per:"Dic 2022",etnia:"Mulato/a",est:0.693923,num:1884,den:2715},
+  {per:"Dic 2022",etnia:"Negro/a",est:0.705575,num:1215,den:1722},
+  {per:"Dic 2022",etnia:"Otro/a",est:0.784343,num:531,den:677},
+  {per:"Dic 2023",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.690560,num:6474,den:9375},
+  {per:"Dic 2023",etnia:"Blanco/a",est:0.561111,num:505,den:900},
+  {per:"Dic 2023",etnia:"Indígena",est:0.874894,num:47372,den:54146},
+  {per:"Dic 2023",etnia:"Mestizo/a",est:0.665446,num:208550,den:313399},
+  {per:"Dic 2023",etnia:"Montuvio/a",est:0.766523,num:26941,den:35147},
+  {per:"Dic 2023",etnia:"Mulato/a",est:0.698400,num:1746,den:2500},
+  {per:"Dic 2023",etnia:"Negro/a",est:0.694528,num:1155,den:1663},
+  {per:"Dic 2023",etnia:"Otro/a",est:0.790010,num:775,den:981},
+  {per:"Dic 2024",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.740054,num:7143,den:9652},
+  {per:"Dic 2024",etnia:"Blanco/a",est:0.638889,num:621,den:972},
+  {per:"Dic 2024",etnia:"Indígena",est:0.894204,num:52268,den:58452},
+  {per:"Dic 2024",etnia:"Mestizo/a",est:0.713359,num:223576,den:313413},
+  {per:"Dic 2024",etnia:"Montuvio/a",est:0.791810,num:33047,den:41736},
+  {per:"Dic 2024",etnia:"Mulato/a",est:0.745815,num:1916,den:2569},
+  {per:"Dic 2024",etnia:"Negro/a",est:0.753509,num:1342,den:1781},
+  {per:"Dic 2024",etnia:"Otro/a",est:0.719410,num:4633,den:6440},
+  {per:"Mar 2025",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.770366,num:7357,den:9550},
+  {per:"Mar 2025",etnia:"Blanco/a",est:0.665245,num:624,den:938},
+  {per:"Mar 2025",etnia:"Indígena",est:0.898448,num:52154,den:58049},
+  {per:"Mar 2025",etnia:"Mestizo/a",est:0.733085,num:224659,den:306457},
+  {per:"Mar 2025",etnia:"Montuvio/a",est:0.805355,num:33568,den:41681},
+  {per:"Mar 2025",etnia:"Mulato/a",est:0.776358,num:1944,den:2504},
+  {per:"Mar 2025",etnia:"Negro/a",est:0.764286,num:1391,den:1820},
+  {per:"Mar 2025",etnia:"Otro/a",est:0.743964,num:5454,den:7331},
+  {per:"Jun 2025",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.778618,num:7414,den:9522},
+  {per:"Jun 2025",etnia:"Blanco/a",est:0.671443,num:656,den:977},
+  {per:"Jun 2025",etnia:"Indígena",est:0.908774,num:53375,den:58733},
+  {per:"Jun 2025",etnia:"Mestizo/a",est:0.746594,num:230452,den:308671},
+  {per:"Jun 2025",etnia:"Montuvio/a",est:0.814200,num:34781,den:42718},
+  {per:"Jun 2025",etnia:"Mulato/a",est:0.784275,num:1985,den:2531},
+  {per:"Jun 2025",etnia:"Negro/a",est:0.781180,num:1403,den:1796},
+  {per:"Jun 2025",etnia:"Otro/a",est:0.747758,num:6421,den:8587},
+  {per:"Sep 2025",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.778161,num:7447,den:9570},
+  {per:"Sep 2025",etnia:"Blanco/a",est:0.685626,num:663,den:967},
+  {per:"Sep 2025",etnia:"Indígena",est:0.907358,num:51645,den:56918},
+  {per:"Sep 2025",etnia:"Mestizo/a",est:0.750248,num:226734,den:302212},
+  {per:"Sep 2025",etnia:"Montuvio/a",est:0.825726,num:36000,den:43598},
+  {per:"Sep 2025",etnia:"Mulato/a",est:0.782299,num:1980,den:2531},
+  {per:"Sep 2025",etnia:"Negro/a",est:0.756368,num:1366,den:1806},
+  {per:"Sep 2025",etnia:"Otro/a",est:0.745133,num:7081,den:9503},
+  {per:"Dic 2025",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.774965,num:7256,den:9363},
+  {per:"Dic 2025",etnia:"Blanco/a",est:0.684703,num:658,den:961},
+  {per:"Dic 2025",etnia:"Indígena",est:0.910691,num:48467,den:53220},
+  {per:"Dic 2025",etnia:"Mestizo/a",est:0.757900,num:223955,den:295494},
+  {per:"Dic 2025",etnia:"Montuvio/a",est:0.813542,num:33234,den:40851},
+  {per:"Dic 2025",etnia:"Mulato/a",est:0.781173,num:1892,den:2422},
+  {per:"Dic 2025",etnia:"Negro/a",est:0.747457,num:1249,den:1671},
+  {per:"Dic 2025",etnia:"Otro/a",est:0.745479,num:7132,den:9567},
+  {per:"Mar 2026",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.756870,num:7051,den:9316},
+  {per:"Mar 2026",etnia:"Blanco/a",est:0.672098,num:660,den:982},
+  {per:"Mar 2026",etnia:"Indígena",est:0.875595,num:51154,den:58422},
+  {per:"Mar 2026",etnia:"Mestizo/a",est:0.732796,num:222770,den:304000},
+  {per:"Mar 2026",etnia:"Montuvio/a",est:0.800401,num:35513,den:44369},
+  {per:"Mar 2026",etnia:"Mulato/a",est:0.756426,num:1854,den:2451},
+  {per:"Mar 2026",etnia:"Negro/a",est:0.729117,num:1222,den:1676},
+  {per:"Mar 2026",etnia:"Otro/a",est:0.720452,num:8028,den:11143},
+  {per:"Jun 2026",etnia:"Afroecuatoriano/a Afrodescendiente",est:0.722026,num:6956,den:9634},
+  {per:"Jun 2026",etnia:"Blanco/a",est:0.647844,num:631,den:974},
+  {per:"Jun 2026",etnia:"Indígena",est:0.839828,num:49119,den:58487},
+  {per:"Jun 2026",etnia:"Mestizo/a",est:0.692946,num:211113,den:304660},
+  {per:"Jun 2026",etnia:"Montuvio/a",est:0.754159,num:33907,den:44960},
+  {per:"Jun 2026",etnia:"Mulato/a",est:0.720033,num:1754,den:2436},
+  {per:"Jun 2026",etnia:"Negro/a",est:0.705815,num:1226,den:1737},
+  {per:"Jun 2026",etnia:"Otro/a",est:0.679317,num:8359,den:12305},
+];
+
+const META=0.9023;
+const PERIODS=["Dic 2021","Dic 2022","Dic 2023","Dic 2024","Mar 2025","Jun 2025","Sep 2025","Dic 2025","Mar 2026","Jun 2026"];
+const MONTH_ORDER={"Mar":1,"Jun":2,"Sep":3,"Dic":4};
+const YEARS=[...new Set(PERIODS.map(p=>p.split(' ')[1]))].sort((a,b)=>b-a);
+const COLORS={nac:'#6B3FA0',urb:'#1A3A6B',rur:'#C0622D',meta:'#C0392B',h:'#1A5FA8',m:'#C0395A',srv:['#81A382','#8B5CF6','#0891B2'],etnia:['#4F46E5','#0F766E','#B45309','#BE123C','#64748B','#16A34A','#EA580C','#0EA5E9']};
+let viewMode='series', selectedYear='2025', selectedPeriod='Dic 2025', sortKey='per', sortAsc=true;
+let charts={};
+const fmtPct=v=>(v*100).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
+const fmtNum=v=>Number(v).toLocaleString('es-EC');
+const pp=v=>(v*100).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+const yearOf=p=>p.split(' ')[1]; const monthOf=p=>p.split(' ')[0];
+const annualPeriods=()=>PERIODS.filter(p=>monthOf(p)==='Dic').sort((a,b)=>yearOf(a)-yearOf(b));
+const periodsForYear=y=>PERIODS.filter(p=>yearOf(p)===String(y)).sort((a,b)=>MONTH_ORDER[monthOf(a)]-MONTH_ORDER[monthOf(b)]);
+const activePeriods=()=>viewMode==='series'?annualPeriods():[selectedPeriod];
+const findGeo=(area,per=selectedPeriod)=>GEO.find(r=>r.per===per&&r.area===area);
+function populate(){
+  const y=document.getElementById('yearSelect'); y.innerHTML=''; YEARS.forEach(v=>y.add(new Option(v,v))); y.value=selectedYear;
+  const ty=document.getElementById('tableYear'); YEARS.slice().sort((a,b)=>b-a).forEach(v=>ty.add(new Option(v,v)));
+}
+function setViewMode(m){viewMode=m;document.getElementById('mode-series').classList.toggle('active',m==='series');document.getElementById('mode-year').classList.toggle('active',m==='year');document.getElementById('yearWrap').style.display=m==='year'?'inline-flex':'none';if(m==='series'){selectedPeriod='Dic 2025'}else{setYear(selectedYear,false)}updateAll();}
+function setYear(y,doUpdate=true){selectedYear=String(y);const ps=periodsForYear(selectedYear);selectedPeriod=ps.includes('Dic '+selectedYear)?'Dic '+selectedYear:ps[ps.length-1];if(doUpdate)updateAll();}
+function showTab(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');setTimeout(()=>Object.values(charts).forEach(c=>c&&c.resize()),60)}
+function kpis(){const r=findGeo('Nacional'),u=findGeo('Urbano'),ru=findGeo('Rural');const ps=PERIODS;const i=ps.indexOf(selectedPeriod);const prev=i>0?findGeo('Nacional',ps[i-1]):null;const gap=META-r.est;document.getElementById('kpiGrid').innerHTML=`<article class="kpi"><div class="kpi-label">Nacional · ${selectedPeriod}</div><div class="kpi-val">${fmtPct(r.est)}</div><div class="kpi-sub">${fmtNum(r.num)} / ${fmtNum(r.den)} usuarios</div>${prev?`<div class="delta ${r.est-prev.est>=0?'up':'down'}">${r.est-prev.est>=0?'▲':'▼'} ${pp(Math.abs(r.est-prev.est))} pp vs ${ps[i-1]}</div>`:''}</article><article class="kpi ${gap>0?'red':'green'}"><div class="kpi-label">Meta 2029</div><div class="kpi-val">90,23%</div><div class="kpi-sub">${gap>0?'Pendiente por alcanzar':'Meta superada'}</div><div class="delta ${gap>0?'down':'up'}">${gap>0?pp(gap)+' pp pendientes':'+'+pp(-gap)+' pp sobre la meta'}</div></article><article class="kpi gold"><div class="kpi-label">Rural</div><div class="kpi-val">${fmtPct(ru.est)}</div><div class="kpi-sub">Brecha rural-urbano: ${pp(ru.est-u.est)} pp</div></article><article class="kpi green"><div class="kpi-label">Urbano</div><div class="kpi-val">${fmtPct(u.est)}</div><div class="kpi-sub">${fmtNum(u.num)} / ${fmtNum(u.den)} usuarios</div></article>`;}
+function destroy(id){if(charts[id]){charts[id].destroy();charts[id]=null}}
+// Plugin genérico de valores en gráfico: dibuja el valor de cada punto/barra usando
+// el mismo formateador que ya tiene el eje Y de ese gráfico (%, $, o número plano),
+// así cada gráfico muestra sus valores con el formato correcto sin configurarlo
+// gráfico por gráfico. Aplica a barras y líneas; las líneas de "meta" (pointRadius:0)
+// no se etiquetan para no saturar.
+const valueLabelPlugin={id:'valueLabelPlugin',afterDatasetsDraw(chart){
+  if(chart.config.type!=='bar'&&chart.config.type!=='line')return;
+  const{ctx}=chart;ctx.save();ctx.font='700 10px Segoe UI, Arial';ctx.textBaseline='middle';
+  const yScale=chart.options.scales&&chart.options.scales.y;
+  const tickCb=yScale&&yScale.ticks&&typeof yScale.ticks.callback==='function'?yScale.ticks.callback:null;
+  const fmt=v=>{if(v===null||v===undefined||!Number.isFinite(Number(v)))return '';const n=Math.round(Number(v)*100)/100;if(tickCb){try{return String(tickCb(n));}catch(e){}}return n.toLocaleString('es-EC');};
+  chart.data.datasets.forEach((ds,i)=>{
+    const meta=chart.getDatasetMeta(i);
+    if(meta.hidden)return;
+    if(chart.config.type==='line'&&ds.pointRadius===0)return;
+    meta.data.forEach((el,j)=>{
+      const raw=ds.data[j];
+      const num=(raw&&typeof raw==='object')?raw.y:raw;
+      const txt=fmt(num);
+      if(!txt)return;
+      const p=el.tooltipPosition();
+      ctx.fillStyle=ds.borderColor||ds.backgroundColor||'#4F449A';
+      if(chart.config.type==='bar'&&chart.options.indexAxis==='y'){ctx.textAlign='left';ctx.fillText(txt,p.x+8,p.y);}
+      else{ctx.textAlign='center';ctx.fillText(txt,p.x,p.y-10);}
+    });
+  });
+  ctx.restore();
+}};
+function lineOpts(){return{responsive:true,maintainAspectRatio:false,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${Number(c.raw).toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2})}%`}}},scales:{y:{ticks:{callback:v=>v+'%'},suggestedMin:45,suggestedMax:100,grid:{color:'#EDF1F7'}},x:{grid:{display:false}}}}}
+function barOpts(horizontal=false){
+  return {
+    indexAxis: horizontal ? 'y' : 'x',
+    responsive:true,maintainAspectRatio:false,
+    maintainAspectRatio: false,
+    layout: { padding: { top: 18, right: horizontal ? 64 : 10 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: items => items[0].label,
+          label: c => 'Estimador: ' + Number(c.raw).toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'
+        }
+      }
+    },
+    scales: horizontal ? {
+      x: { type:'linear', min:0, max:100, ticks: { callback: v => v + '%', stepSize: 10 }, grid: { color: '#EDF1F7' }, title: { display:true, text:'Estimador (%)', font:{ size:11, weight:'700' }, color:'#4A5568' } },
+      y: { type:'category', ticks: { autoSkip: false }, grid: { display: false }, title: { display:true, text:'Categoría', font:{ size:11, weight:'700' }, color:'#4A5568' } }
+    } : {
+      x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 }, grid: { display: false } },
+      y: { ticks: { callback: v => v + '%' }, grid: { color: '#EDF1F7' }, suggestedMax: 100 }
+    }
+  };
+}
+function renderGeo(){const ps=activePeriods();const series=viewMode==='series';document.getElementById('geoTitle').textContent=series?'Serie anual nacional, urbana y rural':'Nacional, urbano y rural · '+selectedPeriod;document.getElementById('geoSub').textContent=series?'Diciembre de cada año.':'Corte más reciente disponible en '+selectedYear+'.';destroy('geo');charts.geo=new Chart(document.getElementById('geoChart'),{type:series?'line':'bar',data:{labels:series?ps:['Nacional','Urbano','Rural'],datasets:series?[{label:'Nacional',data:ps.map(p=>+(findGeo('Nacional',p).est*100).toFixed(2)),borderColor:COLORS.nac,backgroundColor:COLORS.nac,tension:.25},{label:'Urbano',data:ps.map(p=>+(findGeo('Urbano',p).est*100).toFixed(2)),borderColor:COLORS.urb,backgroundColor:COLORS.urb,tension:.25},{label:'Rural',data:ps.map(p=>+(findGeo('Rural',p).est*100).toFixed(2)),borderColor:COLORS.rur,backgroundColor:COLORS.rur,tension:.25},{label:'Meta 2029',data:ps.map(()=>+(META*100).toFixed(2)),borderColor:COLORS.meta,borderDash:[7,6],pointRadius:0}]:[{label:'Estimador',data:['Nacional','Urbano','Rural'].map(a=>+(findGeo(a).est*100).toFixed(2)),backgroundColor:[COLORS.nac,COLORS.urb,COLORS.rur]}]},options:series?lineOpts():barOpts(false)});renderBrecha();renderMetaTrend();}
+function renderBrecha(){const u=findGeo('Urbano'),r=findGeo('Rural');document.getElementById('brechaSub').textContent=`${selectedPeriod}: ${pp(r.est-u.est)} pp`;destroy('brecha');charts.brecha=new Chart(document.getElementById('brechaChart'),{type:'bar',data:{labels:['Urbano','Rural'],datasets:[{data:[+(u.est*100).toFixed(2),+(r.est*100).toFixed(2)],backgroundColor:[COLORS.urb,COLORS.rur]}]},options:barOpts(false)});}
+function renderMetaTrend(){const ps=annualPeriods();destroy('meta');charts.meta=new Chart(document.getElementById('metaChart'),{type:'line',data:{labels:ps,datasets:[{label:'Nacional',data:ps.map(p=>+(findGeo('Nacional',p).est*100).toFixed(2)),borderColor:COLORS.nac,backgroundColor:COLORS.nac,tension:.25,pointRadius:ps.map(p=>p===selectedPeriod?7:4),pointBackgroundColor:ps.map(p=>p===selectedPeriod?'#F0C040':COLORS.nac)},{label:'Meta 2029',data:ps.map(()=>+(META*100).toFixed(2)),borderColor:COLORS.meta,borderDash:[7,6],pointRadius:0}]},options:lineOpts()});}
+function renderSexo(){const ps=activePeriods(),series=viewMode==='series';document.getElementById('sexoTitle').textContent=series?'Serie anual por sexo':'Sexo · '+selectedPeriod;document.getElementById('sexoSub').textContent=series?'Diciembre de cada año.':'Corte más reciente disponible.';const wrap=document.getElementById('sexoChartWrap'),visual=document.getElementById('sexoVisual');if(series){wrap.style.display='block';visual.style.display='none';destroy('sexo');charts.sexo=new Chart(document.getElementById('sexoChart'),{type:'line',data:{labels:ps,datasets:[{label:'Hombre',data:ps.map(p=>+(SEXO.find(x=>x.per===p&&x.sexo==='Hombre').est*100).toFixed(2)),borderColor:COLORS.h,backgroundColor:COLORS.h,tension:.25},{label:'Mujer',data:ps.map(p=>+(SEXO.find(x=>x.per===p&&x.sexo==='Mujer').est*100).toFixed(2)),borderColor:COLORS.m,backgroundColor:COLORS.m,tension:.25}]},options:lineOpts()});}else{destroy('sexo');wrap.style.display='none';visual.style.display='block';const h=SEXO.find(x=>x.per===selectedPeriod&&x.sexo==='Hombre'),m=SEXO.find(x=>x.per===selectedPeriod&&x.sexo==='Mujer');const imgH=document.getElementById('sexoImgH'),imgM=document.getElementById('sexoImgM');if(imgH){imgH.style.display='none';}if(imgM){imgM.style.display='none';}document.getElementById('sexoValues').innerHTML=`<div class="sexo-value" style="text-align:center;">`+`<img src="../imagenes/hombre.png" alt="Hombre" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 auto .5rem;">`+`<strong style="font-size:26px;color:#1A5FA8;display:block;">${fmtPct(h.est)}</strong>`+`<b style="color:#1A5FA8;">Hombre</b>`+`<small style="display:block;margin-top:.3rem;color:#4A5568;">${fmtNum(h.num)} / ${fmtNum(h.den)}</small>`+`</div>`+`<div class="sexo-value" style="text-align:center;">`+`<img src="../imagenes/mujer.png" alt="Mujer" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 auto .5rem;">`+`<strong style="font-size:26px;color:#C0395A;display:block;">${fmtPct(m.est)}</strong>`+`<b style="color:#C0395A;">Mujer</b>`+`<small style="display:block;margin-top:.3rem;color:#4A5568;">${fmtNum(m.num)} / ${fmtNum(m.den)}</small>`+`</div>`;}}
+function renderServicio(){const ps=activePeriods(),series=viewMode==='series';const cats=['Desarrollo Infantil Integral','Personas adultas mayores','Personas con discapacidad'];document.getElementById('srvTitle').textContent=series?'Serie anual por tipo de servicio':'Tipo de servicio · '+selectedPeriod;document.getElementById('srvSub').textContent=series?'Diciembre de cada año.':'Corte más reciente disponible.';destroy('srv');charts.srv=new Chart(document.getElementById('srvChart'),{type:series?'line':'bar',data:{labels:series?ps:cats,datasets:series?cats.map((c,i)=>({label:c,data:ps.map(p=>+(SRV.find(x=>x.per===p&&x.srv===c).est*100).toFixed(2)),borderColor:COLORS.srv[i],backgroundColor:COLORS.srv[i],tension:.25})): [{label:'Estimador',data:cats.map(c=>+(SRV.find(x=>x.per===selectedPeriod&&x.srv===c).est*100).toFixed(2)),backgroundColor:COLORS.srv}]},options:series?lineOpts():barOpts(true)});}
+function renderEtnia(){const ps=activePeriods(),series=viewMode==='series';const cats=[...new Set(ETNIA.map(x=>x.etnia))];document.getElementById('etniaTitle').textContent=series?'Serie anual por etnia':'Etnia · '+selectedPeriod;document.getElementById('etniaSub').textContent=series?'Diciembre de cada año.':'Corte más reciente disponible.';destroy('etnia');charts.etnia=new Chart(document.getElementById('etniaChart'),{type:series?'line':'bar',data:{labels:series?ps:cats,datasets:series?cats.map((c,i)=>({label:c,data:ps.map(p=>+(ETNIA.find(x=>x.per===p&&x.etnia===c).est*100).toFixed(2)),borderColor:COLORS.etnia[i%COLORS.etnia.length],backgroundColor:COLORS.etnia[i%COLORS.etnia.length],tension:.25})): [{label:'Estimador',data:cats.map(c=>+(ETNIA.find(x=>x.per===selectedPeriod&&x.etnia===c).est*100).toFixed(2)),backgroundColor:COLORS.etnia}]},options:series?lineOpts():barOpts(true)});}
+function allRows(){return[...GEO.map(r=>({per:r.per,tipo:'Geográfico',grupo:r.area,est:r.est,num:r.num,den:r.den,gap:META-r.est})),...SEXO.map(r=>({per:r.per,tipo:'Sexo',grupo:r.sexo,est:r.est,num:r.num,den:r.den,gap:META-r.est})),...SRV.map(r=>({per:r.per,tipo:'Servicio',grupo:r.srv,est:r.est,num:r.num,den:r.den,gap:META-r.est})),...ETNIA.map(r=>({per:r.per,tipo:'Etnia',grupo:r.etnia,est:r.est,num:r.num,den:r.den,gap:META-r.est}))];}
+function renderTable(){const y=document.getElementById('tableYear').value,d=document.getElementById('tableDim').value,q=document.getElementById('tableText').value.toLowerCase().trim();let rows=allRows().filter(r=>(!y||yearOf(r.per)===y)&&(!d||r.tipo===d)&&(!q||(r.grupo+' '+r.tipo+' '+r.per).toLowerCase().includes(q)));rows.sort((a,b)=>{let va=a[sortKey],vb=b[sortKey];if(sortKey==='per'){va=PERIODS.indexOf(va);vb=PERIODS.indexOf(vb)}return(va>vb?1:va<vb?-1:0)*(sortAsc?1:-1)});document.getElementById('rowCount').textContent=rows.length+' filas';document.getElementById('dataBody').innerHTML=rows.length?rows.map(r=>`<tr><td>${r.per}</td><td>${r.tipo}</td><td>${r.grupo}</td><td class="num">${fmtPct(r.est)}</td><td class="num">${fmtNum(r.num)}</td><td class="num">${fmtNum(r.den)}</td><td class="num ${r.gap>0?'bad':'good'}">${r.gap>0?pp(r.gap)+' pp':'+'+pp(-r.gap)+' pp'}</td></tr>`).join(''):`<tr><td class="empty" colspan="7">No hay filas con esos filtros.</td></tr>`;}
+function sortTable(k){sortAsc=sortKey===k?!sortAsc:true;sortKey=k;renderTable();}
+function updateAll(){kpis();renderGeo();renderSexo();renderServicio();renderEtnia();renderTable();}
+window.addEventListener('load',()=>{
+  Chart.defaults.font.family='Segoe UI, Arial, sans-serif';
+  Chart.defaults.color='#475569';
+  Chart.register(valueLabelPlugin);
+  populate();
+});
+
+
+/* ── NAVEGACIÓN PROTECCIÓN SOCIAL ── */
+let _psInited=false;
+function irPaginaPS(id){
+  const overlay=document.getElementById('pg-inicio-ps');
+  document.querySelectorAll('.page-ps').forEach(p=>p.classList.remove('active'));
+  if(id==='pg-acciones-ps'){
+    document.getElementById('pg-acciones-ps').classList.add('active');
+    setTimeout(buildAccPS,50);
+    if(overlay) overlay.classList.remove('active');
+  } else if(id==='pg-inicio-ps'){
+    if(overlay) overlay.classList.add('active');
+  } else if(id==='pg-datos-ps'){
+    document.getElementById('pg-datos-ps').classList.add('active');
+    if(overlay) overlay.classList.remove('active');
+    if(!_psInited){
+      _psInited=true;
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          setViewMode('series');
+        });
+      });
+    } else {
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          updateAll();
+        });
+      });
+    }
+  }
+  window.scrollTo(0,0);
+}
+// Datos de acciones cargados desde proteccion_social_acciones_datos.js (ver <script> en el <head>)
+const ACT_PS=[
+  {accion:1,institucion:'Cooperantes',rol:'Ejecutor',incidencia:'Alta'},
+  {accion:2,institucion:'MDTDH',rol:'Ejecutor',incidencia:'Alta'},
+  {accion:3,institucion:'Ministerio de Trabajo y Desarrollo Humano',rol:'Ejecutor',incidencia:'Alta'},
+  {accion:4,institucion:'Ministerio de Trabajo y Desarrollo Humano',rol:'Ejecutor',incidencia:'Alta'},
+  {accion:5,institucion:'GAD en todos sus niveles',rol:'Corresponsable',incidencia:'Alta'},
+  {accion:6,institucion:'GAD en todos sus niveles',rol:'Ejecutor',incidencia:'Alta'},
+  {accion:7,institucion:'MDTDH',rol:'Rector',incidencia:'Alta'},
+];
+let _cPSPres=null,_psBuilt=false;
+function fmtMoneyM(v){return '$'+(v/1e6).toLocaleString('es-EC',{minimumFractionDigits:1,maximumFractionDigits:1})+'M';}
+function fmtMoneyExact(v){return '$'+Math.round(v).toLocaleString('es-EC');}
+function joinConY(arr){
+  if(arr.length<=1)return arr.join('');
+  return arr.slice(0,-1).join(', ')+' y '+arr[arr.length-1];
+}
+function renderKpisAccPS(){
+  const conCorriente=ACC_PS.filter(a=>a.corriente);
+  const conInversion=ACC_PS.filter(a=>a.inversion);
+  const totalCorriente=conCorriente.reduce((s,a)=>s+a.corriente,0);
+  const totalInversion=conInversion.reduce((s,a)=>s+a.inversion,0);
+  const tipos=[...new Set(ACC_PS.map(a=>a.tipo))];
+  document.getElementById('kpi-acc-total').textContent=ACC_PS.length;
+  document.getElementById('kpi-acc-corriente').textContent=fmtMoneyM(totalCorriente);
+  document.getElementById('kpi-acc-corriente-sub').textContent='Acciones '+joinConY(conCorriente.map(a=>a.num));
+  document.getElementById('kpi-acc-inversion').textContent=fmtMoneyM(totalInversion);
+  document.getElementById('kpi-acc-inversion-sub').textContent='Acciones '+joinConY(conInversion.map(a=>a.num));
+  document.getElementById('kpi-acc-tipo').textContent=tipos.length===1?tipos[0]:'Mixto';
+  const nTipoPrincipal=ACC_PS.filter(a=>a.tipo===tipos[0]).length;
+  document.getElementById('kpi-acc-tipo-sub').textContent=nTipoPrincipal+' de '+ACC_PS.length+' acciones';
+}
+function buildAccPS(){
+  if(_psBuilt)return; _psBuilt=true;
+  renderKpisAccPS();
+
+  const cp=ACC_PS.filter(a=>a.corriente);
+  const totalCorriente=cp.reduce((s,a)=>s+a.corriente,0);
+  document.getElementById('acc-fin-sub-ps').textContent='Solo acciones con presupuesto corriente asignado · Total: '+fmtMoneyExact(totalCorriente);
+  const wrap=document.getElementById('chart-ps-pres-wrap');
+  wrap.style.width=Math.max(cp.length*110,300)+'px';
+  wrap.style.minWidth='100%';
+  _cPSPres=new Chart(document.getElementById('chart-ps-pres'),{
+    type:'bar',
+    data:{labels:cp.map(a=>'Acción '+a.num),
+      datasets:[{data:cp.map(a=>a.corriente),
+        backgroundColor:['#1A3A6B','#C0622D','#6B3FA0','#81A382','#0891B2','#D97706'],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>'$'+ctx.parsed.y.toLocaleString('es-EC')}}},
+      scales:{y:{ticks:{callback:v=>'$'+(v/1e6).toFixed(0)+'M',font:{size:10}},
+        grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}
+  });
+  renderTablaAccPS();
+  renderActoresPS();
+}
+function renderTablaAccPS(){
+  document.getElementById('acc-tbody-ps').innerHTML=ACC_PS.map((a,i)=>
+    `<tr style="background:${i%2===0?'white':'#F5F6F8'};">
+      <td style="padding:10px 12px;text-align:center;font-weight:700;color:#4F449A;border-bottom:1px solid #DDE2EE;">${a.num}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #DDE2EE;">
+        <div style="font-weight:600;color:#4F449A;margin-bottom:3px;">${a.titulo}</div>
+        <div style="font-size:11px;color:#5A6180;">${a.desc}</div>
+      </td>
+      <td style="padding:10px 12px;text-align:center;border-bottom:1px solid #DDE2EE;"><span class="acc-tipo-pp-ps">${a.tipo}</span></td>
+      <td style="padding:10px 12px;text-align:right;border-bottom:1px solid #DDE2EE;">
+        ${a.corriente?'<span style="font-weight:700;color:#4F449A;">$'+a.corriente.toLocaleString('es-EC')+'</span>':'<span style="color:#9AA5B4;font-size:11px;">—</span>'}
+      </td>
+      <td style="padding:10px 12px;text-align:right;border-bottom:1px solid #DDE2EE;">
+        ${a.inversion?'<span style="font-weight:600;color:#81A382;">$'+a.inversion.toLocaleString('es-EC')+'</span>':'<span style="color:#9AA5B4;font-size:11px;">—</span>'}
+      </td>
+      <td style="padding:10px 12px;text-align:center;border-bottom:1px solid #DDE2EE;"><span class="acc-estado-ps">🟡 ${a.estado}</span></td>
+    </tr>`
+  ).join('');
+}
+function renderActoresPS(){
+  const rc={'Rector':'acc-rol-rect-ps','Ejecutor':'acc-rol-ejec-ps','Corresponsable':'acc-rol-corr-ps'};
+  document.getElementById('actores-tbody-ps').innerHTML=ACT_PS.map((a,i)=>
+    `<tr style="background:${i%2===0?'white':'#F5F6F8'};">
+      <td style="padding:8px 12px;text-align:center;color:#9AA5B4;border-bottom:1px solid #DDE2EE;">${i+1}</td>
+      <td style="padding:8px 12px;font-weight:600;color:#4F449A;border-bottom:1px solid #DDE2EE;">${a.institucion}</td>
+      <td style="padding:8px 12px;text-align:center;border-bottom:1px solid #DDE2EE;">${a.accion}</td>
+      <td style="padding:8px 12px;text-align:center;border-bottom:1px solid #DDE2EE;"><span class="${rc[a.rol]||'acc-rol-corr-ps'}">${a.rol}</span></td>
+      <td style="padding:8px 12px;text-align:center;border-bottom:1px solid #DDE2EE;"><span class="acc-inc-alta-ps">${a.incidencia}</span></td>
+    </tr>`
+  ).join('');
+}
+</script>
+</div><!-- fin pg-datos-ps -->
+<div id="pg-acciones-ps" class="page-ps">
+  <div style="max-width:1600px;margin:0 auto;padding:1.5rem;">
+
+    <!-- KPIs -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:16px;">
+      <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;padding:1rem;border-top:3px solid #4F449A;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#5A6180;margin-bottom:.3rem;">Total acciones</div>
+        <div style="font-size:2rem;font-weight:700;color:#4F449A;line-height:1;" id="kpi-acc-total">—</div>
+        <div style="font-size:11px;color:#5A6180;">MDTDH · Indicador 1.2.1</div>
+      </div>
+      <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;padding:1rem;border-top:3px solid #F1B620;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#5A6180;margin-bottom:.3rem;">Presupuesto corriente</div>
+        <div style="font-size:1.5rem;font-weight:700;color:#4F449A;line-height:1;" id="kpi-acc-corriente">—</div>
+        <div style="font-size:11px;color:#5A6180;" id="kpi-acc-corriente-sub">—</div>
+      </div>
+      <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;padding:1rem;border-top:3px solid #81A382;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#5A6180;margin-bottom:.3rem;">Presupuesto inversión</div>
+        <div style="font-size:1.5rem;font-weight:700;color:#4F449A;line-height:1;" id="kpi-acc-inversion">—</div>
+        <div style="font-size:11px;color:#5A6180;" id="kpi-acc-inversion-sub">—</div>
+      </div>
+      <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;padding:1rem;border-top:3px solid #4338CA;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#5A6180;margin-bottom:.3rem;">Tipo</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#4F449A;line-height:1;" id="kpi-acc-tipo">—</div>
+        <div style="font-size:11px;color:#5A6180;" id="kpi-acc-tipo-sub">—</div>
+      </div>
+    </div>
+
+    <!-- Gráfico presupuesto -->
+    <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;padding:1.25rem;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;color:#4F449A;margin-bottom:4px;">Presupuesto corriente codificado por acción ($)</div>
+      <div style="font-size:11px;color:#5A6180;margin-bottom:1rem;" id="acc-fin-sub-ps">Solo acciones con presupuesto corriente asignado</div>
+      <div style="overflow-x:auto;overflow-y:hidden;">
+        <div style="position:relative;height:220px;" id="chart-ps-pres-wrap"><canvas id="chart-ps-pres"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tabla acciones -->
+    <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;overflow:hidden;margin-bottom:16px;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #DDE2EE;">
+        <div style="font-size:13px;font-weight:700;color:#4F449A;">Cronograma de acciones planificadas</div>
+        <div style="font-size:11px;color:#5A6180;">Ministerio de Trabajo y Desarrollo Humano · Ene–Dic 2026</div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:#4F449A;">
+              <th style="padding:10px 12px;color:white;text-align:center;width:36px;">#</th>
+              <th style="padding:10px 12px;color:white;text-align:left;min-width:220px;">Acción planificada</th>
+              <th style="padding:10px 12px;color:white;text-align:center;min-width:110px;">Tipo</th>
+              <th style="padding:10px 12px;color:white;text-align:right;min-width:120px;">Presupuesto corriente</th>
+              <th style="padding:10px 12px;color:white;text-align:right;min-width:110px;">Presupuesto inversión</th>
+              <th style="padding:10px 12px;color:white;text-align:center;min-width:100px;">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="acc-tbody-ps"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Actores clave -->
+    <div style="background:white;border:1px solid #DDE2EE;border-radius:10px;overflow:hidden;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #DDE2EE;">
+        <div style="font-size:13px;font-weight:700;color:#4F449A;">Actores clave</div>
+        <div style="font-size:11px;color:#5A6180;">Instituciones con rol en la ejecución</div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="background:#F3F4F6;">
+              <th style="padding:8px 12px;color:#374151;font-size:11px;text-align:center;width:36px;">#</th>
+              <th style="padding:8px 12px;color:#374151;font-size:11px;">Institución</th>
+              <th style="padding:8px 12px;color:#374151;font-size:11px;text-align:center;">Acción</th>
+              <th style="padding:8px 12px;color:#374151;font-size:11px;text-align:center;">Rol</th>
+              <th style="padding:8px 12px;color:#374151;font-size:11px;text-align:center;">Incidencia</th>
+            </tr>
+          </thead>
+          <tbody id="actores-tbody-ps"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="gov-close"><img src="../imagenes/EL_NUEVO_ECUADOR_LOGO.png" alt="Gobierno del Ecuador"></div>
+
+<footer class="dashboard-footer">
+  <strong>Ministerio de Trabajo y Desarrollo Humano</strong> · Subsecretaría de Gestión de Datos y Estudios · Seguimiento PND 2025–2029
+</footer>
+
+<script id="mdh-breadcrumb-script">
+(function(){
+  const cfg = {"base": "Usuarios de servicios de protección social", "default": "Menú del indicador", "items": [{"id": "pg-inicio-ps", "label": "Menú del indicador"}, {"id": "pg-datos-ps", "label": "Resultados administrativos"}, {"id": "pg-acciones-ps", "label": "Acciones 2026"}]};
+  function visible(el){
+    if(!el) return false;
+    const cs = window.getComputedStyle(el);
+    return cs.display !== 'none' && cs.visibility !== 'hidden';
+  }
+  function activeLabel(){
+    const items = cfg.items || [];
+    for(const item of items){
+      const el = document.getElementById(item.id);
+      if(!el) continue;
+      if(el.classList.contains('active') && visible(el)) return item.label;
+    }
+    for(const item of items){
+      const el = document.getElementById(item.id);
+      if(el && el.classList.contains('active')) return item.label;
+    }
+    return cfg.default || '';
+  }
+  function render(){
+    const bc = document.getElementById('mdh-breadcrumb');
+    if(!bc) return;
+    const label = activeLabel();
+    if(label){
+      bc.innerHTML = '<a href="../index_PND.html">Inicio</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<a href="javascript:void(0)" class="mdh-bc-base" onclick="irPaginaPS(&#39;pg-inicio-ps&#39;)" title="Volver a: '+cfg.base+'">' + cfg.base + '</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<span class="mdh-bc-current">' + label + '</span>';
+    } else {
+      bc.innerHTML = '<a href="../index_PND.html">Inicio</a>' +
+        '<span class="mdh-bc-sep">›</span>' +
+        '<span class="mdh-bc-current">' + cfg.base + '</span>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    render();
+    document.body.addEventListener('click', function(){ setTimeout(render, 80); }, true);
+    document.body.addEventListener('change', function(){ setTimeout(render, 80); }, true);
+    setTimeout(render, 120);
+  });
+  window.addEventListener('load', render);
+  window.mdhActualizarBreadcrumb = render;
+})();
+</script>
+
+<script src="../MDTDH/shared.js"></script>
+<script>
+initSidebar({ activeId: 'pnd-usuarios-proteccion', basePath: '../' });
+</script>
+
+</body>
+</html>
