@@ -110,14 +110,20 @@ function fetchProteccionSocialData(){
 // ============================================================
 let CDH_COBERTURA = [];       // [{anio, mes, tipoCredito, registros, montoTotal, montoPromedio}]
 let CDH_CARACTERIZACION = []; // [{anio, mes, tipoCredito, grupo, categoria, registros, montoTotal}]
+let CDH_SERIE_ANUAL = [];     // [{anio, creditos, montoTotal, meses}] — créditos otorgados por año (serie_anual_cdh.csv)
 let cdhDataPromise = null;
 
 function fetchCdhData(){
   if (cdhDataPromise) return cdhDataPromise;
   cdhDataPromise = Promise.all([
     fetchCSV('../datos/kpis/movilidad_social/cobertura_cdh_movilidad.csv'),
-    fetchCSV('../datos/kpis/movilidad_social/caracterizacion_cdh_movilidad.csv')
-  ]).then(([cob, car]) => {
+    fetchCSV('../datos/kpis/movilidad_social/caracterizacion_cdh_movilidad.csv'),
+    fetchCSV('../datos/kpis/movilidad_social/serie_anual_cdh.csv').catch(() => [])
+  ]).then(([cob, car, anual]) => {
+    CDH_SERIE_ANUAL = anual
+      .filter(r => String(r.es_dato_real).trim().toUpperCase() === 'TRUE')
+      .map(r => ({ anio: Number(r.anio), creditos: Number(r.creditos) || 0, montoTotal: Number(r.monto_total_usd) || 0, meses: r.meses || '' }))
+      .sort((a, b) => a.anio - b.anio);
     CDH_COBERTURA = cob.map(r => ({
       anio: r.anio, mes: r.mes, periodo: r.anio + '-' + r.mes, tipoCredito: r.tipo_credito,
       registros: Number(r.registros) || 0, montoTotal: Number(r.monto_total_usd) || 0,
@@ -128,7 +134,7 @@ function fetchCdhData(){
       grupo: r.grupo, categoria: r.categoria, registros: Number(r.registros) || 0,
       montoTotal: Number(r.monto_total_usd) || 0
     }));
-    return { CDH_COBERTURA, CDH_CARACTERIZACION };
+    return { CDH_COBERTURA, CDH_CARACTERIZACION, CDH_SERIE_ANUAL };
   });
   return cdhDataPromise;
 }

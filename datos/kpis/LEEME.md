@@ -30,10 +30,16 @@ Fuente: `resumen_CDH_<mes>_<año>.xlsx` (hojas Tipo credito, Genero, Rango edad,
 
 - Agrega (o reemplaza, si ya existe) el mes en `movilidad_social/cobertura_cdh_movilidad.csv` y
   `movilidad_social/caracterizacion_cdh_movilidad.csv`; los meses anteriores se conservan.
-- Marca el mes como dato real en `proteccion_social/series_historicas_servicios.csv` y actualiza la tarjeta
-  del registro 12 en `kpi_proteccion_social.csv`.
+- Actualiza la cifra destacada de la tarjeta del registro 12 en `kpi_proteccion_social.csv`.
 - La página muestra siempre el **último mes cargado** (cobertura, presupuesto y caracterización).
 - Si alguna desagregación no suma el total de su tipo de crédito, no escribe nada.
+
+**Serie histórica del carrusel** (créditos otorgados por año, 2007 en adelante): `movilidad_social/serie_anual_cdh.csv`.
+Se actualiza con el Excel anual `resumen_CDH_por_anio.xlsx` (hoja Creditos por anio) y el mismo script:
+
+    python scripts/actualizar_cdh.py --archivo "C:/cdh/resumen_CDH_por_anio.xlsx"
+
+El año en curso se marca como parcial (`meses` = enero–último mes cargado) y en el carrusel aparece con asterisco.
 
 ## KPIs con formato de seguimiento mensual
 
