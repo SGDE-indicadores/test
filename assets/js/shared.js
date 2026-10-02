@@ -36,7 +36,7 @@ function parseCSV(text) {
 }
 
 function fetchCSV(path) {
-  return fetch(path).then(r => {
+  return fetch(path, { cache: 'no-cache' }).then(r => {
     if (!r.ok) throw new Error('No se pudo cargar ' + path + ' (HTTP ' + r.status + ')');
     return r.text();
   }).then(parseCSV);
