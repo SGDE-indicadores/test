@@ -22,6 +22,19 @@ Pobreza 2025). Cada mes:
 - Si los totales por sexo, edad, etnia o pobreza no cuadran con el total del servicio, el script no escribe nada.
 - `presupuesto_proteccion_social.csv` no viene en ese Excel: se actualiza a mano.
 
+## Movilidad Social (Crédito de Desarrollo Humano, registro 12)
+
+Fuente: `resumen_CDH_<mes>_<año>.xlsx` (hojas Tipo credito, Genero, Rango edad, Etnia, Pobreza). Cada mes:
+
+    python scripts/actualizar_cdh.py --archivo "C:/cdh/resumen_CDH_octubre_2026.xlsx"
+
+- Agrega (o reemplaza, si ya existe) el mes en `movilidad_social/cobertura_cdh_movilidad.csv` y
+  `movilidad_social/caracterizacion_cdh_movilidad.csv`; los meses anteriores se conservan.
+- Marca el mes como dato real en `proteccion_social/series_historicas_servicios.csv` y actualiza la tarjeta
+  del registro 12 en `kpi_proteccion_social.csv`.
+- La página muestra siempre el **último mes cargado** (cobertura, presupuesto y caracterización).
+- Si alguna desagregación no suma el total de su tipo de crédito, no escribe nada.
+
 ## KPIs con formato de seguimiento mensual
 
 Fuente: "Formato de Seguimiento de KPI MTDH" (Excel con las hojas Catálogo_KPIs y Seguimiento_Mensual).

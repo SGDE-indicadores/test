@@ -100,10 +100,10 @@ function fetchProteccionSocialData(){
 }
 
 // ============================================================
-// CRÉDITO DE DESARROLLO HUMANO (registro 12) — serie mensual real
-// ene-jul 2026 (cobertura_cdh_movilidad.csv) y su caracterización
-// (caracterizacion_cdh_movilidad.csv, cruzada por mes y tipo de crédito).
-// Presupuesto de este indicador sigue pendiente (no hay archivo aún).
+// CRÉDITO DE DESARROLLO HUMANO (registro 12) — dato real mensual
+// (cobertura_cdh_movilidad.csv) y su caracterización (caracterizacion_cdh_movilidad.csv,
+// cruzada por mes y tipo de crédito). Se muestra siempre el último mes cargado;
+// los meses anteriores se conservan en los archivos como histórico.
 // Esta es la tarjeta "Movilidad Social" DENTRO de Protección Social e
 // Inclusión Económica (cobertura/presupuesto/caracterización/ficha) — único
 // lugar donde vive Movilidad Social; ya no existe como área propia de KPIs.
@@ -135,6 +135,16 @@ function fetchCdhData(){
 
 function cdhAvailablePeriods(){
   return [...new Set(CDH_COBERTURA.map(r => r.periodo))].sort();
+}
+
+// Último mes cargado en cobertura_cdh_movilidad.csv y su etiqueta ("septiembre 2026").
+function cdhUltimoPeriodo(){
+  const p = cdhAvailablePeriods();
+  return p[p.length - 1];
+}
+function cdhPeriodoLabel(periodo){
+  const [a, m] = String(periodo || '').split('-');
+  return (TRANSFER_MONTHS[m] || m || '') + ' ' + (a || '');
 }
 
 // Suma los 2 tipos de crédito (12 y 24 meses) de un mes puntual.
@@ -675,12 +685,14 @@ function renderFichaIndicador(f){
         <div class="ind-tag">Características</div><div class="ind-nombre">Medición</div>
         ${fila('Unidad', f.unidad)}${fila('Tipo', f.tipo)}${fila('Periodicidad', f.periodicidad)}${fila('Desagregación', f.desagregacion)}
       </div></div>
+      ${'' /* FUENTE (oculta por ahora). Para volver a mostrarla en todas las fichas, reemplazar esta línea por:
       <div class="ind-card"><div class="ind-stripe"></div><div class="ind-body">
         <div class="ind-tag">Origen del dato</div><div class="ind-nombre">Fuente</div>
         <div style="font-size:12.5px;color:var(--subtexto);line-height:1.5;margin-bottom:8px;">${richText(f.fuente || f.sistema || 'No especificada')}</div>
         <div class="ind-metric-row"><span class="ind-metric-label">Sistema / archivo</span><span class="ind-metric-value" style="font-size:11.5px;text-align:right;max-width:62%;">${escHtml(f.sistema || 'No especificado')}</span></div>
         ${fila('Tipo de recurso', f.recurso)}${fila('Acceso', f.acceso)}
       </div></div>
+      */}
       <div class="ind-card"><div class="ind-stripe"></div><div class="ind-body">
         <div class="ind-tag">Gestión y disponibilidad</div><div class="ind-nombre">Estado de la información</div>
         ${filasEstado.map(([l, v, b]) => b ? badge(l, v) : fila(l, v, '10.8px')).join('')}
@@ -1407,8 +1419,8 @@ function renderCovInfografia(c){
     return;
   }
 
-  const periodoJulio = cdhAvailablePeriods().find(p => p === PERIOD_MAX) || cdhAvailablePeriods()[cdhAvailablePeriods().length - 1];
-  const d = cdhCoverageForPeriod(periodoJulio);
+  const periodoCdh = cdhUltimoPeriodo();
+  const d = cdhCoverageForPeriod(periodoCdh);
   const modalidad24 = d.porTipo.find(t => /24/.test(t.tipoCredito));
   const pct24 = (modalidad24 && d.montoTotal) ? Math.round(modalidad24.montoTotal / d.montoTotal * 100) : null;
   const ringHtml = pct24 !== null ? `
@@ -1436,7 +1448,7 @@ function renderCovInfografia(c){
             <div>
               <div class="infog-stat-label">Cifra destacada</div>
               <div class="infog-stat-value">${fmtInt(d.registros)}</div>
-              <div style="font-size:11.5px;color:var(--subtexto);margin-top:2px;">créditos otorgados en julio 2026</div>
+              <div style="font-size:11.5px;color:var(--subtexto);margin-top:2px;">créditos otorgados en ${cdhPeriodoLabel(periodoCdh)}</div>
             </div>
             ${ringHtml}
           </div>
@@ -1464,13 +1476,12 @@ function selectCovTab(tab){
     // edad, etnia y pobreza. Propia de esta tarjeta; no depende de la infografía de
     // KPIs · Movilidad Social (área principal).
     if(String(c.registro) === '12' && CDH_CARACTERIZACION.length){
-      const periodos = cdhAvailablePeriods();
-      const periodo = periodos.includes(PERIOD_MAX) ? PERIOD_MAX : periodos[periodos.length - 1];
+      const periodo = cdhUltimoPeriodo();
       const porGrupo = cdhCaracterizacionForPeriod(periodo);
       const aGrupoItems = (obj) => Object.entries(obj || {}).map(([categoria, v]) => ({ categoria, usuarios: v.registros }));
       el.innerHTML = `
         <div class="filter-bar coverage-filter-bar">
-          <div class="filter-status">Mostrando: <b>Mes de julio 2026</b> · créditos de 12 y 24 meses</div>
+          <div class="filter-status">Mostrando: <b>Mes de ${cdhPeriodoLabel(periodo)}</b> · créditos de 12 y 24 meses</div>
         </div>` +
         renderCaracterizacionGroup('Género', aGrupoItems(porGrupo.genero)) +
         renderCaracterizacionGroup('Rango de edad', aGrupoItems(porGrupo.rango_edad)) +
@@ -1564,13 +1575,13 @@ function renderCovCoverageByPeriod(period){
   // estructura (por tipo de crédito). Independiente de la infografía de KPIs ·
   // Movilidad Social (área principal): no se enlazan entre sí.
   if(String(c.registro) === '12' && CDH_COBERTURA.length){
-    const periodoJulio = cdhAvailablePeriods().find(p => p === PERIOD_MAX) || cdhAvailablePeriods()[cdhAvailablePeriods().length - 1];
-    currentCovCoveragePeriod = periodoJulio;
-    const d = cdhCoverageForPeriod(periodoJulio);
+    const periodoCdh = cdhUltimoPeriodo();
+    currentCovCoveragePeriod = periodoCdh;
+    const d = cdhCoverageForPeriod(periodoCdh);
     const filasTipo = d.porTipo.map(t => `<tr><td>${escHtml(t.tipoCredito)}</td><td>${fmtInt(t.registros)}</td><td>USD ${fmtMoneyM(t.montoTotal/1e6)}</td><td>USD ${t.montoPromedio.toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr>`).join('');
     el.innerHTML = `
       <div class="filter-bar coverage-filter-bar">
-        <div class="filter-status">Mostrando: <b>Mes de julio 2026</b> · dato </div>
+        <div class="filter-status">Mostrando: <b>Mes de ${cdhPeriodoLabel(periodoCdh)}</b></div>
       </div>
       <div class="ind-card">
         <div class="ind-stripe" style="background:var(--azul);"></div>
@@ -1619,23 +1630,25 @@ function selectCovPeriodo(periodo){
   if(bf) bf.classList.toggle('active', periodo === 'fiscal');
 
   // Movilidad Social (tarjeta 6 de Protección Social, registro 12): el monto ejecutado
-  // real ya viene en CDH_COBERTURA (columna monto_total del Excel de cobertura,
-  // enero-julio 2026), propio de esta tarjeta. Como todavía no hay datos anteriores a
+  // real ya viene en CDH_COBERTURA (columna monto_total del Excel mensual del CDH;
+  // se muestra el último mes cargado), propio de esta tarjeta. Como todavía no hay datos anteriores a
   // 2026, "periodo de gobierno" y "año fiscal" muestran el mismo total por ahora.
   if(c && String(c.registro) === '12' && CDH_COBERTURA.length){
-    const periodoJulio = cdhAvailablePeriods().includes(PERIOD_MAX) ? PERIOD_MAX : cdhAvailablePeriods()[cdhAvailablePeriods().length - 1];
-    const montoJulio = cdhCoverageForPeriod(periodoJulio).montoTotal;
-    const rango = periodo === 'fiscal' ? 'Año fiscal 2026 · mes de julio' : 'Periodo de gobierno · mes de julio';
+    const periodoCdh = cdhUltimoPeriodo();
+    const montoCdh = cdhCoverageForPeriod(periodoCdh).montoTotal;
+    const [anioCdh] = periodoCdh.split('-');
+    const mesCdh = cdhPeriodoLabel(periodoCdh).split(' ')[0];
+    const rango = periodo === 'fiscal' ? `Año fiscal ${anioCdh} · mes de ${mesCdh}` : `Periodo de gobierno · mes de ${mesCdh}`;
     el.innerHTML = `
       <div class="ind-card">
         <div class="ind-stripe" style="background:var(--verde);"></div>
         <div class="ind-body">
           <div class="ind-tag">Monto ejecutado</div>
           <div class="ind-nombre">${escHtml(rango)}</div>
-          <div class="ind-metric-row"><span class="ind-metric-label">Presupuesto ejecutado</span><span class="ind-metric-value money">USD ${fmtMoneyM(montoJulio/1e6)}</span></div>
+          <div class="ind-metric-row"><span class="ind-metric-label">Presupuesto ejecutado</span><span class="ind-metric-value money">USD ${fmtMoneyM(montoCdh/1e6)}</span></div>
         </div>
       </div>
-      <div class="pres-note" style="margin-top:10px;">Créditos otorgados (12 y 24 meses) en julio 2026.</div>`;
+      <div class="pres-note" style="margin-top:10px;">Créditos otorgados (12 y 24 meses) en ${cdhPeriodoLabel(periodoCdh)}.</div>`;
     return;
   }
 

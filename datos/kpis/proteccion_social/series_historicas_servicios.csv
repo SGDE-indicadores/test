@@ -517,4 +517,5 @@ registro_id,servicio,anio,mes,usuarios,es_dato_real,nota
 12,Movilidad Social,2026,04,4938,FALSE,Serie histórica PROVISIONAL (placeholder) mientras se carga la base oficial mensual de Movilidad Social. No usar como dato real.
 12,Movilidad Social,2026,05,4975,FALSE,Serie histórica PROVISIONAL (placeholder) mientras se carga la base oficial mensual de Movilidad Social. No usar como dato real.
 12,Movilidad Social,2026,06,5000,FALSE,Serie histórica PROVISIONAL (placeholder) mientras se carga la base oficial mensual de Movilidad Social. No usar como dato real.
-12,Movilidad Social,2026,07,5080,FALSE,Serie histórica PROVISIONAL (placeholder) mientras se carga la base oficial mensual de Movilidad Social. No usar como dato real.
+12,Movilidad Social,2026,07,5080,TRUE,"Dato real, julio 2026 (resumen_CDH_enero_julio_2026.xlsx)."
+12,Movilidad Social,2026,09,4526,TRUE,"Dato real, septiembre 2026 (resumen_CDH_septiembre_2026.xlsx)."
