@@ -1686,7 +1686,7 @@ const itemLists = {
     desc:'Selecciona el componente que quieres consultar.',
     items:[
       { name:kpiMetadata['1'].nombre, href:'kpi_jubilados.html', badge:'● Disponible', sub:'Expedientes y montos 2023 – agosto 2026 · sexo, régimen y provincia' },
-      { name:'Contratos', badge:'● En construcción' }
+      { name:'Contratos', href:'kpi_contratos.html', badge:'● Disponible', sub:'Foto actual · estado, sexo, edad, provincia, cantón y modalidad contractual' }
     ]
   },
   'trabajo-contratos': {
@@ -1780,7 +1780,7 @@ const ICONS = {
 
 const kpisAreas = [
   { key:'proteccion-social', label:'Protección Social e Inclusión Económica', icon:'familia', disponible:true, desc:'Servicios de desarrollo infantil, movilidad social, personas adultas mayores, discapacidad, protección especial y alertas SUUSEN.', route:'kpis-proteccion-social' },
-  { key:'trabajo', label:'Trabajo', icon:'trabajo', disponible:true, desc:'Compensación jubilar de exservidores y extrabajadores; contratos (en construcción).', route:'kpis-trabajo' },
+  { key:'trabajo', label:'Trabajo', icon:'trabajo', disponible:true, desc:'Compensación jubilar de exservidores y extrabajadores; contratos de trabajo registrados en el SUT.', route:'kpis-trabajo' },
   { key:'pueblos', label:'Pueblos y Nacionalidades', icon:'pueblos', disponible:true, desc:'Economía comunitaria y productiva, y convenios de financiamiento no reembolsable.', route:'kpis-pueblos' },
   { key:'incentivos', label:'Incentivos Temporales', icon:'incentivos', disponible:false, desc:'Jóvenes en acción, compensación de combustible, migrantes retornados.', route:'kpis-incentivos' }
 ];

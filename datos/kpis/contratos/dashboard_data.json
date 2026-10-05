@@ -1,0 +1,6034 @@
+{
+  "fecha_actualizacion": "2026-10-05T15:22:12.618322-05:00",
+  "fuente": {
+    "base_datos": "local_stage",
+    "tabla": "public.mdt02_contratos"
+  },
+  "resumen": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "contratos": 10659922
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "contratos": 2783957
+    }
+  ],
+  "genero": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "genero": "M",
+      "contratos": 7495879,
+      "porcentaje": 70.32
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "genero": "F",
+      "contratos": 3164043,
+      "porcentaje": 29.68
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "genero": "M",
+      "contratos": 1810709,
+      "porcentaje": 65.04
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "genero": "F",
+      "contratos": 973248,
+      "porcentaje": 34.96
+    }
+  ],
+  "grupos_etarios": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "grupo_etario": "1. ADOLESCENTE (15-17)",
+      "contratos": 16995,
+      "porcentaje": 0.16
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "grupo_etario": "2. JÓVENES (18-29)",
+      "contratos": 5583487,
+      "porcentaje": 52.38
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "grupo_etario": "3. ADULTOS",
+      "contratos": 5059440,
+      "porcentaje": 47.46
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "grupo_etario": "1. ADOLESCENTE (15-17)",
+      "contratos": 5167,
+      "porcentaje": 0.19
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "grupo_etario": "2. JÓVENES (18-29)",
+      "contratos": 1305237,
+      "porcentaje": 46.88
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "grupo_etario": "3. ADULTOS",
+      "contratos": 1473553,
+      "porcentaje": 52.93
+    }
+  ],
+  "provincias": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "contratos": 3264949
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "contratos": 3234913
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "contratos": 606979
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "contratos": 573186
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "contratos": 426540
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "contratos": 270595
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "contratos": 258200
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "contratos": 237757
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 219603
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "contratos": 189831
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "contratos": 175011
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "contratos": 171811
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "contratos": 165306
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "contratos": 148964
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "contratos": 135406
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTA ELENA",
+      "contratos": 112283
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "contratos": 88901
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "contratos": 62082
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "contratos": 47769
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "contratos": 45710
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GALÁPAGOS",
+      "contratos": 43630
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "contratos": 42681
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "contratos": 33435
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "contratos": 29372
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "contratos": 29088
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR (REGIMEN COSTA)",
+      "contratos": 25986
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI(REGIMEN COSTA)",
+      "contratos": 14476
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "contratos": 4144
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "contratos": 1298
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SIERRA",
+      "contratos": 11
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COSTA",
+      "contratos": 4
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORIENTE",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "contratos": 889147
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "contratos": 819159
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "contratos": 156018
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "contratos": 143998
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "contratos": 107344
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "contratos": 89371
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "contratos": 70093
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 58434
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "contratos": 54817
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "contratos": 49918
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "contratos": 47250
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "contratos": 44233
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "contratos": 37286
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTA ELENA",
+      "contratos": 33215
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "contratos": 27107
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "contratos": 25829
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "contratos": 22929
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "contratos": 20757
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "contratos": 16147
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GALÁPAGOS",
+      "contratos": 13072
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "contratos": 11751
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "contratos": 10037
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "contratos": 8849
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "contratos": 7029
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "contratos": 7012
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR (REGIMEN COSTA)",
+      "contratos": 6863
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI(REGIMEN COSTA)",
+      "contratos": 3472
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "contratos": 2182
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "contratos": 625
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SIERRA",
+      "contratos": 11
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COSTA",
+      "contratos": 2
+    }
+  ],
+  "cantones": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUITO",
+      "contratos": 2778584
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUAYAQUIL",
+      "contratos": 2635355
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CUENCA",
+      "contratos": 526762
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MANTA",
+      "contratos": 306347
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MACHALA",
+      "contratos": 266688
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "DURAN",
+      "contratos": 261530
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "AMBATO",
+      "contratos": 228365
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 207498
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CAYAMBE",
+      "contratos": 198164
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LATACUNGA",
+      "contratos": 196945
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PEDRO MONCAYO",
+      "contratos": 148785
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LOJA",
+      "contratos": 136666
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUEVEDO",
+      "contratos": 132523
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "IBARRA",
+      "contratos": 123086
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PORTOVIEJO",
+      "contratos": 120313
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ESMERALDAS",
+      "contratos": 118780
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "RIOBAMBA",
+      "contratos": 116440
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LAGO AGRIO",
+      "contratos": 90749
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL COCA",
+      "contratos": 90621
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAMBORONDON",
+      "contratos": 81329
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BABAHOYO",
+      "contratos": 63774
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "RUMIÑAHUI",
+      "contratos": 62186
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA ELENA",
+      "contratos": 57037
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MILAGRO",
+      "contratos": 52933
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MONTECRISTI",
+      "contratos": 50546
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ORELLANA",
+      "contratos": 43525
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 42566
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MEJIA",
+      "contratos": 41782
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LA TRONCAL",
+      "contratos": 39489
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "DAULE",
+      "contratos": 39000
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUABO",
+      "contratos": 37294
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "NARANJAL",
+      "contratos": 36364
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN JACINTO DE YAGUACHI",
+      "contratos": 36025
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LA LIBERTAD",
+      "contratos": 35391
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "AZOGUES",
+      "contratos": 35362
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SHUSHUFINDI",
+      "contratos": 34395
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TENA",
+      "contratos": 32582
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL PANGUI",
+      "contratos": 31581
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TULCÁN",
+      "contratos": 28460
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 28332
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL TRIUNFO",
+      "contratos": 27792
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA CRUZ (GALAPAGOS)",
+      "contratos": 27705
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA ROSA",
+      "contratos": 26480
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ZAMORA",
+      "contratos": 26246
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "JARAMIJO",
+      "contratos": 24760
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PASAJE",
+      "contratos": 22816
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "OTAVALO",
+      "contratos": 22756
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHONE",
+      "contratos": 22606
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUYO",
+      "contratos": 22405
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PORTOVELO",
+      "contratos": 21711
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUARANDA",
+      "contratos": 20835
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "YANZATZA",
+      "contratos": 20384
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN LORENZO",
+      "contratos": 20319
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SALINAS",
+      "contratos": 19855
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SALCEDO",
+      "contratos": 19710
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL CARMEN",
+      "contratos": 19670
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LA MANÁ",
+      "contratos": 19653
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ZARUMA",
+      "contratos": 18794
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUININDE",
+      "contratos": 18419
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PEDERNALES",
+      "contratos": 17347
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "COTACACHI",
+      "contratos": 16917
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PLAYAS",
+      "contratos": 16079
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BUENA FE",
+      "contratos": 15404
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BALAO",
+      "contratos": 15329
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "VALENCIA",
+      "contratos": 14876
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MACAS",
+      "contratos": 14746
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ANTONIO ANTE",
+      "contratos": 13180
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MARCELINO MARIDUEÑA",
+      "contratos": 12274
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LA CONCORDIA",
+      "contratos": 12106
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "VENTANAS",
+      "contratos": 12103
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "HUAQUILLAS",
+      "contratos": 12014
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN MIGUEL DE URCUQUI",
+      "contratos": 11628
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MORONA",
+      "contratos": 10846
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN CRISTOBAL (GALAPAGOS)",
+      "contratos": 10799
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BANOS DE AGUA SANTA",
+      "contratos": 10593
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUJILI",
+      "contratos": 10120
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ARENILLAS",
+      "contratos": 8891
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SUCRE",
+      "contratos": 8843
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CUYABENO",
+      "contratos": 8557
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN PEDRO DE PELILEO",
+      "contratos": 8523
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EMPALME",
+      "contratos": 8349
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PAUTE",
+      "contratos": 8325
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ATACAMES",
+      "contratos": 8272
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "VINCES",
+      "contratos": 7687
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUALACEO",
+      "contratos": 7685
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BABA",
+      "contratos": 7667
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PIÑAS",
+      "contratos": 7536
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "AGUARICO",
+      "contratos": 7531
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CAÑAR",
+      "contratos": 7207
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BOLIVAR",
+      "contratos": 6870
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL CHACO",
+      "contratos": 6785
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUEBLOVIEJO",
+      "contratos": 6734
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUALAQUIZA",
+      "contratos": 6383
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "JIPIJAPA",
+      "contratos": 6354
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PEDRO CARBO",
+      "contratos": 6273
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CATAMAYO",
+      "contratos": 6251
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SUCUMBIOS",
+      "contratos": 6219
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PASTAZA",
+      "contratos": 6192
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUIJOS",
+      "contratos": 5658
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ISABELA",
+      "contratos": 5126
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA ISABEL",
+      "contratos": 4953
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SIMON BOLIVAR",
+      "contratos": 4922
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "NOBOL",
+      "contratos": 4889
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GONZALO PIZARRO",
+      "contratos": 4625
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BALZAR",
+      "contratos": 4336
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SUCUA",
+      "contratos": 4325
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ZAPOTILLO",
+      "contratos": 4294
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "NARANJITO",
+      "contratos": 4259
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ESPEJO",
+      "contratos": 4185
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTIAGO DE PILLARO",
+      "contratos": 4165
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ALAUSI",
+      "contratos": 4105
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MUISNE",
+      "contratos": 4082
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TOSAGUA",
+      "contratos": 3962
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GENERAL ANTONIO ELIZALDE (BUCAY)",
+      "contratos": 3929
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUCARA",
+      "contratos": 3810
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUANO",
+      "contratos": 3779
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MOCACHE",
+      "contratos": 3778
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ELOY ALFARO",
+      "contratos": 3765
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "JUNIN",
+      "contratos": 3729
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SARAGURO",
+      "contratos": 3554
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ROCAFUERTE",
+      "contratos": 3480
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MONTUFAR",
+      "contratos": 3423
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 3415
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUERTO QUITO",
+      "contratos": 3369
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LOMAS DE SARGENTILLO",
+      "contratos": 3277
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ISIDRO AYORA (SOLEDAD)",
+      "contratos": 3209
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA ANA",
+      "contratos": 3195
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BIBLIÁN",
+      "contratos": 3167
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CALVAS",
+      "contratos": 3039
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALANDA",
+      "contratos": 2963
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ARAJUNO",
+      "contratos": 2913
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUTUMAYO",
+      "contratos": 2886
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MIRA",
+      "contratos": 2878
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 2772
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUAMOTE",
+      "contratos": 2738
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "URDANETA",
+      "contratos": 2706
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAQUISILI",
+      "contratos": 2664
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN VICENTE",
+      "contratos": 2662
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALTAS",
+      "contratos": 2637
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MACARÁ",
+      "contratos": 2365
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MONTALVO",
+      "contratos": 2306
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PIMAMPIRO",
+      "contratos": 2264
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PAJAN",
+      "contratos": 2254
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PAQUISHA",
+      "contratos": 2248
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "COLTA",
+      "contratos": 2214
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SIGCHOS",
+      "contratos": 2145
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SIGSIG",
+      "contratos": 2131
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LORETO",
+      "contratos": 2012
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "JAMA",
+      "contratos": 1992
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LAS NAVES",
+      "contratos": 1969
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ARCHIDONA",
+      "contratos": 1903
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ALFREDO BAQUERIZO MORENO (JUJAN)",
+      "contratos": 1884
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PENIPE",
+      "contratos": 1828
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL TAMBO",
+      "contratos": 1823
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CUMANDA",
+      "contratos": 1804
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA LUCIA",
+      "contratos": 1794
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GIRON",
+      "contratos": 1781
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN MIGUEL",
+      "contratos": 1763
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LIMON INDANZA",
+      "contratos": 1735
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "NANGARITZA",
+      "contratos": 1665
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALESTINA",
+      "contratos": 1651
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ATAHUALPA",
+      "contratos": 1636
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TAISHA",
+      "contratos": 1618
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PICHINCHA",
+      "contratos": 1600
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "BALSAS",
+      "contratos": 1542
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CASCALES",
+      "contratos": 1533
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUYANGO",
+      "contratos": 1529
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALLATANGA",
+      "contratos": 1515
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CENTINELA DEL CONDOR",
+      "contratos": 1509
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "FLAVIO ALFARO",
+      "contratos": 1503
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALORA",
+      "contratos": 1501
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CEVALLOS",
+      "contratos": 1483
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TISALEO",
+      "contratos": 1454
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CELICA",
+      "contratos": 1449
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTIAGO",
+      "contratos": 1439
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHINCHIPE",
+      "contratos": 1435
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SEVILLA DE ORO",
+      "contratos": 1431
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MERA",
+      "contratos": 1418
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CALUMA",
+      "contratos": 1412
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "RIO VERDE",
+      "contratos": 1374
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ECHEANDIA",
+      "contratos": 1354
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PATATE",
+      "contratos": 1349
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SALITRE",
+      "contratos": 1333
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHAMBO",
+      "contratos": 1226
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MOCHA",
+      "contratos": 1225
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHIMBO",
+      "contratos": 1151
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHORDELEG",
+      "contratos": 1140
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PUERTO LOPEZ",
+      "contratos": 1110
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PANGUA",
+      "contratos": 1108
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUERO",
+      "contratos": 1043
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PALENQUE",
+      "contratos": 1010
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GONZANAMÁ",
+      "contratos": 977
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "HUAMBOYA",
+      "contratos": 966
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "NABON",
+      "contratos": 948
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHUNCHI",
+      "contratos": 943
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "MARCABELI",
+      "contratos": 902
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "ESPINDOLA",
+      "contratos": 893
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHILLANES",
+      "contratos": 888
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "YACUAMBI",
+      "contratos": 870
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "COLIMES",
+      "contratos": 834
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "24 DE MAYO",
+      "contratos": 697
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "TIWINTZA",
+      "contratos": 694
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN JUAN BOSCO",
+      "contratos": 654
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CARLOS JULIO AROSEMENA TOLA",
+      "contratos": 632
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SUSCAL",
+      "contratos": 594
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "OLMEDO",
+      "contratos": 590
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SANTA CLARA",
+      "contratos": 507
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN PEDRO DE HUACA",
+      "contratos": 495
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHAGUARPAMBA",
+      "contratos": 494
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LOGROÑO",
+      "contratos": 486
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PINDAL",
+      "contratos": 443
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "DELEG",
+      "contratos": 426
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SOZORANGA",
+      "contratos": 335
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "PABLO SEXTO",
+      "contratos": 317
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUACHAPALA",
+      "contratos": 223
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "SAN FERNANDO",
+      "contratos": 217
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "OÑA",
+      "contratos": 184
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUILANGA",
+      "contratos": 177
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "LAS LAJAS",
+      "contratos": 163
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "EL PAN",
+      "contratos": 118
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "CHILLA",
+      "contratos": 73
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "QUINSALOMA",
+      "contratos": 27
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "GUAYAS",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "AZUAY",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "canton": "IMBABURA",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUITO",
+      "contratos": 727937
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUAYAQUIL",
+      "contratos": 690937
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CUENCA",
+      "contratos": 145318
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "DURAN",
+      "contratos": 86470
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MACHALA",
+      "contratos": 64970
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "AMBATO",
+      "contratos": 60567
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MANTA",
+      "contratos": 58673
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 54853
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LATACUNGA",
+      "contratos": 44710
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LOJA",
+      "contratos": 38768
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUEVEDO",
+      "contratos": 37565
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PORTOVIEJO",
+      "contratos": 37068
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CAYAMBE",
+      "contratos": 34775
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "IBARRA",
+      "contratos": 34240
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "RIOBAMBA",
+      "contratos": 31729
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ESMERALDAS",
+      "contratos": 28353
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BABAHOYO",
+      "contratos": 25663
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAMBORONDON",
+      "contratos": 24849
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PEDRO MONCAYO",
+      "contratos": 22163
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "RUMIÑAHUI",
+      "contratos": 19669
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LAGO AGRIO",
+      "contratos": 16772
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MILAGRO",
+      "contratos": 15478
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LA TRONCAL",
+      "contratos": 14028
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA ELENA",
+      "contratos": 13976
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL COCA",
+      "contratos": 13018
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LA LIBERTAD",
+      "contratos": 12993
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "DAULE",
+      "contratos": 12829
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MEJIA",
+      "contratos": 12514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN JACINTO DE YAGUACHI",
+      "contratos": 11601
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MONTECRISTI",
+      "contratos": 11226
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "AZOGUES",
+      "contratos": 11208
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TULCÁN",
+      "contratos": 11042
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUABO",
+      "contratos": 10051
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 9373
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA CRUZ (GALAPAGOS)",
+      "contratos": 8754
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "NARANJAL",
+      "contratos": 8514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ORELLANA",
+      "contratos": 7486
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL PANGUI",
+      "contratos": 7218
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHONE",
+      "contratos": 7218
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ZAMORA",
+      "contratos": 6817
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "OTAVALO",
+      "contratos": 6792
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PASAJE",
+      "contratos": 6718
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TENA",
+      "contratos": 6682
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA ROSA",
+      "contratos": 6549
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUARANDA",
+      "contratos": 6455
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SALINAS",
+      "contratos": 6246
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL TRIUNFO",
+      "contratos": 6229
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PORTOVELO",
+      "contratos": 5722
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SHUSHUFINDI",
+      "contratos": 5686
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "JARAMIJO",
+      "contratos": 5662
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 5521
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PLAYAS",
+      "contratos": 5396
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MARCELINO MARIDUEÑA",
+      "contratos": 5205
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL CARMEN",
+      "contratos": 5189
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN LORENZO",
+      "contratos": 5048
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUININDE",
+      "contratos": 4964
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MACAS",
+      "contratos": 4948
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SALCEDO",
+      "contratos": 4928
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BUENA FE",
+      "contratos": 4676
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LA MANÁ",
+      "contratos": 4651
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUYO",
+      "contratos": 4383
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "YANZATZA",
+      "contratos": 4173
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "VENTANAS",
+      "contratos": 4015
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ZARUMA",
+      "contratos": 3743
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ANTONIO ANTE",
+      "contratos": 3683
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LA CONCORDIA",
+      "contratos": 3581
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BABA",
+      "contratos": 3534
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BALAO",
+      "contratos": 3529
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN CRISTOBAL (GALAPAGOS)",
+      "contratos": 3416
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "VALENCIA",
+      "contratos": 3394
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "VINCES",
+      "contratos": 3389
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "COTACACHI",
+      "contratos": 3226
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PEDERNALES",
+      "contratos": 3192
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "HUAQUILLAS",
+      "contratos": 3163
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN PEDRO DE PELILEO",
+      "contratos": 2930
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BANOS DE AGUA SANTA",
+      "contratos": 2823
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SUCRE",
+      "contratos": 2782
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CAÑAR",
+      "contratos": 2741
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUEBLOVIEJO",
+      "contratos": 2679
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EMPALME",
+      "contratos": 2651
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "JIPIJAPA",
+      "contratos": 2592
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PIÑAS",
+      "contratos": 2573
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ATACAMES",
+      "contratos": 2531
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BOLIVAR",
+      "contratos": 2514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MORONA",
+      "contratos": 2407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUALACEO",
+      "contratos": 2348
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ARENILLAS",
+      "contratos": 2348
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUJILI",
+      "contratos": 2264
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ISIDRO AYORA (SOLEDAD)",
+      "contratos": 2259
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CATAMAYO",
+      "contratos": 2252
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PAUTE",
+      "contratos": 2121
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GENERAL ANTONIO ELIZALDE (BUCAY)",
+      "contratos": 1912
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MOCACHE",
+      "contratos": 1820
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PASTAZA",
+      "contratos": 1783
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MONTUFAR",
+      "contratos": 1780
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ELOY ALFARO",
+      "contratos": 1750
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUERTO QUITO",
+      "contratos": 1590
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN MIGUEL DE URCUQUI",
+      "contratos": 1565
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SIMON BOLIVAR",
+      "contratos": 1555
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTIAGO DE PILLARO",
+      "contratos": 1520
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "NOBOL",
+      "contratos": 1477
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 1400
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA ISABEL",
+      "contratos": 1381
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "NARANJITO",
+      "contratos": 1363
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TOSAGUA",
+      "contratos": 1341
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ALAUSI",
+      "contratos": 1312
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 1293
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BALZAR",
+      "contratos": 1277
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "JUNIN",
+      "contratos": 1261
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MONTALVO",
+      "contratos": 1237
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ROCAFUERTE",
+      "contratos": 1219
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LOMAS DE SARGENTILLO",
+      "contratos": 1194
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ESPEJO",
+      "contratos": 1186
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CUYABENO",
+      "contratos": 1165
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA ANA",
+      "contratos": 1127
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SUCUA",
+      "contratos": 1122
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUALAQUIZA",
+      "contratos": 1091
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PEDRO CARBO",
+      "contratos": 1067
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MUISNE",
+      "contratos": 1050
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUANO",
+      "contratos": 1041
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ALFREDO BAQUERIZO MORENO (JUJAN)",
+      "contratos": 1006
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LAS NAVES",
+      "contratos": 964
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BIBLIÁN",
+      "contratos": 931
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SARAGURO",
+      "contratos": 913
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ISABELA",
+      "contratos": 902
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CALVAS",
+      "contratos": 849
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA LUCIA",
+      "contratos": 841
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "URDANETA",
+      "contratos": 841
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SUCUMBIOS",
+      "contratos": 835
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHINCHIPE",
+      "contratos": 815
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MIRA",
+      "contratos": 813
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAQUISILI",
+      "contratos": 799
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN MIGUEL",
+      "contratos": 786
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SALITRE",
+      "contratos": 783
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUIJOS",
+      "contratos": 779
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL CHACO",
+      "contratos": 767
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN VICENTE",
+      "contratos": 749
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "COLTA",
+      "contratos": 748
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CUMANDA",
+      "contratos": 747
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALTAS",
+      "contratos": 730
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MACARÁ",
+      "contratos": 709
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUAMOTE",
+      "contratos": 673
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUERTO LOPEZ",
+      "contratos": 667
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TISALEO",
+      "contratos": 629
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BALSAS",
+      "contratos": 620
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL TAMBO",
+      "contratos": 618
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SIGSIG",
+      "contratos": 614
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "FLAVIO ALFARO",
+      "contratos": 611
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PAJAN",
+      "contratos": 596
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALLATANGA",
+      "contratos": 573
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PATATE",
+      "contratos": 573
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LORETO",
+      "contratos": 564
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CALUMA",
+      "contratos": 562
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "AGUARICO",
+      "contratos": 544
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GONZALO PIZARRO",
+      "contratos": 544
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SIGCHOS",
+      "contratos": 543
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "RIO VERDE",
+      "contratos": 530
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "JAMA",
+      "contratos": 523
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ECHEANDIA",
+      "contratos": 504
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CEVALLOS",
+      "contratos": 500
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ZAPOTILLO",
+      "contratos": 499
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GIRON",
+      "contratos": 496
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ARCHIDONA",
+      "contratos": 486
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ESPINDOLA",
+      "contratos": 474
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ATAHUALPA",
+      "contratos": 467
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MERA",
+      "contratos": 465
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTIAGO",
+      "contratos": 465
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PICHINCHA",
+      "contratos": 464
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHIMBO",
+      "contratos": 454
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUTUMAYO",
+      "contratos": 445
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CELICA",
+      "contratos": 434
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "NANGARITZA",
+      "contratos": 432
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALESTINA",
+      "contratos": 432
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PIMAMPIRO",
+      "contratos": 412
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALANDA",
+      "contratos": 407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PANGUA",
+      "contratos": 407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALENQUE",
+      "contratos": 406
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUYANGO",
+      "contratos": 403
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHAMBO",
+      "contratos": 392
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CASCALES",
+      "contratos": 382
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PALORA",
+      "contratos": 378
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TAISHA",
+      "contratos": 375
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PINDAL",
+      "contratos": 368
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHUNCHI",
+      "contratos": 368
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GONZANAMÁ",
+      "contratos": 357
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CENTINELA DEL CONDOR",
+      "contratos": 354
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHORDELEG",
+      "contratos": 349
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PAQUISHA",
+      "contratos": 340
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "24 DE MAYO",
+      "contratos": 322
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PENIPE",
+      "contratos": 315
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHILLANES",
+      "contratos": 312
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUERO",
+      "contratos": 303
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "COLIMES",
+      "contratos": 293
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MARCABELI",
+      "contratos": 280
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "MOCHA",
+      "contratos": 248
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LIMON INDANZA",
+      "contratos": 242
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PUCARA",
+      "contratos": 236
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "NABON",
+      "contratos": 235
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN JUAN BOSCO",
+      "contratos": 228
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "ARAJUNO",
+      "contratos": 212
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN PEDRO DE HUACA",
+      "contratos": 211
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "YACUAMBI",
+      "contratos": 201
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SEVILLA DE ORO",
+      "contratos": 199
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "OLMEDO",
+      "contratos": 198
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SANTA CLARA",
+      "contratos": 169
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LOGROÑO",
+      "contratos": 162
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUINSALOMA",
+      "contratos": 152
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SOZORANGA",
+      "contratos": 151
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHAGUARPAMBA",
+      "contratos": 147
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "HUAMBOYA",
+      "contratos": 142
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SUSCAL",
+      "contratos": 140
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "TIWINTZA",
+      "contratos": 132
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "DELEG",
+      "contratos": 126
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "OÑA",
+      "contratos": 126
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "QUILANGA",
+      "contratos": 118
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUACHAPALA",
+      "contratos": 115
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CARLOS JULIO AROSEMENA TOLA",
+      "contratos": 109
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "SAN FERNANDO",
+      "contratos": 88
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "LAS LAJAS",
+      "contratos": 83
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "PABLO SEXTO",
+      "contratos": 59
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CHILLA",
+      "contratos": 57
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "EL PAN",
+      "contratos": 48
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "BORBÓN",
+      "contratos": 7
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "AZUAY",
+      "contratos": 4
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "COTOPAXI",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "GUAYAS",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "canton": "CARCHI",
+      "contratos": 1
+    }
+  ],
+  "provincia_canton": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "CUENCA",
+      "contratos": 526762
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 16242
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "PAUTE",
+      "contratos": 8325
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "GUALACEO",
+      "contratos": 7685
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "PUCARA",
+      "contratos": 3810
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "SANTA ISABEL",
+      "contratos": 2189
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "SIGSIG",
+      "contratos": 2131
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "GIRON",
+      "contratos": 1781
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "SEVILLA DE ORO",
+      "contratos": 1431
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "CHORDELEG",
+      "contratos": 1140
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "NABON",
+      "contratos": 948
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "GUACHAPALA",
+      "contratos": 223
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "SAN FERNANDO",
+      "contratos": 217
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "OÑA",
+      "contratos": 184
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY",
+      "canton": "EL PAN",
+      "contratos": 118
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 26324
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "canton": "SANTA ISABEL",
+      "contratos": 2764
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "GUARANDA",
+      "contratos": 20835
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "LAS NAVES",
+      "contratos": 1969
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "SAN MIGUEL",
+      "contratos": 1763
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "CALUMA",
+      "contratos": 1412
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "ECHEANDIA",
+      "contratos": 1354
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "CHIMBO",
+      "contratos": 1151
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "BOLIVAR",
+      "canton": "CHILLANES",
+      "contratos": 888
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "AZOGUES",
+      "contratos": 35362
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "LA TRONCAL",
+      "contratos": 13503
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "CAÑAR",
+      "contratos": 7207
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "BIBLIÁN",
+      "contratos": 3167
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "EL TAMBO",
+      "contratos": 1823
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "SUSCAL",
+      "contratos": 594
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR",
+      "canton": "DELEG",
+      "contratos": 426
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CAÑAR (REGIMEN COSTA)",
+      "canton": "LA TRONCAL",
+      "contratos": 25986
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "TULCÁN",
+      "contratos": 28460
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "ESPEJO",
+      "contratos": 4185
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "MONTUFAR",
+      "contratos": 3423
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "BOLIVAR",
+      "contratos": 3240
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "MIRA",
+      "contratos": 2878
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CARCHI",
+      "canton": "SAN PEDRO DE HUACA",
+      "contratos": 495
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "RIOBAMBA",
+      "contratos": 116440
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "ALAUSI",
+      "contratos": 4105
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "GUANO",
+      "contratos": 3779
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "GUAMOTE",
+      "contratos": 2738
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "COLTA",
+      "contratos": 2214
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "PENIPE",
+      "contratos": 1828
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "CHAMBO",
+      "contratos": 1226
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "PALLATANGA",
+      "contratos": 1160
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "CHUNCHI",
+      "contratos": 943
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "CUMANDA",
+      "contratos": 861
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "SIGCHOS",
+      "contratos": 80
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO",
+      "canton": "SAQUISILI",
+      "contratos": 32
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "canton": "CUMANDA",
+      "contratos": 943
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "canton": "PALLATANGA",
+      "contratos": 355
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COSTA",
+      "canton": "GUAYAS",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COSTA",
+      "canton": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "LATACUNGA",
+      "contratos": 196945
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "SALCEDO",
+      "contratos": 19710
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "PUJILI",
+      "contratos": 10120
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "LA MANÁ",
+      "contratos": 5177
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "SAQUISILI",
+      "contratos": 2632
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "SIGCHOS",
+      "contratos": 2065
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI",
+      "canton": "PANGUA",
+      "contratos": 1108
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "COTOPAXI(REGIMEN COSTA)",
+      "canton": "LA MANÁ",
+      "contratos": 14476
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "MACHALA",
+      "contratos": 266688
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "GUABO",
+      "contratos": 37294
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "SANTA ROSA",
+      "contratos": 26480
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "PASAJE",
+      "contratos": 22816
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "PORTOVELO",
+      "contratos": 21711
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "ZARUMA",
+      "contratos": 18794
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "HUAQUILLAS",
+      "contratos": 12014
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "ARENILLAS",
+      "contratos": 8891
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "PIÑAS",
+      "contratos": 7536
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "ATAHUALPA",
+      "contratos": 1636
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "BALSAS",
+      "contratos": 1542
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "MARCABELI",
+      "contratos": 902
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "LAS LAJAS",
+      "contratos": 163
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "EL ORO",
+      "canton": "CHILLA",
+      "contratos": 73
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "ESMERALDAS",
+      "contratos": 118780
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "SAN LORENZO",
+      "contratos": 20319
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "QUININDE",
+      "contratos": 18419
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "ATACAMES",
+      "contratos": 8272
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "MUISNE",
+      "contratos": 4082
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "ELOY ALFARO",
+      "contratos": 3765
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ESMERALDAS",
+      "canton": "RIO VERDE",
+      "contratos": 1374
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GALÁPAGOS",
+      "canton": "SANTA CRUZ (GALAPAGOS)",
+      "contratos": 27705
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GALÁPAGOS",
+      "canton": "SAN CRISTOBAL (GALAPAGOS)",
+      "contratos": 10799
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GALÁPAGOS",
+      "canton": "ISABELA",
+      "contratos": 5126
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "GUAYAQUIL",
+      "contratos": 2635355
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "DURAN",
+      "contratos": 261530
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "SAMBORONDON",
+      "contratos": 81329
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "MILAGRO",
+      "contratos": 52933
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "DAULE",
+      "contratos": 39000
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "NARANJAL",
+      "contratos": 36364
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "SAN JACINTO DE YAGUACHI",
+      "contratos": 36025
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "EL TRIUNFO",
+      "contratos": 27792
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "PLAYAS",
+      "contratos": 16079
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "BALAO",
+      "contratos": 15329
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "MARCELINO MARIDUEÑA",
+      "contratos": 12274
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "EMPALME",
+      "contratos": 8349
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "PEDRO CARBO",
+      "contratos": 6273
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "SIMON BOLIVAR",
+      "contratos": 4922
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "NOBOL",
+      "contratos": 4889
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "BALZAR",
+      "contratos": 4336
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "NARANJITO",
+      "contratos": 4259
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "GENERAL ANTONIO ELIZALDE (BUCAY)",
+      "contratos": 3929
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "LOMAS DE SARGENTILLO",
+      "contratos": 3277
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "ISIDRO AYORA (SOLEDAD)",
+      "contratos": 3209
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "ALFREDO BAQUERIZO MORENO (JUJAN)",
+      "contratos": 1884
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "SANTA LUCIA",
+      "contratos": 1794
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "PALESTINA",
+      "contratos": 1651
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "SALITRE",
+      "contratos": 1333
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "GUAYAS",
+      "canton": "COLIMES",
+      "contratos": 834
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "IBARRA",
+      "contratos": 123086
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "OTAVALO",
+      "contratos": 22756
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "COTACACHI",
+      "contratos": 16917
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "ANTONIO ANTE",
+      "contratos": 13180
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "SAN MIGUEL DE URCUQUI",
+      "contratos": 11628
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "IMBABURA",
+      "canton": "PIMAMPIRO",
+      "contratos": 2264
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "LOJA",
+      "contratos": 136666
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "CATAMAYO",
+      "contratos": 6251
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "ZAPOTILLO",
+      "contratos": 4294
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "SARAGURO",
+      "contratos": 3554
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "CALVAS",
+      "contratos": 3039
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "PALTAS",
+      "contratos": 2637
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "MACARÁ",
+      "contratos": 2365
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "PUYANGO",
+      "contratos": 1529
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "CELICA",
+      "contratos": 1449
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "GONZANAMÁ",
+      "contratos": 977
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "ESPINDOLA",
+      "contratos": 893
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "CHAGUARPAMBA",
+      "contratos": 494
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "PINDAL",
+      "contratos": 443
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "SOZORANGA",
+      "contratos": 335
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "OLMEDO",
+      "contratos": 203
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOJA",
+      "canton": "QUILANGA",
+      "contratos": 177
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "QUEVEDO",
+      "contratos": 132523
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "BABAHOYO",
+      "contratos": 63774
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "BUENA FE",
+      "contratos": 15404
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "VALENCIA",
+      "contratos": 14876
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "VENTANAS",
+      "contratos": 12103
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "VINCES",
+      "contratos": 7687
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "BABA",
+      "contratos": 7667
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "PUEBLOVIEJO",
+      "contratos": 6734
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "MOCACHE",
+      "contratos": 3778
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "URDANETA",
+      "contratos": 2706
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "MONTALVO",
+      "contratos": 2306
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "PALENQUE",
+      "contratos": 1010
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "LOS RIOS",
+      "canton": "QUINSALOMA",
+      "contratos": 27
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "MANTA",
+      "contratos": 306347
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "PORTOVIEJO",
+      "contratos": 120313
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "MONTECRISTI",
+      "contratos": 50546
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "JARAMIJO",
+      "contratos": 24760
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "CHONE",
+      "contratos": 22606
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "EL CARMEN",
+      "contratos": 19670
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "PEDERNALES",
+      "contratos": 17347
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "SUCRE",
+      "contratos": 8843
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "JIPIJAPA",
+      "contratos": 6354
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "TOSAGUA",
+      "contratos": 3962
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "JUNIN",
+      "contratos": 3729
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "BOLIVAR",
+      "contratos": 3630
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "ROCAFUERTE",
+      "contratos": 3480
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "SANTA ANA",
+      "contratos": 3195
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "SAN VICENTE",
+      "contratos": 2662
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "PAJAN",
+      "contratos": 2254
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "JAMA",
+      "contratos": 1992
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "PICHINCHA",
+      "contratos": 1592
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "FLAVIO ALFARO",
+      "contratos": 1503
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "PUERTO LOPEZ",
+      "contratos": 1110
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "24 DE MAYO",
+      "contratos": 697
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MANABI",
+      "canton": "OLMEDO",
+      "contratos": 387
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "MACAS",
+      "contratos": 14746
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "MORONA",
+      "contratos": 10846
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "GUALAQUIZA",
+      "contratos": 6383
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SUCUA",
+      "contratos": 4325
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "LIMON INDANZA",
+      "contratos": 1735
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "TAISHA",
+      "contratos": 1618
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "PALORA",
+      "contratos": 1501
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SANTIAGO",
+      "contratos": 1439
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "HUAMBOYA",
+      "contratos": 966
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "TIWINTZA",
+      "contratos": 694
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SAN JUAN BOSCO",
+      "contratos": 654
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "LOGROÑO",
+      "contratos": 486
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "PABLO SEXTO",
+      "contratos": 317
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "TENA",
+      "contratos": 32582
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "EL CHACO",
+      "contratos": 6785
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "QUIJOS",
+      "contratos": 5658
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "ARCHIDONA",
+      "contratos": 1903
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "CARLOS JULIO AROSEMENA TOLA",
+      "contratos": 632
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "ORELLANA",
+      "contratos": 78
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "LORETO",
+      "contratos": 69
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 54
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "NAPO",
+      "canton": "AGUARICO",
+      "contratos": 8
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "canton": "EL COCA",
+      "contratos": 90621
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "canton": "ORELLANA",
+      "contratos": 43446
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 28278
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "canton": "AGUARICO",
+      "contratos": 7523
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORELLANA",
+      "canton": "LORETO",
+      "contratos": 1943
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ORIENTE",
+      "canton": "ORELLANA",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "canton": "PUYO",
+      "contratos": 22405
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "canton": "PASTAZA",
+      "contratos": 6192
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "canton": "ARAJUNO",
+      "contratos": 2913
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "canton": "MERA",
+      "contratos": 1418
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PASTAZA",
+      "canton": "SANTA CLARA",
+      "contratos": 507
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "QUITO",
+      "contratos": 2778584
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "CAYAMBE",
+      "contratos": 198164
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "PEDRO MONCAYO",
+      "contratos": 148785
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "RUMIÑAHUI",
+      "contratos": 62186
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "MEJIA",
+      "contratos": 41782
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 2032
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "PUERTO QUITO",
+      "contratos": 1744
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 1636
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "PUERTO QUITO",
+      "contratos": 1625
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 1383
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 1136
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTA ELENA",
+      "canton": "SANTA ELENA",
+      "contratos": 57037
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTA ELENA",
+      "canton": "LA LIBERTAD",
+      "contratos": 35391
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTA ELENA",
+      "canton": "SALINAS",
+      "contratos": 19855
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "canton": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 207497
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "canton": "LA CONCORDIA",
+      "contratos": 12106
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SIERRA",
+      "canton": "PICHINCHA",
+      "contratos": 8
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SIERRA",
+      "canton": "AZUAY",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SIERRA",
+      "canton": "IMBABURA",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "LAGO AGRIO",
+      "contratos": 90749
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "SHUSHUFINDI",
+      "contratos": 34395
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "CUYABENO",
+      "contratos": 8557
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "SUCUMBIOS",
+      "contratos": 6219
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "GONZALO PIZARRO",
+      "contratos": 4625
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "PUTUMAYO",
+      "contratos": 2886
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "SUCUMBIOS",
+      "canton": "CASCALES",
+      "contratos": 1533
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "AMBATO",
+      "contratos": 228365
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "BANOS DE AGUA SANTA",
+      "contratos": 10593
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "SAN PEDRO DE PELILEO",
+      "contratos": 8523
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "SANTIAGO DE PILLARO",
+      "contratos": 4165
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "CEVALLOS",
+      "contratos": 1483
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "TISALEO",
+      "contratos": 1454
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "PATATE",
+      "contratos": 1349
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "MOCHA",
+      "contratos": 1225
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "TUNGURAHUA",
+      "canton": "QUERO",
+      "contratos": 1043
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "EL PANGUI",
+      "contratos": 31581
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "ZAMORA",
+      "contratos": 26246
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "YANZATZA",
+      "contratos": 20384
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "PALANDA",
+      "contratos": 2963
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "PAQUISHA",
+      "contratos": 2248
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "NANGARITZA",
+      "contratos": 1665
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "CENTINELA DEL CONDOR",
+      "contratos": 1509
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "CHINCHIPE",
+      "contratos": 1435
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "YACUAMBI",
+      "contratos": 870
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "CUENCA",
+      "contratos": 145318
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 3100
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "GUALACEO",
+      "contratos": 2348
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "PAUTE",
+      "contratos": 2121
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "SANTA ISABEL",
+      "contratos": 625
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "SIGSIG",
+      "contratos": 614
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "GIRON",
+      "contratos": 496
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "CHORDELEG",
+      "contratos": 349
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "PUCARA",
+      "contratos": 236
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "NABON",
+      "contratos": 235
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "SEVILLA DE ORO",
+      "contratos": 199
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "OÑA",
+      "contratos": 126
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "GUACHAPALA",
+      "contratos": 115
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "SAN FERNANDO",
+      "contratos": 88
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY",
+      "canton": "EL PAN",
+      "contratos": 48
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "canton": "CAMILO PONCE ENRIQUEZ",
+      "contratos": 6273
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "AZUAY (REGIMEN COSTA)",
+      "canton": "SANTA ISABEL",
+      "contratos": 756
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "GUARANDA",
+      "contratos": 6455
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "LAS NAVES",
+      "contratos": 964
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "SAN MIGUEL",
+      "contratos": 786
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "CALUMA",
+      "contratos": 562
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "ECHEANDIA",
+      "contratos": 504
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "CHIMBO",
+      "contratos": 454
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "BOLIVAR",
+      "canton": "CHILLANES",
+      "contratos": 312
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "AZOGUES",
+      "contratos": 11208
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "LA TRONCAL",
+      "contratos": 7165
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "CAÑAR",
+      "contratos": 2741
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "BIBLIÁN",
+      "contratos": 931
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "EL TAMBO",
+      "contratos": 618
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "SUSCAL",
+      "contratos": 140
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR",
+      "canton": "DELEG",
+      "contratos": 126
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CAÑAR (REGIMEN COSTA)",
+      "canton": "LA TRONCAL",
+      "contratos": 6863
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "TULCÁN",
+      "contratos": 11042
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "MONTUFAR",
+      "contratos": 1780
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "ESPEJO",
+      "contratos": 1186
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "BOLIVAR",
+      "contratos": 1115
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "MIRA",
+      "contratos": 813
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CARCHI",
+      "canton": "SAN PEDRO DE HUACA",
+      "contratos": 211
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "RIOBAMBA",
+      "contratos": 31729
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "ALAUSI",
+      "contratos": 1312
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "GUANO",
+      "contratos": 1041
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "COLTA",
+      "contratos": 748
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "GUAMOTE",
+      "contratos": 673
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "CHAMBO",
+      "contratos": 392
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "CHUNCHI",
+      "contratos": 368
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "CUMANDA",
+      "contratos": 350
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "PALLATANGA",
+      "contratos": 345
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "PENIPE",
+      "contratos": 315
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "SIGCHOS",
+      "contratos": 10
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO",
+      "canton": "SAQUISILI",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "canton": "CUMANDA",
+      "contratos": 397
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "CHIMBORAZO(REGIMEN COSTA)",
+      "canton": "PALLATANGA",
+      "contratos": 228
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COSTA",
+      "canton": "GUAYAS",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "LATACUNGA",
+      "contratos": 44710
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "SALCEDO",
+      "contratos": 4928
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "PUJILI",
+      "contratos": 2264
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "LA MANÁ",
+      "contratos": 1179
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "SAQUISILI",
+      "contratos": 796
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "SIGCHOS",
+      "contratos": 533
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI",
+      "canton": "PANGUA",
+      "contratos": 407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "COTOPAXI(REGIMEN COSTA)",
+      "canton": "LA MANÁ",
+      "contratos": 3472
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "MACHALA",
+      "contratos": 64970
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "GUABO",
+      "contratos": 10051
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "PASAJE",
+      "contratos": 6718
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "SANTA ROSA",
+      "contratos": 6549
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "PORTOVELO",
+      "contratos": 5722
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "ZARUMA",
+      "contratos": 3743
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "HUAQUILLAS",
+      "contratos": 3163
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "PIÑAS",
+      "contratos": 2573
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "ARENILLAS",
+      "contratos": 2348
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "BALSAS",
+      "contratos": 620
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "ATAHUALPA",
+      "contratos": 467
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "MARCABELI",
+      "contratos": 280
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "LAS LAJAS",
+      "contratos": 83
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "EL ORO",
+      "canton": "CHILLA",
+      "contratos": 57
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "ESMERALDAS",
+      "contratos": 28353
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "SAN LORENZO",
+      "contratos": 5048
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "QUININDE",
+      "contratos": 4964
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "ATACAMES",
+      "contratos": 2531
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "ELOY ALFARO",
+      "contratos": 1750
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "MUISNE",
+      "contratos": 1050
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "RIO VERDE",
+      "contratos": 530
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ESMERALDAS",
+      "canton": "BORBÓN",
+      "contratos": 7
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GALÁPAGOS",
+      "canton": "SANTA CRUZ (GALAPAGOS)",
+      "contratos": 8754
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GALÁPAGOS",
+      "canton": "SAN CRISTOBAL (GALAPAGOS)",
+      "contratos": 3416
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GALÁPAGOS",
+      "canton": "ISABELA",
+      "contratos": 902
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "GUAYAQUIL",
+      "contratos": 690937
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "DURAN",
+      "contratos": 86470
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "SAMBORONDON",
+      "contratos": 24849
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "MILAGRO",
+      "contratos": 15478
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "DAULE",
+      "contratos": 12829
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "SAN JACINTO DE YAGUACHI",
+      "contratos": 11601
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "NARANJAL",
+      "contratos": 8514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "EL TRIUNFO",
+      "contratos": 6229
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "PLAYAS",
+      "contratos": 5396
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "MARCELINO MARIDUEÑA",
+      "contratos": 5205
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "BALAO",
+      "contratos": 3529
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "EMPALME",
+      "contratos": 2651
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "ISIDRO AYORA (SOLEDAD)",
+      "contratos": 2259
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "GENERAL ANTONIO ELIZALDE (BUCAY)",
+      "contratos": 1912
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "SIMON BOLIVAR",
+      "contratos": 1555
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "NOBOL",
+      "contratos": 1477
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "NARANJITO",
+      "contratos": 1363
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "BALZAR",
+      "contratos": 1277
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "LOMAS DE SARGENTILLO",
+      "contratos": 1194
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "PEDRO CARBO",
+      "contratos": 1067
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "ALFREDO BAQUERIZO MORENO (JUJAN)",
+      "contratos": 1006
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "SANTA LUCIA",
+      "contratos": 841
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "SALITRE",
+      "contratos": 783
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "PALESTINA",
+      "contratos": 432
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "GUAYAS",
+      "canton": "COLIMES",
+      "contratos": 293
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "IBARRA",
+      "contratos": 34240
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "OTAVALO",
+      "contratos": 6792
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "ANTONIO ANTE",
+      "contratos": 3683
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "COTACACHI",
+      "contratos": 3226
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "SAN MIGUEL DE URCUQUI",
+      "contratos": 1565
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "IMBABURA",
+      "canton": "PIMAMPIRO",
+      "contratos": 412
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "LOJA",
+      "contratos": 38768
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "CATAMAYO",
+      "contratos": 2252
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "SARAGURO",
+      "contratos": 913
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "CALVAS",
+      "contratos": 849
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "PALTAS",
+      "contratos": 730
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "MACARÁ",
+      "contratos": 709
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "ZAPOTILLO",
+      "contratos": 499
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "ESPINDOLA",
+      "contratos": 474
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "CELICA",
+      "contratos": 434
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "PUYANGO",
+      "contratos": 403
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "PINDAL",
+      "contratos": 368
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "GONZANAMÁ",
+      "contratos": 357
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "SOZORANGA",
+      "contratos": 151
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "CHAGUARPAMBA",
+      "contratos": 147
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "QUILANGA",
+      "contratos": 118
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOJA",
+      "canton": "OLMEDO",
+      "contratos": 78
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "QUEVEDO",
+      "contratos": 37565
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "BABAHOYO",
+      "contratos": 25663
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "BUENA FE",
+      "contratos": 4676
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "VENTANAS",
+      "contratos": 4015
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "BABA",
+      "contratos": 3534
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "VALENCIA",
+      "contratos": 3394
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "VINCES",
+      "contratos": 3389
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "PUEBLOVIEJO",
+      "contratos": 2679
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "MOCACHE",
+      "contratos": 1820
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "MONTALVO",
+      "contratos": 1237
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "URDANETA",
+      "contratos": 841
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "PALENQUE",
+      "contratos": 406
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "LOS RIOS",
+      "canton": "QUINSALOMA",
+      "contratos": 152
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "MANTA",
+      "contratos": 58673
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "PORTOVIEJO",
+      "contratos": 37068
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "MONTECRISTI",
+      "contratos": 11226
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "CHONE",
+      "contratos": 7218
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "JARAMIJO",
+      "contratos": 5662
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "EL CARMEN",
+      "contratos": 5189
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "PEDERNALES",
+      "contratos": 3192
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "SUCRE",
+      "contratos": 2782
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "JIPIJAPA",
+      "contratos": 2592
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "BOLIVAR",
+      "contratos": 1399
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "TOSAGUA",
+      "contratos": 1341
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "JUNIN",
+      "contratos": 1261
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "ROCAFUERTE",
+      "contratos": 1219
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "SANTA ANA",
+      "contratos": 1127
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "SAN VICENTE",
+      "contratos": 749
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "PUERTO LOPEZ",
+      "contratos": 667
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "FLAVIO ALFARO",
+      "contratos": 611
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "PAJAN",
+      "contratos": 596
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "JAMA",
+      "contratos": 523
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "PICHINCHA",
+      "contratos": 461
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "24 DE MAYO",
+      "contratos": 322
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MANABI",
+      "canton": "OLMEDO",
+      "contratos": 120
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "MACAS",
+      "contratos": 4948
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "MORONA",
+      "contratos": 2407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SUCUA",
+      "contratos": 1122
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "GUALAQUIZA",
+      "contratos": 1091
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SANTIAGO",
+      "contratos": 465
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "PALORA",
+      "contratos": 378
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "TAISHA",
+      "contratos": 375
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "LIMON INDANZA",
+      "contratos": 242
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "SAN JUAN BOSCO",
+      "contratos": 228
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "LOGROÑO",
+      "contratos": 162
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "HUAMBOYA",
+      "contratos": 142
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "TIWINTZA",
+      "contratos": 132
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "MORONA SANTIAGO",
+      "canton": "PABLO SEXTO",
+      "contratos": 59
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "TENA",
+      "contratos": 6682
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "QUIJOS",
+      "contratos": 779
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "EL CHACO",
+      "contratos": 767
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "ARCHIDONA",
+      "contratos": 486
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "CARLOS JULIO AROSEMENA TOLA",
+      "contratos": 109
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "ORELLANA",
+      "contratos": 13
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 7
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "LORETO",
+      "contratos": 4
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "NAPO",
+      "canton": "AGUARICO",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "canton": "EL COCA",
+      "contratos": 13018
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "canton": "ORELLANA",
+      "contratos": 7473
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "canton": "LA JOYA DE LOS SACHAS",
+      "contratos": 5514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "canton": "LORETO",
+      "contratos": 560
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ORELLANA",
+      "canton": "AGUARICO",
+      "contratos": 542
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "canton": "PUYO",
+      "contratos": 4383
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "canton": "PASTAZA",
+      "contratos": 1783
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "canton": "MERA",
+      "contratos": 465
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "canton": "ARAJUNO",
+      "contratos": 212
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PASTAZA",
+      "canton": "SANTA CLARA",
+      "contratos": 169
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "QUITO",
+      "contratos": 727937
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "CAYAMBE",
+      "contratos": 34775
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "PEDRO MONCAYO",
+      "contratos": 22163
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "RUMIÑAHUI",
+      "contratos": 19669
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "MEJIA",
+      "contratos": 12514
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 785
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 778
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA",
+      "canton": "PUERTO QUITO",
+      "contratos": 538
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "PUERTO QUITO",
+      "contratos": 1052
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "PEDRO VICENTE MALDONADO",
+      "contratos": 622
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "PICHINCHA(REGIMEN COSTA)",
+      "canton": "SAN MIGUEL DE LOS BANCOS",
+      "contratos": 508
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTA ELENA",
+      "canton": "SANTA ELENA",
+      "contratos": 13976
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTA ELENA",
+      "canton": "LA LIBERTAD",
+      "contratos": 12993
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTA ELENA",
+      "canton": "SALINAS",
+      "contratos": 6246
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "canton": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "contratos": 54853
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SANTO DOMINGO DE LOS TSÁCHILAS",
+      "canton": "LA CONCORDIA",
+      "contratos": 3581
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SIERRA",
+      "canton": "AZUAY",
+      "contratos": 4
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SIERRA",
+      "canton": "COTOPAXI",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SIERRA",
+      "canton": "PICHINCHA",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SIERRA",
+      "canton": "CARCHI",
+      "contratos": 1
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "LAGO AGRIO",
+      "contratos": 16772
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "SHUSHUFINDI",
+      "contratos": 5686
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "CUYABENO",
+      "contratos": 1165
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "SUCUMBIOS",
+      "contratos": 835
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "GONZALO PIZARRO",
+      "contratos": 544
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "PUTUMAYO",
+      "contratos": 445
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "SUCUMBIOS",
+      "canton": "CASCALES",
+      "contratos": 382
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "AMBATO",
+      "contratos": 60567
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "SAN PEDRO DE PELILEO",
+      "contratos": 2930
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "BANOS DE AGUA SANTA",
+      "contratos": 2823
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "SANTIAGO DE PILLARO",
+      "contratos": 1520
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "TISALEO",
+      "contratos": 629
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "PATATE",
+      "contratos": 573
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "CEVALLOS",
+      "contratos": 500
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "QUERO",
+      "contratos": 303
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "TUNGURAHUA",
+      "canton": "MOCHA",
+      "contratos": 248
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "EL PANGUI",
+      "contratos": 7218
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "ZAMORA",
+      "contratos": 6817
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "YANZATZA",
+      "contratos": 4173
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "CHINCHIPE",
+      "contratos": 815
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "NANGARITZA",
+      "contratos": 432
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "PALANDA",
+      "contratos": 407
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "CENTINELA DEL CONDOR",
+      "contratos": 354
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "PAQUISHA",
+      "contratos": 340
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "provincia": "ZAMORA CHINCHIPE",
+      "canton": "YACUAMBI",
+      "contratos": 201
+    }
+  ],
+  "tipos_contrato": [
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato indefinido",
+      "contratos": 4381251
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato por obra o servicio determinado dentro del giro del negocio",
+      "contratos": 1183464
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de obra cierta",
+      "contratos": 854756
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato a plazo fijo",
+      "contratos": 758300
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de jornada parcial permanente",
+      "contratos": 560290
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Especial Emergente",
+      "contratos": 489307
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato a plazo fijo con periodo de prueba",
+      "contratos": 366926
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de temporada",
+      "contratos": 355483
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato eventual",
+      "contratos": 346145
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Sector Productivo",
+      "contratos": 275537
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Verbal",
+      "contratos": 241352
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato por tarea",
+      "contratos": 203047
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato a destajo",
+      "contratos": 180793
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato entre artesanos y operarios",
+      "contratos": 88931
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato a prueba",
+      "contratos": 83407
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de servicio doméstico",
+      "contratos": 68085
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato zona franca",
+      "contratos": 44726
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato eventual discontinuo",
+      "contratos": 36380
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato agrícola",
+      "contratos": 33883
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato ocasional",
+      "contratos": 22689
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de Transporte",
+      "contratos": 20278
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato eventual continuo",
+      "contratos": 19106
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Sector Turístico",
+      "contratos": 9493
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Joven",
+      "contratos": 6508
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de aprendizaje",
+      "contratos": 6133
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato florícola",
+      "contratos": 5049
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato bananero",
+      "contratos": 4339
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato florícola permanente",
+      "contratos": 4205
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato especial para la educación superior particular",
+      "contratos": 2798
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato a domicilio",
+      "contratos": 2366
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato Emprendimiento",
+      "contratos": 1747
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato para adolescentes",
+      "contratos": 1238
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de Trabajo por Proyecto a Jornada Especial Completa para el Sector Manufacturero",
+      "contratos": 647
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato jóvenes en formación ",
+      "contratos": 413
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato agrícola por actividades a jornada parcial",
+      "contratos": 272
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de maquilado",
+      "contratos": 182
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato bananero parcial discontinuo",
+      "contratos": 119
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de Trabajo para Proyectos a Jornada Especial Completa para el Sector de Desarrollo y Servicio de Software",
+      "contratos": 95
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato ganadero parcial permanente",
+      "contratos": 49
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de enganche",
+      "contratos": 43
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato turístico permanente",
+      "contratos": 35
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato turístico por evento parcial discontinuo",
+      "contratos": 33
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato de Trabajo Especial para personal que labora en los bares escolares del Sistema Nacional de Educación",
+      "contratos": 20
+    },
+    {
+      "estado_contrato": "FINALIZADO",
+      "tipo_contrato": "Contrato florícola parcial discontinuo",
+      "contratos": 2
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato indefinido",
+      "contratos": 1808555
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato por obra o servicio determinado dentro del giro del negocio",
+      "contratos": 185906
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de jornada parcial permanente",
+      "contratos": 153609
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Sector Productivo",
+      "contratos": 130895
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Verbal",
+      "contratos": 75919
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de obra cierta",
+      "contratos": 73720
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de temporada",
+      "contratos": 60648
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato eventual",
+      "contratos": 60074
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Especial Emergente",
+      "contratos": 44342
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de servicio doméstico",
+      "contratos": 34000
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato entre artesanos y operarios",
+      "contratos": 29035
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato a prueba",
+      "contratos": 24852
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato a destajo",
+      "contratos": 21519
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato por tarea",
+      "contratos": 17183
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato ocasional",
+      "contratos": 13328
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato agrícola",
+      "contratos": 9322
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de Transporte",
+      "contratos": 9229
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato a plazo fijo",
+      "contratos": 9190
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Sector Turístico",
+      "contratos": 3600
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato eventual discontinuo",
+      "contratos": 3582
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato eventual continuo",
+      "contratos": 3496
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Joven",
+      "contratos": 2259
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato especial para la educación superior particular",
+      "contratos": 1646
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato florícola",
+      "contratos": 1563
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato bananero",
+      "contratos": 1446
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de aprendizaje",
+      "contratos": 1198
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato a plazo fijo con periodo de prueba",
+      "contratos": 1060
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato a domicilio",
+      "contratos": 989
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato florícola permanente",
+      "contratos": 477
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato Emprendimiento",
+      "contratos": 381
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato para adolescentes",
+      "contratos": 376
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato agrícola por actividades a jornada parcial",
+      "contratos": 199
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato jóvenes en formación ",
+      "contratos": 133
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato ganadero parcial permanente",
+      "contratos": 54
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de Trabajo Especial para personal que labora en los bares escolares del Sistema Nacional de Educación",
+      "contratos": 50
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de maquilado",
+      "contratos": 37
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato zona franca",
+      "contratos": 37
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato bananero parcial discontinuo",
+      "contratos": 34
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato turístico permanente",
+      "contratos": 6
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de Trabajo por Proyecto a Jornada Especial Completa para el Sector Manufacturero",
+      "contratos": 4
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de Trabajo para Proyectos a Jornada Especial Completa para el Sector de Desarrollo y Servicio de Software",
+      "contratos": 3
+    },
+    {
+      "estado_contrato": "VIGENTE",
+      "tipo_contrato": "Contrato de enganche",
+      "contratos": 1
+    }
+  ]
+}
