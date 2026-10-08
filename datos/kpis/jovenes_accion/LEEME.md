@@ -1,0 +1,1 @@
+Fuente: tablas SQL compartidas en conversación (Jóvenes en Acción). Beneficiarios por cédula válida. Año por fecha_acreditacion. La suma anual de únicos no coincide con el único global por repetición de personas entre años. Registros no son pagos verificados. Actualización manual de serie_anual.csv y resumen.csv.

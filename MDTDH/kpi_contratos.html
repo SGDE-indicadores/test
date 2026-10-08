@@ -11,9 +11,9 @@
 <script src="../assets/js/ecuador-map.js"></script>
 <script src="../assets/js/export-utils.js"></script>
 <style>
-  :root{--hom:#4F449A;--muj:#C99200;--neutro:#B9C0CE}
+  :root{--hombre:#1A5FA8;--mujer:#C0395A;--neutro:#B9C0CE}   /* sexo: mismos colores y siluetas que PND y jubilados */
   /* filtros */
-  .fbar{position:sticky;top:0;z-index:1000;background:#fff;border:1px solid var(--gris-bd);border-radius:10px;padding:12px 14px;margin:0 0 16px;box-shadow:var(--shadow)}
+  .fbar{position:sticky;top:var(--fbar-top,148px);z-index:90;background:#fff;border:1px solid var(--gris-bd);border-radius:10px;padding:12px 14px;margin:0 0 16px;box-shadow:var(--shadow)}
   .fbar .fila{display:flex;gap:10px 14px;align-items:flex-end;flex-wrap:wrap}
   .fbar label{display:block;font-size:10.5px;font-weight:700;color:var(--subtexto);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
   .fbar select{padding:7px 9px;border:1px solid var(--gris-bd);border-radius:7px;background:#fff;color:var(--texto);font-size:12.5px;min-width:120px}
@@ -34,7 +34,16 @@
   .k .s.warn{color:#8A6100}
   /* tarjetas de contenido */
   .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .g3{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+  /* siluetas por sexo (mismo diseño que PND y jubilados) */
+  .siluetas{display:flex;justify-content:center;align-items:stretch;padding:8px 0}
+  .silueta{flex:1;text-align:center;padding:6px 18px;border-radius:10px;cursor:pointer}
+  .silueta:hover{background:var(--azul-pale)}
+  .silueta.sel{outline:2px solid var(--amarillo)}
+  .silueta + .silueta{border-left:1px solid var(--gris-bd);border-radius:0}
+  .silueta img{width:84px;height:84px;object-fit:contain;display:block;margin:0 auto}
+  .silueta .val{font-size:30px;font-weight:700;line-height:1;margin-top:10px;font-variant-numeric:tabular-nums}
+  .silueta .lab{font-size:13px;font-weight:700;color:var(--texto);margin-top:4px}
+  .silueta .det{font-size:12px;color:var(--subtexto);margin-top:6px;line-height:1.55}
   .card-b{background:#fff;border:1px solid var(--gris-bd);border-radius:10px;margin-bottom:16px;overflow:hidden}
   .card-b .h{padding:12px 16px;border-bottom:1px solid var(--gris-bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
   .card-b .h b{color:var(--azul);font-size:13.5px}
@@ -47,7 +56,6 @@
   table.t th{background:var(--azul-pale);color:var(--azul);text-align:left;padding:8px 12px;font-weight:700;border-bottom:1px solid var(--gris-bd);position:sticky;top:0}
   table.t td{padding:7px 12px;border-bottom:1px solid var(--gris-bd);vertical-align:top}
   table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  table.ficha th{width:210px;position:static}
   details.tabla{border-top:1px solid var(--gris-bd)}
   details.tabla summary{padding:10px 16px;font-size:12.5px;font-weight:700;color:var(--azul);cursor:pointer}
   .table-wrap{overflow:auto;max-height:420px}
@@ -55,7 +63,7 @@
   .aviso-err{background:#FDECEA;border:1px solid #F3A8AC;color:#C4262E;border-radius:8px;padding:12px 16px;margin:14px 0}
   /* mapa (mismo módulo que PND y jubilados) */
   .mapa-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:start}
-  #map-wrap{position:relative}
+  #map-wrap{position:relative;z-index:0;isolation:isolate}   /* el mapa no se monta sobre la cabecera fija */
   #ec-map{height:470px;border-radius:8px;background:#EAF2FB}
   .leaflet-container{font-family:Arial,sans-serif}
   .prov-tooltip{font-family:Arial,sans-serif;font-size:12px}.prov-tooltip b{color:var(--azul)}
@@ -79,8 +87,7 @@
   .drill table.t th{background:#fff}
   .leyenda{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--subtexto);margin-bottom:8px}
   .leyenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-  @media(max-width:1100px){.g3{grid-template-columns:1fr 1fr}}
-  @media(max-width:860px){.g2,.g3,.mapa-grid{grid-template-columns:1fr}.k .v{font-size:22px}#ec-map{height:380px}.fbar{position:static}.fbar .sep{display:none}}
+  @media(max-width:860px){.g2,.mapa-grid{grid-template-columns:1fr}.siluetas{flex-direction:column}.silueta + .silueta{border-left:0;border-top:1px solid var(--gris-bd)}.k .v{font-size:22px}#ec-map{height:380px}.fbar{position:static}.fbar .sep{display:none}}
 </style>
 </head>
 <body>
@@ -156,25 +163,27 @@
     <details class="tabla"><summary>Ver todos los tipos de contrato</summary><div class="table-wrap"><table class="t" id="t-tipo"></table></div></details>
   </div>
 
-  <div class="g3">
+  <div class="g2">
     <div class="card-b">
-      <div class="h"><div><b>Sexo y grupo etario</b><div class="sub">Edad a la fecha de inicio del contrato</div></div></div>
-      <div class="c"><div class="leyenda" id="ley-edad"></div><div class="chart-box" style="height:230px"><canvas id="g-edad"></canvas></div>
+      <div class="h"><div><b>Contratos por sexo</b><div class="sub">Haz clic en una figura para filtrar el tablero</div></div></div>
+      <div class="c"><div class="siluetas" id="siluetas"></div><div class="nota" id="nota-sexo"></div></div>
+    </div>
+    <div class="card-b">
+      <div class="h"><div><b>Grupo etario por sexo</b><div class="sub">Edad a la fecha de inicio del contrato</div></div></div>
+      <div class="c"><div class="leyenda" id="ley-edad"></div><div class="chart-box" style="height:200px"><canvas id="g-edad"></canvas></div>
         <div class="nota" id="nota-edad"></div></div>
-    </div>
-    <div class="card-b">
-      <div class="h"><div><b>Etnia del trabajador</b><div class="sub">Autoidentificación registrada en el SUT</div></div></div>
-      <div class="c"><div class="chart-box" style="height:260px"><canvas id="g-etnia"></canvas></div></div>
-    </div>
-    <div class="card-b">
-      <div class="h"><div><b>Trabajadores extranjeros</b><div class="sub" id="sub-nac">Nacionalidad · 10 principales</div></div></div>
-      <div class="c"><div class="chart-box" style="height:260px"><canvas id="g-nac"></canvas></div></div>
     </div>
   </div>
 
-  <div class="card-b">
-    <div class="h"><div><b>Ficha del indicador</b><div class="sub">Ficha metodológica 18 · Coordinación de Información y Estudios del Trabajo</div></div></div>
-    <div class="c" id="ficha"></div>
+  <div class="g2">
+    <div class="card-b">
+      <div class="h"><div><b>Etnia del trabajador</b><div class="sub">Autoidentificación del trabajador</div></div></div>
+      <div class="c"><div class="chart-box" style="height:280px"><canvas id="g-etnia"></canvas></div></div>
+    </div>
+    <div class="card-b">
+      <div class="h"><div><b>Trabajadores extranjeros</b><div class="sub" id="sub-nac">Nacionalidad · 10 principales</div></div></div>
+      <div class="c"><div class="chart-box" style="height:280px"><canvas id="g-nac"></canvas></div></div>
+    </div>
   </div>
 </div>
 
@@ -186,7 +195,10 @@
 (function(){
 'use strict';
 const PATH = '../datos/kpis/contratos/dashboard_data.json';
-const C = { azul:'#4F449A', hom:'#4F449A', muj:'#C99200', neutro:'#B9C0CE' };
+function cargarDatos(){
+  return fetch(PATH, { cache:'no-cache' }).then(r => { if (!r.ok) throw Error('HTTP ' + r.status); return r.json(); });
+}
+const C = { azul:'#4F449A', hom:'#1A5FA8', muj:'#C0395A', neutro:'#B9C0CE' };
 const MESES_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const fmt = n => Number(n || 0).toLocaleString('es-EC');
 const pct = (a, b) => b > 0 ? (100 * a / b).toLocaleString('es-EC', { minimumFractionDigits:1, maximumFractionDigits:1 }).replace(/^-/, '−') + ' %' : '–';
@@ -198,6 +210,20 @@ const fecha = (iso, largo) => { const d = new Date(iso + 'T12:00:00');
   return largo ? `${d.getDate()} de ${MESES_L[d.getMonth()]} de ${d.getFullYear()}` : d.toLocaleDateString('es-EC', { day:'2-digit', month:'2-digit', year:'numeric' }); };
 
 initSidebar({ activeId:'kpis-trabajo', basePath:'../' });
+
+// La barra de filtros se fija JUSTO DEBAJO de la cabecera del portal (logo, menú y migas también son
+// fijos), en vez de en el borde superior, para no taparlos. Se recalcula al cambiar el tamaño.
+function ajustarFiltroFijo(){
+  let tope = 0;
+  document.querySelectorAll('.header, .mega-nav, .breadcrumb').forEach(el => {
+    const cs = getComputedStyle(el);
+    if (cs.position === 'sticky' || cs.position === 'fixed') tope = Math.max(tope, (parseFloat(cs.top) || 0) + el.offsetHeight);
+  });
+  document.documentElement.style.setProperty('--fbar-top', (tope + 8) + 'px');
+}
+window.addEventListener('resize', ajustarFiltroFijo);
+window.addEventListener('load', ajustarFiltroFijo);
+setTimeout(ajustarFiltroFijo, 300);
 const meta = kpiMetadata['2'];
 
 let D, F, charts = {}, mapa = null, ramaSel = null;
@@ -234,7 +260,7 @@ function textoActivos(){
   if (F.s !== 'all') t.push(`<b>${D.dic.sexo[F.s].toLowerCase()}</b>`);
   if (F.g !== 'all') t.push(`<b>${D.dic.edad[F.g].toLowerCase()}</b>`);
   if (F.d !== 'all') t.push(`<b>${D.dic.disc[F.d].toLowerCase()}</b>`);
-  return t.length ? 'Filtros activos: ' + t.join(' · ') : `Sin filtros: todos los contratos registrados (vigentes y finalizados) en la foto del ${fecha(D.fecha_corte)}.`;
+  return t.length ? 'Filtros activos: ' + t.join(' · ') : `Sin filtros: todos los contratos registrados (vigentes y finalizados) al ${fecha(D.fecha_corte, true)}.`;
 }
 function sincronizarControles(){
   $('f-prov').value = F.p; $('f-sexo').value = F.s; $('f-edad').value = F.g; $('f-disc').value = F.d;
@@ -287,7 +313,7 @@ function barras(key, id, labels, data, opt = {}){
 // ───────────────────────── secciones ─────────────────────────
 function renderKpis(){
   const total = suma(agrega('base', 0));
-  const sexo = agrega('base', 1), disc = agrega('base', 3);
+  const disc = agrega('base', 3);
   const extr = suma(agrega('nac', 5));
   const ef = F.e; F.e = 'all'; const estado = agrega('base', 0); F.e = ef;
   const emp = D.t.empresas.find(r => r[0] === (F.e === 'all' ? -1 : F.e) && r[1] === (F.p === 'all' ? -1 : F.p));
@@ -300,8 +326,6 @@ function renderKpis(){
     <div class="k main"><div class="l">${etqTotal}</div><div class="v">${fmt(total)}</div><div class="s">${subTotal}</div></div>
     <div class="k"><div class="l">Empresas</div><div class="v">${emp ? fmt(emp[2]) : '–'}</div>
       <div class="s${empParcial ? ' warn' : ''}">${empParcial ? 'Solo responde a estado y provincia' : 'Razones sociales distintas'}</div></div>
-    <div class="k"><div class="l">Mujeres</div><div class="v">${fmt(sexo.get(1))}</div><div class="s">${pct(sexo.get(1) || 0, total)}</div></div>
-    <div class="k"><div class="l">Hombres</div><div class="v">${fmt(sexo.get(0))}</div><div class="s">${pct(sexo.get(0) || 0, total)}</div></div>
     <div class="k"><div class="l">Con discapacidad</div><div class="v">${fmt(disc.get(1))}</div><div class="s">${pct(disc.get(1) || 0, total)} de los contratos</div></div>
     <div class="k"><div class="l">Trabajadores extranjeros</div><div class="v">${fmt(extr)}</div><div class="s">${pct(extr, total)} de los contratos</div></div>`;
 }
@@ -321,7 +345,7 @@ function renderTerritorio(){
   $('prov-lista').innerHTML = filas.map(d => {
     const sg = sinGeo(d.p);
     const color = sg ? C.neutro : _ecmapInterpola('#F5F6F8', C.azul, Math.sqrt(maxV > 0 ? d.value / maxV : 0));
-    return `<div class="prov-row${F.p === d.idx ? ' sel' : ''}" data-i="${d.idx}" title="${sg ? 'Regiones (Sierra, Costa, Oriente) o provincia vacía en la fuente' : 'Filtrar por ' + esc(d.p)}">
+    return `<div class="prov-row${F.p === d.idx ? ' sel' : ''}" data-i="${d.idx}" title="${sg ? 'Contratos sin provincia ni cantón identificables' : 'Filtrar por ' + esc(d.p)}">
       <span class="rank">${sg ? '' : ++rank}</span><span class="dot" style="background:${color}"></span>
       <span class="nom">${esc(d.p)}</span><span class="val">${fmt(d.value)}</span><span class="pct">${pct(d.value, total)}</span></div>`;
   }).join('');
@@ -390,7 +414,22 @@ function renderTipo(){
     filas.map((f, i) => `<tr><td>${i + 1}</td><td>${esc(f.nom)}</td><td class="n">${fmt(f.n)}</td><td class="n">${pct(f.n, total)}</td></tr>`).join('') + '</tbody>';
 }
 
+function renderSexo(){
+  const m = agrega('base', 1, { s:true }), total = suma(m);
+  const SEXO = [[0, 'Hombres', C.hom, '../imagenes/hombre.png'], [1, 'Mujeres', C.muj, '../imagenes/mujer.png']];
+  $('siluetas').innerHTML = SEXO.map(([k, l, c, img]) => {
+    const n = m.get(k) || 0, sel = F.s === k;
+    return `<div class="silueta${sel ? ' sel' : ''}" data-s="${k}" title="${sel ? 'Quitar filtro' : 'Filtrar por ' + l.toLowerCase()}">
+      <img src="${img}" alt="${l}"><div class="val" style="color:${c}">${fmt(n)}</div>
+      <div class="lab">${l}</div><div class="det">${pct(n, total)} de los contratos</div></div>`;
+  }).join('');
+  document.querySelectorAll('#siluetas .silueta').forEach(el => el.onclick = () => { const k = +el.dataset.s; F.s = F.s === k ? 'all' : k; render(); });
+  const sd = m.get(2) || 0;
+  $('nota-sexo').textContent = sd ? `${fmt(sd)} contratos sin sexo registrado (${pct(sd, total)}).` : '';
+}
+
 function renderPerfil(){
+  renderSexo();
   const mat = D.dic.edad.map(() => [0, 0, 0]);
   for (const r of D.t.base) if (pasa(r, 'base', {})) mat[r[2]][r[1]] += r[5];
   const total = mat.flat().reduce((a, b) => a + b, 0);
@@ -415,26 +454,6 @@ function renderPerfil(){
   $('sub-nac').textContent = `${fmt(tn)} contratos de ${fmt(mn.size)} nacionalidades distintas a la ecuatoriana · 10 principales`;
 }
 
-function renderFicha(){
-  const filas = [
-    ['Nombre (matriz de KPI)', meta.nombre],
-    ['Definición', meta.definicion],
-    ['Fórmula', meta.formula],
-    ['Interpretación', meta.interpretacion],
-    ['Unidad de medida', meta.unidad],
-    ['Periodicidad', meta.periodicidad],
-    ['Captura de la fuente', 'Foto diaria de la tabla mdt02_contratos (SUT). El tablero presenta solo la foto vigente; no se almacena histórico.'],
-    ['Disponibilidad', meta.disponibilidad],
-    ['Desagregación', meta.desagregacion],
-    ['Fuente', meta.sistema],
-    ['Consulta', D.fuente.consulta],
-    ['Responsable', meta.responsable],
-    ['Validación', meta.validacion],
-    ['Limitaciones técnicas', meta.observacion],
-  ].filter(f => f[1]);
-  $('ficha').innerHTML = `<table class="t ficha"><tbody>${filas.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</tbody></table>`;
-}
-
 function render(){
   sincronizarControles();
   $('activos').innerHTML = textoActivos();
@@ -442,21 +461,17 @@ function render(){
 }
 
 // ───────────────────────── carga ─────────────────────────
-fetch(PATH, { cache:'no-cache' })
-  .then(r => { if (!r.ok) throw Error('HTTP ' + r.status); return r.json(); })
+cargarDatos()
   .then(d => {
     D = d; F = defaults();
-    const hora = D.fecha_hora_corte && D.fecha_hora_corte.length > 10 ? ' · ' + D.fecha_hora_corte.slice(11, 16) : '';
     $('interpretacion').innerHTML = `Existen <b>${fmt(D.registrados)}</b> contratos registrados en el Sistema Único de Trabajo (SUT) al ${fecha(D.fecha_corte, true)}.`;
-    $('chips').innerHTML = `<span>Fuente: SUT · ${esc(D.fuente.tabla)}</span><span>Foto del ${fecha(D.fecha_corte)}${hora}</span><span>Foto diaria · periodicidad del indicador mensual</span>`;
     $('fbar').hidden = false; $('contenido').hidden = false;
-    montarFiltros(); renderFicha(); render();
+    montarFiltros(); render();
   })
   .catch(err => {
     $('interpretacion').textContent = meta.definicion || '';
-    $('error').innerHTML = `<div class="aviso-err"><b>No se pudo cargar la foto de contratos.</b><br>${esc(err.message)}<br>
-      <span class="nota">Copia aquí el <code>data/dashboard_data.json</code> que genera <code>actualizar_dashboard.py</code> (carpeta de extracción) en <code>datos/kpis/contratos/</code>
-      y abre el portal mediante un servidor local o GitHub Pages (no con file://).</span></div>`;
+    $('error').innerHTML = `<div class="aviso-err"><b>No se pudieron cargar los datos de contratos.</b><br>${esc(err.message)}<br>
+      <span class="nota">Revisa que exista <code>datos/kpis/contratos/dashboard_data.json</code> y abre el portal mediante un servidor local o GitHub Pages (no con file://).</span></div>`;
   });
 })();
 </script>
